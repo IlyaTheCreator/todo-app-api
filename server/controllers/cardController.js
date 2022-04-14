@@ -10,8 +10,7 @@ class CardController {
   async addCard(req, res) {
     try {
       const { name, isCompleted, listId } = req.body;
-      const card = { name, isCompleted, listId };
-
+      const card = { name, isCompleted: false, listId };
       await Cards.create(card);
       res.json('Card added');
     } catch (e) {

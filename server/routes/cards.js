@@ -33,7 +33,55 @@ const router = new Router();
  *         listId: 3
  */
 
+ /**
+  * @swagger
+  * tags:
+  *   name: Cards
+  *   description: Managing cards
+  */
+
+/**
+ * @swagger
+ * /api/cards:
+ *   get:
+ *     summary: Returns the list of all the cards
+ *     tags: [Cards]
+ *     responses:
+ *       200:
+ *         description: The list of the cards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Card'
+ */
+
 router.get('/cards', cardController.getCards);
+
+/**
+ * @swagger
+ * /api/cards/filter:
+ *   get:
+ *     summary: Returns the list of all the cards that match isCompleted value in the query
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: query
+ *         name: isCompleted
+ *         schema:
+ *           type: boolean
+ *         required: true
+ *         description: Cards' completion state by which they'll be filtered
+ *     responses:
+ *       200:
+ *         description: The list of the filtered cards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Card'
+ */
 router.get('/cards/filter', cardController.filterCards);
 router.get('/card/:id', cardController.getCard);
 router.post('/card', cardController.addCard);

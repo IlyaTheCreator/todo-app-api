@@ -8,6 +8,13 @@ Lists.init({
     type: DataTypes.STRING,
     unique: true, // Отвечает за уникальность имени списка
     allowNull: false,
+    validate: {
+      isString(value) {
+        if (typeof value !== 'string') {
+          throw new Error(errors.types.string.message);
+        }
+      },
+    }
   },
 },
   {

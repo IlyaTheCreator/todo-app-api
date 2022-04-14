@@ -141,6 +141,10 @@ class CardController {
       // Проверка есть ли такой параметр
       if (availableProperty.includes(propKeys[0].toLowerCase())
         && propKeys.length !== 0) {
+        if (propKeys[0] === 'isCompleted') {
+          property[propKeys[0]] = property[propKeys[0]] ? 1 : 0;
+        }
+
         const cards = await Cards.findAll({ where: property });
 
         res.json(cards);

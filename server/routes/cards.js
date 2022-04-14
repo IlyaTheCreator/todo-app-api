@@ -33,12 +33,12 @@ const router = new Router();
  *         listId: 3
  */
 
- /**
-  * @swagger
-  * tags:
-  *   name: Cards
-  *   description: Managing cards
-  */
+/**
+ * @swagger
+ * tags:
+ *   name: Cards
+ *   description: Managing cards
+ */
 
 /**
  * @swagger
@@ -146,12 +146,12 @@ router.get('/cards/:id', cardController.getCard);
  *               items:
  *                 $ref: '#/components/schemas/Card'
  */
-router.post('/cards', cardController.addCard);
+router.post('/card', cardController.addCard);
 
 
 /**
  * @swagger
- * /api/cards/{id}:
+ * /api/card/{id}:
  *   put:
  *     summary: Sets a name of a card
  *     tags: [Cards]

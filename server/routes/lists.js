@@ -7,5 +7,6 @@ router.post('/list', listController.addList);
 router.get('/lists', listController.getLists);
 router.delete('/list/:id', listController.deleteList);
 router.put('/list/:id', listController.setNameList);
+router.get('/list/:id', listController.getList);
 
 module.exports = router;

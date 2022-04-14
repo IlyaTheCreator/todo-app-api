@@ -1,4 +1,4 @@
-const availableProperty = ['name', 'iscompleted', 'listId'];
+const availableProperty = ['name', 'iscompleted', 'listid'];
 
 module.exports = {
   availableProperty,

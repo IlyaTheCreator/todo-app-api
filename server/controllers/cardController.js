@@ -1,16 +1,55 @@
 const Cards = require('../db/tables/Cards');
-const { availableProperty } = require('../variables');
 const { errors } = require('../rules/errors');
 
 class CardController {
+  static types = {};
+
+  constructor() {
+    //Записываем в статическое свойство types объект со значениями и типами данных полей
+    Object.keys(Cards.getAttributes()).forEach((key) => {
+      if (Cards.getAttributes()[key].type.key === 'INTEGER') {
+        CardController.types[key.toLowerCase()] = 'number';
+
+        return;
+      }
+
+      CardController.types[key.toLowerCase()] = Cards.getAttributes()[key].type.key.toLowerCase();
+    });
+  }
+
   /**
-  * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
-  * ex. http://localhost:8080/api/card
- */
+    * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
+    * ex. http://localhost:8080/api/card
+   */
   async addCard(req, res) {
     try {
-      const { name, isCompleted, listId } = req.body;
-      const card = { name, isCompleted: false, listId };
+      const { name, listId } = req.body;
+      const card = { name, listId };
+
+      if (!name || !name.toString().trim()) {
+        res.json(errors.filed.isNotEmpty('name'));
+
+        return;
+      }
+
+      if (!listId || !listId.toString().trim()) {
+        res.json(errors.filed.isNotEmpty('listId'));
+
+        return;
+      }
+
+      // Ошибка если тип name не равен типу из таблицы
+      if (typeof name !== CardController.types.name) {
+        res.json(errors.types.general('name'));
+        return;
+      }
+
+      // Ошибка если тип listId не равен типу из таблицы
+      if (typeof listId !== CardController.types.listid) {
+        res.json(errors.types.general('listId'));
+        return;
+      }
+
       await Cards.create(card);
       res.json('Card added');
     } catch (e) {
@@ -20,9 +59,8 @@ class CardController {
         return;
       }
 
-      //Небольшая проверка есть ли сообщение об ошибке
-      const message = Array.isArray(e.errors) && e.errors[0].message;
-      res.json(message || e);
+      console.log(e);
+      res.json(e);
     }
   };
 
@@ -33,10 +71,15 @@ class CardController {
   async getCards(req, res) {
     try {
       const cards = await Cards.findAll();
-      res.json(cards);
+
+      if (!cards) {
+        res.json('There are no cards');
+      }
+
+      res.json({ data: cards });
     } catch (e) {
-      const { message } = e.errors[0];
-      res.json(message);
+      console.log(e);
+      res.json(e);
     }
   };
 
@@ -50,17 +93,16 @@ class CardController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.json('Card in not defined');
+        res.json(errors.cards.notDefined);
 
         return;
       }
 
-      res.json(card);
+      res.json({ data: card });
     } catch (e) {
-      const { message } = e.errors[0];
-      res.json(message);
+      console.log(e);
+      res.json(e);
     }
-
   }
 
   /**
@@ -72,13 +114,27 @@ class CardController {
     try {
       const reqId = req.params.id;
       const card = await Cards.findOne({ where: { id: reqId } });
+      const { name } = req.body;
 
       if (!card) {
-        res.json('Card in not defined');
+        res.json(errors.cards.notDefined);
 
         return;
       }
-      card.name = req.body.name;
+
+      if (!name || !name.toString().trim()) {
+        res.json(errors.filed.isNotEmpty('name'));
+
+        return;
+      }
+
+      if (typeof name !== CardController.types.name) {
+        res.json(errors.types.general('name'));
+
+        return;
+      }
+
+      card.name = name;
       await card.save();
 
       res.json('Updated');
@@ -98,7 +154,7 @@ class CardController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.json('Card in not defined');
+        res.json(errors.cards.notDefined);
 
         return;
       }
@@ -107,8 +163,8 @@ class CardController {
 
       res.json('Updated');
     } catch (e) {
-      const { message } = e.errors[0];
-      res.json(message);
+      console.log(e);
+      res.json(e);
     }
   }
 
@@ -119,12 +175,19 @@ class CardController {
   async deleteCard(req, res) {
     try {
       const reqId = req.params.id;
-      await Cards.destroy({ where: { id: reqId } });
+      const card = await Cards.findOne({ where: { id: reqId } });
 
-      res.json(`Card with Id = ${reqId} is deleted`);
+      if (card) {
+        await Cards.destroy({ where: { id: reqId } });
+        res.json(`Card with Id = ${reqId} is deleted`);
+
+        return;
+      }
+
+      res.json(errors.cards.notDefined);
     } catch (e) {
-      const { message } = e.errors[0] || e;
-      res.json(message);
+      console.log(e);
+      res.json(e);
     }
   }
 
@@ -135,19 +198,29 @@ class CardController {
   */
   async filterCards(req, res) {
     try {
-      const property = req.query;
-      const propKeys = Object.keys(property);
+      const { key, value } = req.query;
 
       // Проверка есть ли такой параметр
-      if (availableProperty.includes(propKeys[0].toLowerCase())
-        && propKeys.length !== 0) {
-        if (propKeys[0] === 'isCompleted') {
-          property[propKeys[0]] = property[propKeys[0]] ? 1 : 0;
+      if (Object.keys(CardController.types).includes(key.toLowerCase())) {
+        let booleanValue;
+        if (key === 'isCompleted') {
+          if (value === 'true') {
+            booleanValue = 1;
+          }
+
+          if (value === 'false') {
+            booleanValue = 0;
+          }
         }
 
-        const cards = await Cards.findAll({ where: property });
+        if (typeof value === CardController.types[key]) {
+          const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
+          res.json({ date: cards });
 
-        res.json(cards);
+          return;
+        }
+
+        res.json(errors.types.general(key));
         return;
       }
 

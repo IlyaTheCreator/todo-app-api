@@ -6,14 +6,38 @@ class ListController {
    * POST запрос. Добавление нового списка, данные из тела запроса
    * ex. http://localhost:8080/api/list
    */
+  static types = {};
+
+  constructor() {
+    Object.keys(Lists.getAttributes()).forEach((key) => {
+      if (Lists.getAttributes()[key].type.key === 'INTEGER') {
+        ListController.types[key.toLowerCase()] = 'number';
+
+        return;
+      }
+
+      ListController.types[key.toLowerCase()] = Lists.getAttributes()[key].type.key.toLowerCase();
+    });
+  }
+
   async addList(req, res) {
     try {
-      const list = {
-        name: req.body.name || null,
-      };
+      const { name } = req.body;
+      const list = { name };
 
-      if (!list.name) {
-        res.json('Name not specified');
+      /**
+       * Проверка: было ли вообще получено поле name,
+       * а если получено, то не является ли пустой строкой.
+       */
+      if (!name || !name.toString().trim()) {
+        res.json(errors.filed.isNotEmpty('name'));
+
+        return;
+      }
+
+      //Проверка типов
+      if (typeof name !== ListController.types.name) {
+        res.json(errors.types.general('name'));
 
         return;
       }
@@ -27,6 +51,7 @@ class ListController {
         return;
       }
 
+      console.log(e);
       res.json(e)
     }
   }
@@ -44,8 +69,28 @@ class ListController {
 
         return;
       }
-      res.json(lists);
+
+      res.json({ date: lists });
     } catch (e) {
+      console.log(e);
+      res.json(e);
+    }
+  }
+
+  async getList(req, res) {
+    try {
+      const reqId = req.params.id;
+      const list = await Lists.findOne({ where: { id: reqId } });
+
+      if (!list) {
+        res.json(errors.lists.notDefined);
+
+        return;
+      }
+
+      res.json({ data: list });
+    } catch (e) {
+      console.log(e);
       res.json(e);
     }
   }
@@ -57,13 +102,18 @@ class ListController {
   async deleteList(req, res) {
     try {
       const reqId = req.params.id;
-
       const list = await Lists.findOne({ where: { id: reqId } });
 
-      await list.destroy();
+      if (list) {
+        await list.destroy();
+        res.json(`List with Id = ${reqId} is deleted`);
 
-      res.json(`List with Id = ${reqId} is deleted`);
+        return;
+      }
+
+      res.json(errors.lists.notDefined);
     } catch (e) {
+      console.log(e);
       res.json(e);
     }
   }
@@ -76,24 +126,35 @@ class ListController {
   async setNameList(req, res) {
     try {
       const reqId = req.params.id;
+      const { name } = req.body;
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.json('List is not defined');
-
-        return;
-      }
-      if (!req.body.name) {
-        res.json('Name not specified');
+        res.json(errors.lists.notDefined);
 
         return;
       }
 
-      list.name = req.body.name;
+      // Аналогично в методе Addlist
+      if (!name || !name.toString().trim()) {
+        res.json(errors.filed.isNotEmpty('name'));
+
+        return;
+      }
+
+      // Аналогично в методе Addlist
+      if (typeof name !== ListController.types.name) {
+        res.json(errors.types.general('name'));
+
+        return;
+      }
+
+      list.name = name;
       await list.save();
 
       res.json('Name updated');
     } catch (e) {
+      console.log(e);
       res.json(e);
     }
   }

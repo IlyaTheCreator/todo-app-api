@@ -29,7 +29,7 @@ class ListController extends BaseController {
       }
 
       await Lists.create(list);
-      res.json('List Added');
+      res.status(201).json('List Added');
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
         res.status(400).json(errors.lists.uniqueName);

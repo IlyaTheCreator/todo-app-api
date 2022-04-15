@@ -189,32 +189,24 @@ class CardController extends BaseController {
   */
   filterCards = async (req, res) => {
     try {
-      const { key, value } = req.query;
-      console.log(key);
+      const { key } = req.query;
+      const value = req.query.value.toLowerCase();
+
       if (!key) {
         this.getCards(req, res);
 
-        // const cards = await Cards.findAll();
-
-        // if (!cards) {
-        //   res.json('There are no cards');
-        // }
-
-        // res.json({ data: cards });
-
         return;
       }
+
       // Проверка есть ли такой параметр
       if (Object.keys(CardController.types).includes(key.toLowerCase())) {
         let booleanValue;
-        if (key === 'isCompleted') {
-          if (value === 'true') {
-            booleanValue = 1;
-          }
+        if (value === 'true') {
+          booleanValue = 1;
+        }
 
-          if (value === 'false') {
-            booleanValue = 0;
-          }
+        if (value === 'false') {
+          booleanValue = 0;
         }
 
         const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });

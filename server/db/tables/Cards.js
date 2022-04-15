@@ -24,7 +24,7 @@ Cards.init({
     defaultValue: false,
     validate: {
       isIn: {
-        args: [[false, true, 1, 0]],
+        args: [false, true, 1, 0],
         msg: errors.types.boolean.message,
       },
     },

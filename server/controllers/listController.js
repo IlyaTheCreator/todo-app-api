@@ -21,7 +21,7 @@ class ListController extends BaseController {
        * а если получено, то не является ли пустой строкой.
        */
       if (!name || !name.toString().trim()) {
-        res.json(errors.filed.isNotEmpty('name'));
+        res.json(errors.field.isNotEmpty('name'));
 
         return;
       }
@@ -128,7 +128,7 @@ class ListController extends BaseController {
 
       // Аналогично в методе Addlist
       if (!name || !name.toString().trim()) {
-        res.json(errors.filed.isNotEmpty('name'));
+        res.json(errors.field.isNotEmpty('name'));
 
         return;
       }

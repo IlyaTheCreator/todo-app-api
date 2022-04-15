@@ -1,4 +1,3 @@
-
 class BaseController {
   static types = {};
 

@@ -17,13 +17,13 @@ class CardController extends BaseController {
       const card = { name, listId };
 
       if (!name || !name.toString().trim()) {
-        res.json(errors.filed.isNotEmpty('name'));
+        res.json(errors.field.isNotEmpty('name'));
 
         return;
       }
 
       if (!listId || !listId.toString().trim()) {
-        res.json(errors.filed.isNotEmpty('listId'));
+        res.json(errors.field.isNotEmpty('listId'));
 
         return;
       }
@@ -113,7 +113,7 @@ class CardController extends BaseController {
       }
 
       if (!name || !name.toString().trim()) {
-        res.json(errors.filed.isNotEmpty('name'));
+        res.json(errors.field.isNotEmpty('name'));
 
         return;
       }

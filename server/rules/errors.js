@@ -43,7 +43,7 @@ const errors = {
       }
     },
   },
-  filed: {
+  field: {
     isNotEmpty(field) {
       return {
         statusCode: 8,

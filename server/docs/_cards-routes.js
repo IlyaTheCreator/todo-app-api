@@ -114,21 +114,21 @@
  *               items:
  *                 $ref: '#/components/schemas/Card'
  *               properties:
- *                data: 
- *                  type: object
- *                  properties:
- *                    id: 
- *                      type: integer
- *                      example: 1
- *                    name: 
- *                      type: string
- *                      example: "Throw out the trash"
- *                    isCompleted: 
- *                      type: boolean
- *                      example: false
- *                    listId:
- *                      type: integer
- *                      example: 1
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
+ *                     name: 
+ *                       type: string
+ *                       example: "Throw out the trash"
+ *                     isCompleted: 
+ *                       type: boolean
+ *                       example: false
+ *                     listId:
+ *                       type: integer
+ *                       example: 1
  *       400:
  *         description: Card with such id is not defined
  *         content:
@@ -138,9 +138,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *               statusCode: 1
+ *               name: "some-error"
+ *               message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -192,9 +192,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *               statusCode: 1
+ *               name: "some-error"
+ *               message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -240,7 +240,7 @@
  *               items:
  *                 $ref: '#/components/schemas/Card'
  *             example:
- *              "updated"
+ *               "updated"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -250,9 +250,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *               statusCode: 1
+ *               name: "some-error"
+ *               message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -298,7 +298,7 @@
  *               items:
  *                 $ref: '#/components/schemas/Card'
  *             example:
- *              "updated"
+ *               "updated"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -308,9 +308,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *               statusCode: 1
+ *               name: "some-error"
+ *               message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -344,7 +344,7 @@
  *               items:
  *                 $ref: '#/components/schemas/Card'
  *             example:
- *              "Card with Id = 2 is deleted"
+ *               "Card with Id = 2 is deleted"
  *       400:
  *         description: Card id validation error
  *         content:
@@ -354,9 +354,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *               statusCode: 1
+ *               name: "some-error"
+ *               message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:

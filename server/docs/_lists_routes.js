@@ -65,17 +65,17 @@
  *               items:
  *                 $ref: '#/components/schemas/List'
  *               properties:
- *                data: 
- *                  type: array
- *                  items: 
- *                    type: object
- *                    properties:
- *                      id: 
- *                        type: integer
- *                        example: 1
- *                      name: 
- *                        type: string
- *                        example: "First list"
+ *                 data: 
+ *                   type: array
+ *                   items: 
+ *                     type: object
+ *                     properties:
+ *                       id: 
+ *                         type: integer
+ *                         example: 1
+ *                       name: 
+ *                         type: string
+ *                         example: "First list"
  *       500:
  *         description: Internal server error 
  *         content:
@@ -167,7 +167,7 @@
  *               items:
  *                 $ref: '#/components/schemas/List'
  *             example:
- *              Name updated
+ *               Name updated
  * 
  *       400:
  *         description: List validation error
@@ -178,9 +178,9 @@
  *               items:
  *                 $ref: '#/components/schemas/List'
  *             example:
- *              statusCode: 7
- *              name: empty-field
- *              message: The 'name' field cannot be empty
+ *               statusCode: 7
+ *               name: empty-field
+ *               message: The 'name' field cannot be empty
  *       500:
  *         description: Internal server error 
  *         content:
@@ -214,9 +214,9 @@
  *               items:
  *                 $ref: '#/components/schemas/List'
  *             example:
- *              data:
- *               id: 1 
- *               name: 'First list'
+ *               data:
+ *                 id: 1 
+ *                 name: 'First list'
  *       400:
  *         description: List in not defined
  *         content:
@@ -226,9 +226,9 @@
  *               items:
  *                 $ref: '#/components/schemas/List'
  *             example:
- *              statusCode: 8
- *              name: undefined-list
- *              message: List in not defined
+ *               statusCode: 8
+ *               name: undefined-list
+ *               message: List in not defined
  *       500:
  *         description: Internal server error 
  *         content:

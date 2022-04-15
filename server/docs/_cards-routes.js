@@ -10,9 +10,27 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *               properties:
+ *                data: 
+ *                  type: array
+ *                  items: 
+ *                    type: object
+ *                    properties:
+ *                      id: 
+ *                        type: integer
+ *                        example: 2281337
+ *                      name: 
+ *                        type: string
+ *                        example: "Throw out the trash"
+ *                      isCompleted: 
+ *                        type: boolean
+ *                        example: false
+ *                      listId:
+ *                        type: integer
+ *                        example: 2281337
  *       500:
  *         description: Internal server error. Could not get cards
  *         content:
@@ -95,11 +113,22 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *             example:
- *              id: "d5fE_asz"
- *              name: "Throw out the trash"
- *              isCompleted: false
- *              listId: 3
+ *               properties:
+ *                data: 
+ *                  type: object
+ *                  properties:
+ *                    id: 
+ *                      type: integer
+ *                      example: 2281337
+ *                    name: 
+ *                      type: string
+ *                      example: "Throw out the trash"
+ *                    isCompleted: 
+ *                      type: boolean
+ *                      example: false
+ *                    listId:
+ *                      type: integer
+ *                      example: 2281337
  *       400:
  *         description: Card with such id is not defined
  *         content:

@@ -5,8 +5,8 @@ const errors = {
       message: 'property is not defined',
     },
     fk_added: {
-      statusCode: 19,
-      message: 'FOREIGN KEY constraint failed. There is no list with this Id',
+      statusCode: 10,
+      message: 'FOREIGN KEY constraint failed. There is no entity with this Id',
     },
     notDefined: {
       statusCode: 7,

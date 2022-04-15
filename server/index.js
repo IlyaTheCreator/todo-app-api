@@ -26,7 +26,7 @@ const options = {
       },
     ],
   },
-  apis: ["./routes/*.js"],
+  apis: ["./docs/*.js"],
 };
 
 // Initializing swagger jsdoc

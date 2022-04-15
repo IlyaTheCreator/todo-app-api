@@ -59,6 +59,7 @@ class CardController extends BaseController {
    * ex. http://localhost:8080/api/cards
   */
   async getCards(req, res) {
+    console.log(123123123);
     try {
       const cards = await Cards.findAll();
 
@@ -186,10 +187,23 @@ class CardController extends BaseController {
    * ex. http://localhost:8080/api/cards/filter?name=card 3
    * ex. http://localhost:8080/api/cards/filter?isCompleted=1
   */
-  async filterCards(req, res) {
+  filterCards = async (req, res) => {
     try {
       const { key, value } = req.query;
+      console.log(key);
+      if (!key) {
+        this.getCards(req, res);
 
+        // const cards = await Cards.findAll();
+
+        // if (!cards) {
+        //   res.json('There are no cards');
+        // }
+
+        // res.json({ data: cards });
+
+        return;
+      }
       // Проверка есть ли такой параметр
       if (Object.keys(CardController.types).includes(key.toLowerCase())) {
         let booleanValue;
@@ -203,14 +217,9 @@ class CardController extends BaseController {
           }
         }
 
-        if (typeof value === CardController.types[key]) {
-          const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
-          res.json({ date: cards });
+        const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
+        res.json({ date: cards });
 
-          return;
-        }
-
-        res.json(errors.types.general(key));
         return;
       }
 

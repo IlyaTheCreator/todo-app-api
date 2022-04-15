@@ -16,19 +16,22 @@ class ListController extends BaseController {
       const { name } = req.body;
       const list = { name };
 
+      const arr = [];
+
       /**
        * Проверка: было ли вообще получено поле name,
        * а если получено, то не является ли пустой строкой.
        */
       if (!name || !name.toString().trim()) {
-        res.json(errors.field.isNotEmpty('name'));
-
-        return;
+        arr.push(errors.field.isNotEmpty('name'));
       }
 
       //Проверка типов
       if (typeof name !== ListController.types.name) {
-        res.json(errors.types.general('name'));
+        arr.push(errors.types.general('name'));
+      }
+      if (arr.length) {
+        res.status(400).json(arr);
 
         return;
       }
@@ -60,11 +63,9 @@ class ListController extends BaseController {
 
         return;
       }
-
-      res.json({ date: lists });
+      res.status(200).json({ date: lists });
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 

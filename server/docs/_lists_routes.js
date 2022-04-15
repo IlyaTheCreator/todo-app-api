@@ -17,8 +17,30 @@
  *               name:
  *                 type: string
  *     responses:
- *       200:
+ *       201:
  *         description: List created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:   
+ *              List Added
+ *       400:
+ *         description: List data validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:   
+ *              statusCode: 5
+ *              name: incorrect-type
+ *              message: The 'name' type is incorrectly set
+ *       500:
+ *         description: Internal server error 
  *         content:
  *           application/json:
  *             schema:
@@ -39,7 +61,27 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *               properties:
+ *                data: 
+ *                  type: array
+ *                  items: 
+ *                    type: object
+ *                    properties:
+ *                      id: 
+ *                        type: integer
+ *                        example: 1
+ *                      name: 
+ *                        type: string
+ *                        example: "First list"
+ *       500:
+ *         description: Internal server error 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
  */
@@ -58,8 +100,30 @@
  *         required: true
  *         description: Existing list id
  *     responses:
- *       200:
+ *       202:
  *         description: List deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              List with Id = 1 is deleted
+ *       400:
+ *         description: List in not defined
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              statusCode: 8
+ *              name: undefined-list
+ *              message: List in not defined
+ *       500:
+ *         description: Internal server error 
  *         content:
  *           application/json:
  *             schema:
@@ -94,12 +158,35 @@
  *               name:
  *                 type: string
  *     responses:
- *       200:
+ *       202:
  *         description: The list with a new name
  *         content:
  *           application/json:
  *             schema:
  *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              Name updated
+ * 
+ *       400:
+ *         description: List validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              statusCode: 7
+ *              name: empty-field
+ *              message: The 'name' field cannot be empty
+ *       500:
+ *         description: Internal server error 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
  */
@@ -120,6 +207,30 @@
  *     responses:
  *       200:
  *         description: Single found list
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              data:
+ *               id: 1 
+ *               name: 'First list'
+ *       400:
+ *         description: List in not defined
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/List'
+ *             example:
+ *              statusCode: 8
+ *              name: undefined-list
+ *              message: List in not defined
+ *       500:
+ *         description: Internal server error 
  *         content:
  *           application/json:
  *             schema:

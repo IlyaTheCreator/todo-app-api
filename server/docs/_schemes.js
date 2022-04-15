@@ -2,6 +2,26 @@
  * @swagger
  * components:
  *   schemas:
+ *     List:
+ *       type: object
+ *       required:
+ *         - name
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of a list
+ *         name:
+ *           type: string
+ *           description: List title
+ *       example:
+ *         id: 1
+ *         name: Today's ToDos
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
  *     Card:
  *       type: object
  *       required:
@@ -54,24 +74,4 @@
  *       example:
  *         statusCode: 4
  *         message: The value of IsCompleted can be either true(1) or false(0)
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     List:
- *       type: object
- *       required:
- *         - name
- *       properties:
- *         id:
- *           type: string
- *           description: The auto-generated id of a list
- *         name:
- *           type: string
- *           description: List title
- *       example:
- *         id: 1
- *         name: Today's ToDos
  */

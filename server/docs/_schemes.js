@@ -39,16 +39,15 @@
  *           type: number
  *           description: |
  *            Custom error type. Possible values are:
- *            * 1 - property is not defined
- *            * 2 - name must be unique
- *            * 3 - isCompleted is not boolean
- *            * 4 - name is not a string
- *            * 5 - listId is not a number
- *            * 6 - property value is incorrect
- *            * 7 - card is not defined
- *            * 8 - property cannot be empty
- *            * 9 - list is not defined
- *            * 10 - no entity with provided id
+ *            * 1 - undefined-property
+ *            * 2 - list-name-exist
+ *            * 3 - not-string-type
+ *            * 4 - not-number-type
+ *            * 5 - incorrect-type
+ *            * 6 - undefined-card
+ *            * 7 - empty-field
+ *            * 8 - undefined-list
+ *            * 9 - no-such-entity
  *         message:
  *           type: string
  *           description: Text of an error

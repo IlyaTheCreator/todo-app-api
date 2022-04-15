@@ -51,6 +51,26 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *       400:
+ *         description: Card parameters validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -75,6 +95,11 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              id: "d5fE_asz"
+ *              name: "Throw out the trash"
+ *              isCompleted: false
+ *              listId: 3
  *       400:
  *         description: Card with such id is not defined
  *         content:
@@ -83,6 +108,10 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -123,6 +152,8 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "Card added"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -131,6 +162,10 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -143,7 +178,7 @@
 
 /**
  * @swagger
- * /api/card/{id}:
+ * /api/cards/{id}:
  *   put:
  *     summary: Sets a name of a card
  *     tags: [Cards]
@@ -172,9 +207,11 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "updated"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -183,6 +220,10 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -224,9 +265,11 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "updated"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -235,6 +278,10 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:
@@ -267,6 +314,8 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "Card with Id = 2 is deleted"
  *       400:
  *         description: Card id validation error
  *         content:
@@ -275,6 +324,10 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
  *       500:
  *         description: Internal server error
  *         content:

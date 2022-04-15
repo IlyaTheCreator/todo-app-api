@@ -1,6 +1,6 @@
-const Cards = require('../db/tables/Cards');
+const Cards = require("../db/tables/Cards");
 const BaseController = require("./baseController");
-const { errors } = require('../rules/errors');
+const { errors } = require("../rules/errors");
 
 class CardController extends BaseController {
   constructor() {
@@ -8,76 +8,79 @@ class CardController extends BaseController {
   }
 
   /**
-    * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
-    * ex. http://localhost:8080/api/card
+   * Method for validating new card data before putting it into db
+   */
+  validateNewCard(card) {
+    if (!card.name || !card.name.toString().trim()) {
+      return errors.field.isNotEmpty("name");
+    }
+
+    if (!card.listId || !card.listId.toString().trim()) {
+      return errors.field.isNotEmpty("listId");
+    }
+
+    // Ошибка если тип name не равен типу из таблицы
+    if (typeof card.name !== CardController.types.name) {
+      return errors.types.general("name");
+    }
+
+    // Ошибка если тип listId не равен типу из таблицы
+    if (typeof card.listId !== CardController.types.listid) {
+      return errors.types.general("listId");
+    }
+  }
+
+  /**
+   * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
+   * ex. http://localhost:8080/api/card
    */
   async addCard(req, res) {
     try {
       const { name, listId } = req.body;
       const card = { name, listId };
 
-      if (!name || !name.toString().trim()) {
-        res.json(errors.field.isNotEmpty('name'));
+      const cardError = this.validateNewCard(card);
 
-        return;
-      }
-
-      if (!listId || !listId.toString().trim()) {
-        res.json(errors.field.isNotEmpty('listId'));
-
-        return;
-      }
-
-      // Ошибка если тип name не равен типу из таблицы
-      if (typeof name !== CardController.types.name) {
-        res.json(errors.types.general('name'));
-        return;
-      }
-
-      // Ошибка если тип listId не равен типу из таблицы
-      if (typeof listId !== CardController.types.listid) {
-        res.json(errors.types.general('listId'));
-        return;
+      if (cardError) {
+        throw new Error(cardError);
       }
 
       await Cards.create(card);
-      res.json('Card added');
+      res.json("Card added");
     } catch (e) {
-      if (e.toString().toLowerCase().includes('foreign')) {
+      if (e.toString().toLowerCase().includes("foreign")) {
         res.json(errors.cards.fk_added);
 
         return;
       }
 
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
-  };
+  }
 
   /**
    * GET запрос. Получение всех карточек
    * ex. http://localhost:8080/api/cards
-  */
+   */
   async getCards(req, res) {
     console.log(123123123);
     try {
       const cards = await Cards.findAll();
 
       if (!cards) {
-        res.json('There are no cards');
+        res.json("There are no cards");
       }
 
       res.json({ data: cards });
     } catch (e) {
-      console.log(e);
       res.json(e);
     }
-  };
+  }
 
   /**
    * GET запрос. Получение карточки по id
    * ex. http://localhost:8080/api/card/<id>
-  */
+   */
   async getCard(req, res) {
     try {
       const reqId = req.params.id;
@@ -114,13 +117,13 @@ class CardController extends BaseController {
       }
 
       if (!name || !name.toString().trim()) {
-        res.json(errors.field.isNotEmpty('name'));
+        res.json(errors.field.isNotEmpty("name"));
 
         return;
       }
 
       if (typeof name !== CardController.types.name) {
-        res.json(errors.types.general('name'));
+        res.json(errors.types.general("name"));
 
         return;
       }
@@ -128,7 +131,7 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.json('Updated');
+      res.json("Updated");
     } catch (e) {
       const { message } = e.errors[0];
       res.json(message);
@@ -152,7 +155,7 @@ class CardController extends BaseController {
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.json('Updated');
+      res.json("Updated");
     } catch (e) {
       console.log(e);
       res.json(e);
@@ -219,7 +222,7 @@ class CardController extends BaseController {
     } catch (e) {
       res.json(e);
     }
-  };
-};
+  }
+}
 
 module.exports = new CardController();

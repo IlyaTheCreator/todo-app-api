@@ -146,7 +146,7 @@ router.get('/cards/:id', cardController.getCard);
  *               items:
  *                 $ref: '#/components/schemas/Card'
  */
-router.post('/card', cardController.addCard);
+router.post('/cards', cardController.addCard);
 
 
 /**

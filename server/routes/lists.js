@@ -3,10 +3,10 @@ const listController = require('../controllers/listController');
 
 const router = new Router();
 
-router.post('/list', listController.addList);
+router.post('/lists', listController.addList);
 router.get('/lists', listController.getLists);
-router.delete('/list/:id', listController.deleteList);
-router.put('/list/:id', listController.setNameList);
-router.get('/list/:id', listController.getList);
+router.delete('/lists/:id', listController.deleteList);
+router.put('/lists/:id', listController.setNameList);
+router.get('/lists/:id', listController.getList);
 
 module.exports = router;

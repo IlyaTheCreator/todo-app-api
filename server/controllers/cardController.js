@@ -6,50 +6,27 @@ class CardController extends BaseController {
   constructor() {
     super(Cards);
   }
-
-  /**
-   * Method for validating new card data before putting it into db
-   */
-  validateNewCard(card) {
-    if (!card.name || !card.name.toString().trim()) {
-      return errors.field.isNotEmpty("name");
-    }
-
-    if (!card.listId || !card.listId.toString().trim()) {
-      return errors.field.isNotEmpty("listId");
-    }
-
-    // Ошибка если тип name не равен типу из таблицы
-    if (typeof card.name !== CardController.types.name) {
-      return errors.types.general("name");
-    }
-
-    // Ошибка если тип listId не равен типу из таблицы
-    if (typeof card.listId !== CardController.types.listid) {
-      return errors.types.general("listId");
-    }
-  }
-
   /**
    * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
-   * ex. http://localhost:8080/api/card
+   * ex. http://localhost:8080/api/cards
    */
-  async addCard(req, res) {
+  addCard = async (req, res) => {
     try {
       const { name, listId } = req.body;
       const card = { name, listId };
-
-      const cardError = this.validateNewCard(card);
+      const cardError = this.validate(card, CardController.types);
 
       if (cardError) {
-        throw new Error(cardError);
+        res.status(400).json(cardError);
+
+        return;
       }
 
       await Cards.create(card);
       res.json("Card added");
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
-        res.json(errors.cards.fk_added);
+        res.status(400).json(errors.cards.fk_added);
 
         return;
       }
@@ -63,7 +40,6 @@ class CardController extends BaseController {
    * ex. http://localhost:8080/api/cards
    */
   async getCards(req, res) {
-    console.log(123123123);
     try {
       const cards = await Cards.findAll();
 
@@ -73,13 +49,13 @@ class CardController extends BaseController {
 
       res.json({ data: cards });
     } catch (e) {
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * GET запрос. Получение карточки по id
-   * ex. http://localhost:8080/api/card/<id>
+   * ex. http://localhost:8080/api/cards/:id
    */
   async getCard(req, res) {
     try {
@@ -87,43 +63,38 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.json(errors.cards.notDefined);
+        res.status(400).json(errors.cards.notDefined);
 
         return;
       }
 
-      res.json({ data: card });
+      res.status(201).json({ data: card });
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * PUT запрос. Обновление имени для карточки
-   * ex. http://localhost:8080/api/card/<id>
+   * ex. http://localhost:8080/api/cards/:id
    * Имя принимает из тела запроса
    */
-  async setNameCard(req, res) {
+  setNameCard = async (req, res) => {
     try {
       const reqId = req.params.id;
       const card = await Cards.findOne({ where: { id: reqId } });
       const { name } = req.body;
 
       if (!card) {
-        res.json(errors.cards.notDefined);
+        res.status(400).json(errors.cards.notDefined);
 
         return;
       }
 
-      if (!name || !name.toString().trim()) {
-        res.json(errors.field.isNotEmpty("name"));
+      const cardError = this.validate({ name }, CardController.types);
 
-        return;
-      }
-
-      if (typeof name !== CardController.types.name) {
-        res.json(errors.types.general("name"));
+      if (cardError) {
+        res.status(400).json(cardError);
 
         return;
       }
@@ -131,16 +102,15 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.json("Updated");
+      res.status(202).json("Updated");
     } catch (e) {
-      const { message } = e.errors[0];
-      res.json(message);
+      res.status(400).json(e);
     }
   }
 
   /**
    * PUT запрос. Меняет флаг isCompleted
-   * ex. http://localhost:8080/api/card/complete/<id>
+   * ex. http://localhost:8080/api/card/complete/:id
    */
   async setCompleted(req, res) {
     try {
@@ -148,23 +118,22 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.json(errors.cards.notDefined);
+        res.status(400).json(errors.cards.notDefined);
 
         return;
       }
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.json("Updated");
+      res.status(202).json("Updated");
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * DELETE запрос. Удаление карточки
-   * ex. http://localhost:8080/api/card/<id>
+   * ex. http://localhost:8080/api/cards/:id
    */
   async deleteCard(req, res) {
     try {
@@ -178,17 +147,16 @@ class CardController extends BaseController {
         return;
       }
 
-      res.json(errors.cards.notDefined);
+      res.status(400).json(errors.cards.notDefined);
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * Фильтр запросов через параметры
-   * ex. http://localhost:8080/api/cards/filter?name=card 3
-   * ex. http://localhost:8080/api/cards/filter?isCompleted=1
+   * ex. http://localhost:8080/api/cards/filter?key=name&value=card
+   * ex. http://localhost:8080/api/cards/filter?key=isCompleted&value=true
   */
   filterCards = async (req, res) => {
     try {
@@ -218,9 +186,9 @@ class CardController extends BaseController {
         return;
       }
 
-      res.json(errors.cards.filter);
+      res.status(400).json(errors.cards.filter);
     } catch (e) {
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 }

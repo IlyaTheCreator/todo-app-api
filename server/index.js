@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
 
 const sequelize = require("./db/database");
 const cardRoutes = require("./routes/cards");

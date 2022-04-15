@@ -22,12 +22,6 @@ Cards.init({
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-    validate: {
-      isIn: {
-        args: [false, true, 1, 0],
-        msg: errors.types.boolean.message,
-      },
-    },
   },
   listId: {
     type: DataTypes.INTEGER,

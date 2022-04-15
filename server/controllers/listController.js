@@ -9,29 +9,21 @@ class ListController extends BaseController {
 
   /**
    * POST запрос. Добавление нового списка, данные из тела запроса
-   * ex. http://localhost:8080/api/list
+   * ex. http://localhost:8080/api/lists
    */
-  async addList(req, res) {
+  addList = async (req, res) => {
     try {
       const { name } = req.body;
       const list = { name };
-
-      const arr = [];
 
       /**
        * Проверка: было ли вообще получено поле name,
        * а если получено, то не является ли пустой строкой.
        */
-      if (!name || !name.toString().trim()) {
-        arr.push(errors.field.isNotEmpty('name'));
-      }
+      const listError = this.validate(list, ListController.types);
 
-      //Проверка типов
-      if (typeof name !== ListController.types.name) {
-        arr.push(errors.types.general('name'));
-      }
-      if (arr.length) {
-        res.status(400).json(arr);
+      if (listError) {
+        res.status(400).json(listError);
 
         return;
       }
@@ -40,13 +32,12 @@ class ListController extends BaseController {
       res.json('List Added');
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
-        res.json(errors.lists.uniqueName);
+        res.status(400).json(errors.lists.uniqueName);
 
         return;
       }
 
-      console.log(e);
-      res.json(e)
+      res.status(500).json(e)
     }
   }
 
@@ -63,7 +54,7 @@ class ListController extends BaseController {
 
         return;
       }
-      res.status(200).json({ date: lists });
+      res.json({ date: lists });
     } catch (e) {
       res.status(500).json(e);
     }
@@ -75,21 +66,20 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.json(errors.lists.notDefined);
+        res.status(400).json(errors.lists.notDefined);
 
         return;
       }
 
       res.json({ data: list });
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * DELETE запрос. Удаление карточки
-   * ex. http://localhost:8080/api/list/<id>
+   * ex. http://localhost:8080/api/lists/:id
    */
   async deleteList(req, res) {
     try {
@@ -98,45 +88,38 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.json(`List with Id = ${reqId} is deleted`);
+        res.status(202).json(`List with Id = ${reqId} is deleted`);
 
         return;
       }
 
-      res.json(errors.lists.notDefined);
+      res.status(400).json(errors.lists.notDefined);
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 
   /**
    * PUT запрос. Обновление имени для списка
-   * ex. http://localhost:8080/api/list/<id>
+   * ex. http://localhost:8080/api/lists/:id
    * Имя принимает из тела запроса
    */
-  async setNameList(req, res) {
+  setNameList = async (req, res) => {
     try {
       const reqId = req.params.id;
       const { name } = req.body;
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.json(errors.lists.notDefined);
+        res.status(400).json(errors.lists.notDefined);
 
         return;
       }
 
-      // Аналогично в методе Addlist
-      if (!name || !name.toString().trim()) {
-        res.json(errors.field.isNotEmpty('name'));
+      const listError = this.validate({ name }, ListController.types);
 
-        return;
-      }
-
-      // Аналогично в методе Addlist
-      if (typeof name !== ListController.types.name) {
-        res.json(errors.types.general('name'));
+      if (listError) {
+        res.status(400).json(listError);
 
         return;
       }
@@ -144,10 +127,9 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.json('Name updated');
+      res.status(202).json('Name updated');
     } catch (e) {
-      console.log(e);
-      res.json(e);
+      res.status(500).json(e);
     }
   }
 }

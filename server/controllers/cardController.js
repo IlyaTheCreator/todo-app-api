@@ -1,0 +1,196 @@
+const Cards = require("../db/tables/Cards");
+const BaseController = require("./baseController");
+const { errors } = require("../rules/errors");
+
+class CardController extends BaseController {
+  constructor() {
+    super(Cards);
+  }
+  /**
+   * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
+   * ex. http://localhost:8080/api/cards
+   */
+  addCard = async (req, res) => {
+    try {
+      const { name, listId } = req.body;
+      const card = { name, listId };
+      const cardError = this.validate(card, CardController.types);
+
+      if (cardError) {
+        res.status(400).json(cardError);
+
+        return;
+      }
+
+      await Cards.create(card);
+      res.status(201).json("Card added");
+    } catch (e) {
+      if (e.toString().toLowerCase().includes("foreign")) {
+        res.status(400).json(errors.cards.fk_added);
+
+        return;
+      }
+
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * GET запрос. Получение всех карточек
+   * ex. http://localhost:8080/api/cards
+   */
+  async getCards(req, res) {
+    try {
+      const cards = await Cards.findAll();
+
+      if (!cards) {
+        res.json("There are no cards");
+      }
+
+      res.json({ data: cards });
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * GET запрос. Получение карточки по id
+   * ex. http://localhost:8080/api/cards/:id
+   */
+  async getCard(req, res) {
+    try {
+      const reqId = req.params.id;
+      const card = await Cards.findOne({ where: { id: reqId } });
+
+      if (!card) {
+        res.status(400).json(errors.cards.notDefined);
+
+        return;
+      }
+
+      res.json({ data: card });
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * PUT запрос. Обновление имени для карточки
+   * ex. http://localhost:8080/api/cards/:id
+   * Имя принимает из тела запроса
+   */
+  setNameCard = async (req, res) => {
+    try {
+      const reqId = req.params.id;
+      const card = await Cards.findOne({ where: { id: reqId } });
+      const { name } = req.body;
+
+      if (!card) {
+        res.status(400).json(errors.cards.notDefined);
+
+        return;
+      }
+
+      const cardError = this.validate({ name }, CardController.types);
+
+      if (cardError) {
+        res.status(400).json(cardError);
+
+        return;
+      }
+
+      card.name = name;
+      await card.save();
+
+      res.status(202).json("Updated");
+    } catch (e) {
+      res.status(400).json(e);
+    }
+  }
+
+  /**
+   * PUT запрос. Меняет флаг isCompleted
+   * ex. http://localhost:8080/api/card/complete/:id
+   */
+  async setCompleted(req, res) {
+    try {
+      const reqId = req.params.id;
+      const card = await Cards.findOne({ where: { id: reqId } });
+
+      if (!card) {
+        res.status(400).json(errors.cards.notDefined);
+
+        return;
+      }
+      card.isCompleted = !card.isCompleted;
+      await card.save();
+
+      res.status(202).json("Updated");
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * DELETE запрос. Удаление карточки
+   * ex. http://localhost:8080/api/cards/:id
+   */
+  async deleteCard(req, res) {
+    try {
+      const reqId = req.params.id;
+      const card = await Cards.findOne({ where: { id: reqId } });
+
+      if (card) {
+        await Cards.destroy({ where: { id: reqId } });
+        res.status(202).json(`Card with Id = ${reqId} is deleted`);
+
+        return;
+      }
+
+      res.status(400).json(errors.cards.notDefined);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * Фильтр запросов через параметры
+   * ex. http://localhost:8080/api/cards/filter?key=name&value=card
+   * ex. http://localhost:8080/api/cards/filter?key=isCompleted&value=true
+  */
+  filterCards = async (req, res) => {
+    try {
+      const { key } = req.query;
+      const value = req.query.value.toLowerCase();
+
+      if (!key) {
+        this.getCards(req, res);
+
+        return;
+      }
+
+      // Проверка есть ли такой параметр
+      if (Object.keys(CardController.types).includes(key.toLowerCase())) {
+        let booleanValue;
+        if (value === 'true') {
+          booleanValue = 1;
+        }
+
+        if (value === 'false') {
+          booleanValue = 0;
+        }
+
+        const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
+        res.json({ date: cards });
+
+        return;
+      }
+
+      res.status(400).json(errors.cards.filter);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+}
+
+module.exports = new CardController();

@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
+const logger = require("morgan");
+const fs = require("fs");
 
 const sequelize = require("./db/database");
 const cardRoutes = require("./routes/cards");
@@ -33,6 +35,14 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 const app = express();
+
+// Defining logging (file and console)
+const operationsLogStream = fs.createWriteStream(
+  __dirname + "/logs/" + "operations.log",
+  { flags: "a" }
+);
+app.use(logger("common", { stream: operationsLogStream }));
+app.use(logger("dev"));
 
 app.use(cors());
 app.use(express.json());

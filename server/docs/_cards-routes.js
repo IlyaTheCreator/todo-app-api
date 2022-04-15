@@ -70,7 +70,7 @@
  *               items:
  *                 $ref: '#/components/schemas/Card'
  *       400:
- *         description: Card parameters validation error
+ *         description: undefined property
  *         content:
  *           application/json:
  *             schema:
@@ -79,8 +79,8 @@
  *                 $ref: '#/components/schemas/Error'
  *             example:
  *              statusCode: 1
- *              name: "some-error"
- *              message: "some error message"
+ *              name: "undefined-property"
+ *              message: "property is not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -139,8 +139,8 @@
  *                 $ref: '#/components/schemas/Error'
  *             example:
  *               statusCode: 1
- *               name: "some-error"
- *               message: "some error message"
+ *               name: "undefined-card"
+ *               message: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -184,7 +184,7 @@
  *             example:
  *              "Card added"
  *       400:
- *         description: Card data validation error
+ *         description: FOREIGN KEY constraint
  *         content:
  *           application/json:
  *             schema:
@@ -192,9 +192,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *               statusCode: 1
- *               name: "some-error"
- *               message: "some error message"
+ *               statusCode: 9
+ *               name: "no-such-entity"
+ *               message: "FOREIGN KEY constraint failed. There is no entity with this Id"
  *       500:
  *         description: Internal server error
  *         content:
@@ -242,7 +242,7 @@
  *             example:
  *               "updated"
  *       400:
- *         description: Card data validation error
+ *         description: Card data validation error or not defined
  *         content:
  *           application/json:
  *             schema:
@@ -250,9 +250,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *               statusCode: 1
- *               name: "some-error"
- *               message: "some error message"
+ *               statusCode: 6
+ *               name: "undefined-card"
+ *               message: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -265,7 +265,7 @@
 
 /**
  * @swagger
- * /api/cards:
+ * /api/cards/complete/{id}:
  *   put:
  *     summary: Edits existing card's isCompleted property by its id
  *     tags: [Cards]
@@ -308,9 +308,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *               statusCode: 1
- *               name: "some-error"
- *               message: "some error message"
+ *               statusCode: 6
+ *               name: "undefined-card"
+ *               message: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -346,7 +346,7 @@
  *             example:
  *               "Card with Id = 2 is deleted"
  *       400:
- *         description: Card id validation error
+ *         description: Card is not defined
  *         content:
  *           application/json:
  *             schema:
@@ -354,9 +354,9 @@
  *               items:
  *                 $ref: '#/components/schemas/Error'
  *             example:
- *               statusCode: 1
- *               name: "some-error"
- *               message: "some error message"
+ *               statusCode: 6
+ *               name: "undefined-card"
+ *               message: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:

@@ -54,7 +54,7 @@ class ListController extends BaseController {
 
         return;
       }
-      res.json({ date: lists });
+      res.json({ data: lists });
     } catch (e) {
       res.status(500).json(e);
     }

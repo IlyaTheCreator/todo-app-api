@@ -11,7 +11,9 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 const PORT = process.env.PORT || 8080;
 
-sequelize.sync().then(() => console.log("db is ready"));
+sequelize.sync().then(() => {
+  console.log("db is ready");
+});
 
 // Swagger options
 const options = {

@@ -10,7 +10,10 @@
     "swagger-ui-express": "^4.3.0"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "bigInsert": "node bigInsert.js",
+    "smallInsert": "node smallInsert.js",
+    "clear": "node clearDB.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

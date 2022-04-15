@@ -21,7 +21,7 @@
  *                    properties:
  *                      id: 
  *                        type: integer
- *                        example: 2281337
+ *                        example: 1
  *                      name: 
  *                        type: string
  *                        example: "Throw out the trash"
@@ -30,7 +30,7 @@
  *                        example: false
  *                      listId:
  *                        type: integer
- *                        example: 2281337
+ *                        example: 1
  *       500:
  *         description: Internal server error. Could not get cards
  *         content:
@@ -119,7 +119,7 @@
  *                  properties:
  *                    id: 
  *                      type: integer
- *                      example: 2281337
+ *                      example: 1
  *                    name: 
  *                      type: string
  *                      example: "Throw out the trash"
@@ -128,7 +128,7 @@
  *                      example: false
  *                    listId:
  *                      type: integer
- *                      example: 2281337
+ *                      example: 1
  *       400:
  *         description: Card with such id is not defined
  *         content:

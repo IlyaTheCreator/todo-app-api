@@ -1,25 +1,16 @@
 const Lists = require('../db/tables/Lists');
+const BaseController = require("./baseController");
 const { errors } = require('../rules/errors');
 
-class ListController {
+class ListController extends BaseController {
+  constructor() {
+    super(Lists);
+  }
+
   /**
    * POST запрос. Добавление нового списка, данные из тела запроса
    * ex. http://localhost:8080/api/list
    */
-  static types = {};
-
-  constructor() {
-    Object.keys(Lists.getAttributes()).forEach((key) => {
-      if (Lists.getAttributes()[key].type.key === 'INTEGER') {
-        ListController.types[key.toLowerCase()] = 'number';
-
-        return;
-      }
-
-      ListController.types[key.toLowerCase()] = Lists.getAttributes()[key].type.key.toLowerCase();
-    });
-  }
-
   async addList(req, res) {
     try {
       const { name } = req.body;

@@ -1,20 +1,10 @@
 const Cards = require('../db/tables/Cards');
+const BaseController = require("./baseController");
 const { errors } = require('../rules/errors');
 
-class CardController {
-  static types = {};
-
+class CardController extends BaseController {
   constructor() {
-    //Записываем в статическое свойство types объект со значениями и типами данных полей
-    Object.keys(Cards.getAttributes()).forEach((key) => {
-      if (Cards.getAttributes()[key].type.key === 'INTEGER') {
-        CardController.types[key.toLowerCase()] = 'number';
-
-        return;
-      }
-
-      CardController.types[key.toLowerCase()] = Cards.getAttributes()[key].type.key.toLowerCase();
-    });
+    super(Cards);
   }
 
   /**

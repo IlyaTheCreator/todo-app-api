@@ -57,7 +57,7 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: Existing city id
+ *         description: Existing card id
  *     responses:
  *       200:
  *         description: Single found card
@@ -185,7 +185,7 @@
  *         schema:
  *           type: string
  *         required: true
- *         description: Existing city id
+ *         description: Existing card id
  *     responses:
  *       200:
  *         description: Card deleted

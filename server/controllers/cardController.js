@@ -23,7 +23,7 @@ class CardController extends BaseController {
       }
 
       await Cards.create(card);
-      res.json("Card added");
+      res.status(201).json("Card added");
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
         res.status(400).json(errors.cards.fk_added);
@@ -68,7 +68,7 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(201).json({ data: card });
+      res.json({ data: card });
     } catch (e) {
       res.status(500).json(e);
     }
@@ -142,7 +142,7 @@ class CardController extends BaseController {
 
       if (card) {
         await Cards.destroy({ where: { id: reqId } });
-        res.json(`Card with Id = ${reqId} is deleted`);
+        res.status(202).json(`Card with Id = ${reqId} is deleted`);
 
         return;
       }

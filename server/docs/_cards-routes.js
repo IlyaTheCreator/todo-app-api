@@ -6,13 +6,39 @@
  *     tags: [Cards]
  *     responses:
  *       200:
- *         description: The list of the cards
+ *         description: The list of the cards (can be empty)
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *               properties:
+ *                data: 
+ *                  type: array
+ *                  items: 
+ *                    type: object
+ *                    properties:
+ *                      id: 
+ *                        type: integer
+ *                        example: 2281337
+ *                      name: 
+ *                        type: string
+ *                        example: "Throw out the trash"
+ *                      isCompleted: 
+ *                        type: boolean
+ *                        example: false
+ *                      listId:
+ *                        type: integer
+ *                        example: 2281337
+ *       500:
+ *         description: Internal server error. Could not get cards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -43,6 +69,26 @@
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *       400:
+ *         description: Card parameters validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -67,6 +113,42 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *               properties:
+ *                data: 
+ *                  type: object
+ *                  properties:
+ *                    id: 
+ *                      type: integer
+ *                      example: 2281337
+ *                    name: 
+ *                      type: string
+ *                      example: "Throw out the trash"
+ *                    isCompleted: 
+ *                      type: boolean
+ *                      example: false
+ *                    listId:
+ *                      type: integer
+ *                      example: 2281337
+ *       400:
+ *         description: Card with such id is not defined
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -91,7 +173,7 @@
  *               listId:
  *                 type: number
  *     responses:
- *       200:
+ *       201:
  *         description: Card created successfully
  *         content:
  *           application/json:
@@ -99,11 +181,33 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "Card added"
+ *       400:
+ *         description: Card data validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
  * @swagger
- * /api/card/{id}:
+ * /api/cards/{id}:
  *   put:
  *     summary: Sets a name of a card
  *     tags: [Cards]
@@ -127,14 +231,36 @@
  *               name:
  *                 type: string
  *     responses:
- *       200:
- *         description: The card with a new name
+ *       202:
+ *         description: The card was updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "updated"
+ *       400:
+ *         description: Card data validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -163,14 +289,36 @@
  *               idCompleted:
  *                 type: boolean
  *     responses:
- *       200:
- *         description: Card edited successfully
+ *       202:
+ *         description: The card was updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "updated"
+ *       400:
+ *         description: Card data validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -187,12 +335,34 @@
  *         required: true
  *         description: Existing card id
  *     responses:
- *       200:
- *         description: Card deleted
+ *       202:
+ *         description: Card deleted successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *             example:
+ *              "Card with Id = 2 is deleted"
+ *       400:
+ *         description: Card id validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *             example:
+ *              statusCode: 1
+ *              name: "some-error"
+ *              message: "some error message"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
  */

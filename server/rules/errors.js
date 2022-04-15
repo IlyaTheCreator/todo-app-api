@@ -6,12 +6,12 @@ const errors = {
       message: 'property is not defined',
     },
     fk_added: {
-      statusCode: 10,
+      statusCode: 9,
       name: 'no-such-entity',
       message: 'FOREIGN KEY constraint failed. There is no entity with this Id',
     },
     notDefined: {
-      statusCode: 7,
+      statusCode: 6,
       name: 'undefined-card',
       message: 'Card in not defined',
     }
@@ -23,25 +23,25 @@ const errors = {
       message: "Name must be unique",
     },
     notDefined: {
-      statusCode: 9,
+      statusCode: 8,
       name: 'undefined-list',
       message: 'List in not defined',
     }
   },
   types: {
     string: {
-      statusCode: 4,
+      statusCode: 3,
       name: 'not-string-type',
       message: 'The value must be String',
     },
     number: {
-      statusCode: 5,
+      statusCode: 4,
       name: 'not-number-type',
       message: 'The value must be Number',
     },
     general(field) {
       return {
-        statusCode: 6,
+        statusCode: 5,
         name: 'incorrect-type',
         message: `The '${field}' type is incorrectly set`,
       }
@@ -50,7 +50,7 @@ const errors = {
   field: {
     isNotEmpty(field) {
       return {
-        statusCode: 8,
+        statusCode: 7,
         name: 'empty-field',
         message: `The '${field}' field cannot be empty`
       }

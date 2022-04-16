@@ -14,19 +14,9 @@ const errors = {
       statusCode: 6,
       name: 'undefined-card',
       message: 'Card in not defined',
-    },
-    noName: {
-      statusCode: 0,
-      name: 'no-name',
-      message: "Name mustn't be empty",
     }
   },
   lists: {
-    noName: {
-      statusCode: 0,
-      name: 'no-name',
-      message: "Name mustn't be empty",
-    },
     uniqueName: {
       statusCode: 2,
       name: 'list-name-exist',

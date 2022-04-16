@@ -17,16 +17,16 @@ class CardController extends BaseController {
       const cardError = this.validate(card, CardController.types);
 
       if (cardError) {
-        res.status(400).json(cardError);
+        res.status(409).json(cardError);
 
         return;
       }
 
       await Cards.create(card);
-      res.status(201).json(messages.card.added);
+      res.status(200).json(messages.card.added);
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
-        res.status(400).json(errors.cards.fk_added);
+        res.status(409).json(errors.cards.fk_added);
 
         return;
       }
@@ -63,7 +63,7 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.status(400).json(errors.cards.notDefined);
+        res.status(409).json(errors.cards.notDefined);
 
         return;
       }
@@ -86,7 +86,7 @@ class CardController extends BaseController {
       const { name } = req.body;
 
       if (!card) {
-        res.status(400).json(errors.cards.notDefined);
+        res.status(409).json(errors.cards.notDefined);
 
         return;
       }
@@ -94,7 +94,7 @@ class CardController extends BaseController {
       const cardError = this.validate({ name }, CardController.types);
 
       if (cardError) {
-        res.status(400).json(cardError);
+        res.status(409).json(cardError);
 
         return;
       }
@@ -102,9 +102,9 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.status(202).json(messages.card.updated);
+      res.status(200).json(messages.card.updated);
     } catch (e) {
-      res.status(400).json(e);
+      res.status(409).json(e);
     }
   }
 
@@ -118,14 +118,14 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.status(400).json(errors.cards.notDefined);
+        res.status(409).json(errors.cards.notDefined);
 
         return;
       }
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.status(202).json(messages.card.updated);
+      res.status(200).json(messages.card.updated);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -142,12 +142,12 @@ class CardController extends BaseController {
 
       if (card) {
         await Cards.destroy({ where: { id: reqId } });
-        res.status(202).json(messages.card.deleted);
+        res.status(200).json(messages.card.deleted);
 
         return;
       }
 
-      res.status(400).json(errors.cards.notDefined);
+      res.status(409).json(errors.cards.notDefined);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -186,7 +186,7 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(400).json(errors.cards.filter);
+      res.status(409).json(errors.cards.filter);
     } catch (e) {
       res.status(500).json(e);
     }

@@ -23,16 +23,16 @@ class ListController extends BaseController {
       const listError = this.validate(list, ListController.types);
 
       if (listError) {
-        res.status(400).json(listError);
+        res.status(409).json(listError);
 
         return;
       }
 
       await Lists.create(list);
-      res.status(201).json(messages.list.added);
+      res.status(200).json(messages.list.added);
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
-        res.status(400).json(errors.lists.uniqueName);
+        res.status(409).json(errors.lists.uniqueName);
 
         return;
       }
@@ -66,7 +66,7 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(400).json(errors.lists.notDefined);
+        res.status(409).json(errors.lists.notDefined);
 
         return;
       }
@@ -88,12 +88,12 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(202).json(messages.list.deleted);
+        res.status(200).json(messages.list.deleted);
 
         return;
       }
 
-      res.status(400).json(errors.lists.notDefined);
+      res.status(409).json(errors.lists.notDefined);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -111,7 +111,7 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(400).json(errors.lists.notDefined);
+        res.status(409).json(errors.lists.notDefined);
 
         return;
       }
@@ -119,7 +119,7 @@ class ListController extends BaseController {
       const listError = this.validate({ name }, ListController.types);
 
       if (listError) {
-        res.status(400).json(listError);
+        res.status(409).json(listError);
 
         return;
       }
@@ -127,7 +127,7 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(202).json(messages.list.updated);
+      res.status(200).json(messages.list.updated);
     } catch (e) {
       res.status(500).json(e);
     }

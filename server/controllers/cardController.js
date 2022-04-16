@@ -1,6 +1,6 @@
 const Cards = require("../db/tables/Cards");
 const BaseController = require("./baseController");
-const { errors } = require("../rules/errors");
+const { errors, messages } = require("../rules/errors");
 
 class CardController extends BaseController {
   constructor() {
@@ -23,7 +23,7 @@ class CardController extends BaseController {
       }
 
       await Cards.create(card);
-      res.status(201).json("Card added");
+      res.status(201).json(messages.card.added);
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
         res.status(400).json(errors.cards.fk_added);
@@ -44,7 +44,7 @@ class CardController extends BaseController {
       const cards = await Cards.findAll();
 
       if (!cards) {
-        res.json("There are no cards");
+        res.json(messages.card.noData);
       }
 
       res.json({ data: cards });
@@ -102,7 +102,7 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.status(202).json("Updated");
+      res.status(202).json(messages.card.updated);
     } catch (e) {
       res.status(400).json(e);
     }
@@ -125,7 +125,7 @@ class CardController extends BaseController {
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.status(202).json("Updated");
+      res.status(202).json(messages.card.updated);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -142,7 +142,7 @@ class CardController extends BaseController {
 
       if (card) {
         await Cards.destroy({ where: { id: reqId } });
-        res.status(202).json(`Card with Id = ${reqId} is deleted`);
+        res.status(202).json(messages.card.deleted);
 
         return;
       }

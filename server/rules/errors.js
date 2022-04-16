@@ -14,9 +14,19 @@ const errors = {
       statusCode: 6,
       name: 'undefined-card',
       message: 'Card in not defined',
+    },
+    noName: {
+      statusCode: 0,
+      name: 'no-name',
+      message: "Name mustn't be empty",
     }
   },
   lists: {
+    noName: {
+      statusCode: 0,
+      name: 'no-name',
+      message: "Name mustn't be empty",
+    },
     uniqueName: {
       statusCode: 2,
       name: 'list-name-exist',
@@ -59,4 +69,19 @@ const errors = {
 
 };
 
-module.exports = { errors };
+const messages = {
+  list: {
+    added: {message: 'List added'},
+    deleted: {message: 'List deleted'},
+    updated: {message: 'List updated'},
+    noData: {message: 'There are no lists'}
+  },
+  card: {
+    added: {message: 'Card added'},
+    deleted: {message: 'Card deleted'},
+    updated: {message: 'Card updated'},
+    noData: {message: 'There are no cards'}
+  }
+}
+
+module.exports = { errors, messages };

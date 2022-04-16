@@ -1,6 +1,6 @@
 const Lists = require('../db/tables/Lists');
 const BaseController = require("./baseController");
-const { errors } = require('../rules/errors');
+const { errors, messages } = require('../rules/errors');
 
 class ListController extends BaseController {
   constructor() {
@@ -29,7 +29,7 @@ class ListController extends BaseController {
       }
 
       await Lists.create(list);
-      res.status(201).json('List Added');
+      res.status(201).json(messages.list.added);
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
         res.status(400).json(errors.lists.uniqueName);
@@ -50,7 +50,7 @@ class ListController extends BaseController {
       const lists = await Lists.findAll();
 
       if (!lists) {
-        res.json('There are no lists');
+        res.json(messages.list.noData);
 
         return;
       }
@@ -88,7 +88,7 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(202).json(`List with Id = ${reqId} is deleted`);
+        res.status(202).json(messages.list.deleted);
 
         return;
       }
@@ -127,7 +127,7 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(202).json('Name updated');
+      res.status(202).json(messages.list.updated);
     } catch (e) {
       res.status(500).json(e);
     }

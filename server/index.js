@@ -3,6 +3,7 @@ const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
 const logger = require("morgan");
 const fs = require("fs");
+const path = require('path');
 
 const sequelize = require("./db/database");
 const cardRoutes = require("./routes/cards");
@@ -53,6 +54,10 @@ app.use("/api", listRoutes);
 
 // Defining a separate route for docs page
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+
+// put ui build in folder ui-build
+app.use(express.static(path.join(__dirname, 'ui-build')))
+app.get('/*', (req, res) => res.sendFile(`${__dirname}/ui-build/index.html`));
 
 const start = async () => {
   try {

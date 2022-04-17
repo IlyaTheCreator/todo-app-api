@@ -181,7 +181,7 @@ class CardController extends BaseController {
         }
 
         const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
-        res.json({ date: cards });
+        res.json({ data: cards });
 
         return;
       }

@@ -212,6 +212,7 @@ class CardController extends BaseController {
 
           if (Object.keys(CardController.types).includes(key.toLowerCase())) {
             let booleanValue;
+
             if (value === 'true') {
               booleanValue = 1;
             }
@@ -224,9 +225,12 @@ class CardController extends BaseController {
           }
 
         }
+        
         const cards = await Cards.findAll({ where });
         
-        res.json({ data: cards });
+        res.status(200).json({ data: cards });
+
+        return;
       }
     } catch (e) {
       res.status(500).json(e);

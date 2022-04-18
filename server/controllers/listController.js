@@ -67,8 +67,8 @@ class ListController extends BaseController {
     }
   }
 
-    /**
-   * PUT запрос. Получение списка по id
+  /**
+   * GET запрос. Получение списка по id
    * ex. http://localhost:8080/api/lists/:id
    */
   async getList(req, res) {
@@ -82,7 +82,7 @@ class ListController extends BaseController {
         return;
       }
 
-      res.json({ data: list });
+      res.status(200).json({ data: list });
     } catch (e) {
       res.status(500).json({ data: e });
     }
@@ -99,7 +99,7 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(202).json({
+        res.status(200).json({
           data: {
             id: list.id,
             ...messages.list.deleted
@@ -143,7 +143,7 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(202).json({
+      res.status(200).json({
         data: {
           id: list.id,
           ...messages.list.updated

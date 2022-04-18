@@ -288,7 +288,7 @@
  *               name:
  *                 type: string
  *     responses:
- *       202:
+ *       200:
  *         description: The card was updated successfully
  *         content:
  *           application/json:
@@ -300,6 +300,9 @@
  *                data: 
  *                   type: object
  *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
  *                     message: 
  *                       type: string
  *                       example: "Card updated"
@@ -360,7 +363,7 @@
  *               idCompleted:
  *                 type: boolean
  *     responses:
- *       202:
+ *       200:
  *         description: The card was updated successfully
  *         content:
  *           application/json:
@@ -372,6 +375,9 @@
  *                data: 
  *                   type: object
  *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
  *                     message: 
  *                       type: string
  *                       example: "Card updated"
@@ -420,7 +426,7 @@
  *         required: true
  *         description: Existing card id
  *     responses:
- *       202:
+ *       200:
  *         description: Card deleted successfully
  *         content:
  *           application/json:
@@ -432,6 +438,9 @@
  *                data: 
  *                   type: object
  *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
  *                     message: 
  *                       type: string
  *                       example: "Card updated"

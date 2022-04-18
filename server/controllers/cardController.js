@@ -113,7 +113,12 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.status(200).json({ data: messages.card.updated });
+      res.status(200).json({
+        data: {
+          id: card.id,
+          ...messages.card.updated
+        }
+      });
     } catch (e) {
       res.status(409).json({ data: e });
     }
@@ -136,7 +141,12 @@ class CardController extends BaseController {
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.status(200).json({ data: messages.card.updated });
+      res.status(200).json({
+        data: {
+          id: card.id,
+          ...messages.card.updated
+        }
+      });
     } catch (e) {
       res.status(500).json({ data: e });
     }
@@ -153,7 +163,12 @@ class CardController extends BaseController {
 
       if (card) {
         await Cards.destroy({ where: { id: reqId } });
-        res.status(200).json({ data: messages.card.deleted });
+        res.status(200).json({
+          data: {
+            id: card.id,
+            ...messages.card.deleted
+          }
+        });
 
         return;
       }

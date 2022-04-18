@@ -117,7 +117,7 @@
  *         required: true
  *         description: Existing list id
  *     responses:
- *       202:
+ *       200:
  *         description: List deleted
  *         content:
  *           application/json:
@@ -192,7 +192,7 @@
  *               name:
  *                 type: string
  *     responses:
- *       202:
+ *       200:
  *         description: The list with a new name
  *         content:
  *           application/json:

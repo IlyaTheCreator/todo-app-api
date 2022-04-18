@@ -1,7 +1,8 @@
 const Lists = require('../db/tables/Lists');
 const Cards = require('../db/tables/Cards');
 const BaseController = require("./baseController");
-const { errors, messages } = require('../rules/errors');
+const { errors } = require('../rules/errors');
+const { messages } = require('../rules/messages');
 
 
 class ListController extends BaseController {
@@ -67,10 +68,10 @@ class ListController extends BaseController {
     }
   }
 
-    /**
-   * PUT запрос. Получение списка по id
-   * ex. http://localhost:8080/api/lists/:id
-   */
+  /**
+ * PUT запрос. Получение списка по id
+ * ex. http://localhost:8080/api/lists/:id
+ */
   async getList(req, res) {
     try {
       const reqId = req.params.id;

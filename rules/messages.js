@@ -12,7 +12,8 @@ const messages = {
     deletedAll: { message: 'All cards deleted' },
     updated: { message: 'Card updated' },
     updatedAll: { message: 'All cards updated' },
-    noData: { message: 'There are no cards' }
+    noData: { message: 'There are no cards' },
+    deleteComplete: { message: 'Completed cards removed' },
   }
 };
 

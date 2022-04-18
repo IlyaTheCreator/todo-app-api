@@ -24,8 +24,10 @@ class CardController extends BaseController {
 
       const data = await Cards.create(card);
       res.status(200).json({
-        id: data.id,
-        ...messages.card.added
+        data: {
+          id: data.id,
+          ...messages.card.added
+        }
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
@@ -190,6 +192,46 @@ class CardController extends BaseController {
       }
 
       res.status(409).json(errors.cards.filter);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * Фильтр запросов через параметры
+   * ex. http://localhost:8080/api/cards/multifilter?key=value
+   * ex. http://localhost:8080/api/cards/multifilter?isCompleted=true&listId=1
+  */
+  multiFilterCards = async (req, res) => {
+    try {
+      const where = {};
+
+      for (const key in req.query) {
+        if (Object.hasOwnProperty.call(req.query, key)) {
+          const value = req.query[key];
+
+          if (Object.keys(CardController.types).includes(key.toLowerCase())) {
+            let booleanValue;
+
+            if (value === 'true') {
+              booleanValue = 1;
+            }
+
+            if (value === 'false') {
+              booleanValue = 0;
+            }
+
+            where[key] = booleanValue ?? value
+          }
+
+        }
+
+        const cards = await Cards.findAll({ where });
+        
+        res.status(200).json({ data: cards });
+
+        return;
+      }
     } catch (e) {
       res.status(500).json(e);
     }

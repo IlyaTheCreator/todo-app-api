@@ -166,49 +166,10 @@ class CardController extends BaseController {
 
   /**
    * Фильтр запросов через параметры
-   * ex. http://localhost:8080/api/cards/filter?key=name&value=card
-   * ex. http://localhost:8080/api/cards/filter?key=isCompleted&value=true
+   * ex. http://localhost:8080/api/cards/filter?key=value
+   * ex. http://localhost:8080/api/cards/filter?isCompleted=true&listId=1
   */
   filterCards = async (req, res) => {
-    try {
-      const { key } = req.query;
-      const value = req.query.value.toLowerCase();
-
-      if (!key) {
-        this.getCards(req, res);
-
-        return;
-      }
-
-      // Проверка есть ли такой параметр
-      if (Object.keys(CardController.types).includes(key.toLowerCase())) {
-        let booleanValue;
-        if (value === 'true') {
-          booleanValue = 1;
-        }
-
-        if (value === 'false') {
-          booleanValue = 0;
-        }
-
-        const cards = await Cards.findAll({ where: { [key]: [booleanValue ?? value] } });
-        res.json({ data: cards });
-
-        return;
-      }
-
-      res.status(409).json({ data: errors.cards.filter });
-    } catch (e) {
-      res.status(500).json({ data: e });
-    }
-  }
-
-  /**
-   * Фильтр запросов через параметры
-   * ex. http://localhost:8080/api/cards/multifilter?key=value
-   * ex. http://localhost:8080/api/cards/multifilter?isCompleted=true&listId=1
-  */
-  multiFilterCards = async (req, res) => {
     try {
       const where = {};
 

@@ -25,7 +25,7 @@ class ListController extends BaseController {
       const listError = this.validate(list, ListController.types);
 
       if (listError) {
-        res.status(409).json(listError);
+        res.status(409).json({ data: listError });
 
         return;
       }
@@ -37,12 +37,12 @@ class ListController extends BaseController {
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
-        res.status(409).json(errors.lists.uniqueName);
+        res.status(409).json({ data: errors.lists.uniqueName });
 
         return;
       }
 
-      res.status(500).json(e)
+      res.status(500).json({ data: e })
     }
   }
 
@@ -55,13 +55,13 @@ class ListController extends BaseController {
       const lists = await Lists.findAll();
 
       if (!lists) {
-        res.json(messages.list.noData);
+        res.json({ data: messages.list.noData });
 
         return;
       }
       res.json({ data: lists });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -71,14 +71,14 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(409).json(errors.lists.notDefined);
+        res.status(409).json({ data: errors.lists.notDefined });
 
         return;
       }
 
       res.json({ data: list });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -93,14 +93,14 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(200).json(messages.list.deleted);
+        res.status(200).json({ data: messages.list.deleted });
 
         return;
       }
 
-      res.status(409).json(errors.lists.notDefined);
+      res.status(409).json({ data: errors.lists.notDefined });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -116,7 +116,7 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(409).json(errors.lists.notDefined);
+        res.status(409).json({ data: errors.lists.notDefined });
 
         return;
       }
@@ -124,7 +124,7 @@ class ListController extends BaseController {
       const listError = this.validate({ name }, ListController.types);
 
       if (listError) {
-        res.status(409).json(listError);
+        res.status(409).json({ data: listError });
 
         return;
       }
@@ -132,9 +132,9 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(200).json(messages.list.updated);
+      res.status(200).json({ data: messages.list.updated });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -142,9 +142,9 @@ class ListController extends BaseController {
     try {
       Lists.destroy({ truncate: true });
 
-      res.json({ data: { message: 'Все списки удалены' } });
+      res.json({ data: { message: 'All the lists are deleted' } });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 }

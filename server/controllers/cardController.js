@@ -17,7 +17,7 @@ class CardController extends BaseController {
       const cardError = this.validate(card, CardController.types);
 
       if (cardError) {
-        res.status(409).json(cardError);
+        res.status(409).json({ data: cardError });
 
         return;
       }
@@ -36,7 +36,7 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -49,12 +49,12 @@ class CardController extends BaseController {
       const cards = await Cards.findAll();
 
       if (!cards) {
-        res.json(messages.card.noData);
+        res.json({ data: messages.card.noData });
       }
 
       res.json({ data: cards });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -68,14 +68,16 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.status(409).json(errors.cards.notDefined);
+        res.status(409).json({ data: {
+          message: errors.cards.notDefined
+        }});
 
         return;
       }
 
       res.json({ data: card });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -91,7 +93,7 @@ class CardController extends BaseController {
       const { name } = req.body;
 
       if (!card) {
-        res.status(409).json(errors.cards.notDefined);
+        res.status(409).json({ data: errors.cards.notDefined });
 
         return;
       }
@@ -99,7 +101,7 @@ class CardController extends BaseController {
       const cardError = this.validate({ name }, CardController.types);
 
       if (cardError) {
-        res.status(409).json(cardError);
+        res.status(409).json({ data: cardError });
 
         return;
       }
@@ -107,9 +109,9 @@ class CardController extends BaseController {
       card.name = name;
       await card.save();
 
-      res.status(200).json(messages.card.updated);
+      res.status(200).json({ data: messages.card.updated });
     } catch (e) {
-      res.status(409).json(e);
+      res.status(409).json({ data: e });
     }
   }
 
@@ -123,16 +125,16 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.status(409).json(errors.cards.notDefined);
+        res.status(409).json({ data: errors.cards.notDefined });
 
         return;
       }
       card.isCompleted = !card.isCompleted;
       await card.save();
 
-      res.status(200).json(messages.card.updated);
+      res.status(200).json({ data: messages.card.updated });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -147,14 +149,14 @@ class CardController extends BaseController {
 
       if (card) {
         await Cards.destroy({ where: { id: reqId } });
-        res.status(200).json(messages.card.deleted);
+        res.status(200).json({ data: messages.card.deleted });
 
         return;
       }
 
-      res.status(409).json(errors.cards.notDefined);
+      res.status(409).json({data: errors.cards.notDefined});
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -191,9 +193,9 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(409).json(errors.cards.filter);
+      res.status(409).json({ data: errors.cards.filter });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -235,7 +237,7 @@ class CardController extends BaseController {
         return;
       }
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -245,7 +247,7 @@ class CardController extends BaseController {
 
       res.json({ data: { message: 'Все карточки удалены' } });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 
@@ -260,9 +262,9 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(400).json(errors.cards.incorrectlyProp);
+      res.status(400).json({ data: errors.cards.incorrectlyProp });
     } catch (e) {
-      res.status(500).json(e);
+      res.status(500).json({ data: e });
     }
   }
 }

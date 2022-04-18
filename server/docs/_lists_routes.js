@@ -25,8 +25,16 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:   
- *              List Added
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
+ *                     message: 
+ *                       type: string
+ *                       example: "List added"
  *       400:
  *         description: List data validation error
  *         content:
@@ -35,10 +43,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:   
- *              statusCode: 5
- *              name: incorrect-type
- *              message: The 'name' type is incorrectly set
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 5
+ *                     name: 
+ *                       type: string
+ *                       example: "incorrect-type"
+ *                     message: 
+ *                       type: string
+ *                       example: "The 'name' type is incorrectly set"
  *       500:
  *         description: Internal server error 
  *         content:
@@ -108,8 +125,13 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:
- *              List with Id = 1 is deleted
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     message: 
+ *                       type: string
+ *                       example: "List deleted"
  *       400:
  *         description: List in not defined
  *         content:
@@ -118,10 +140,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:
- *              statusCode: 8
- *              name: undefined-list
- *              message: List in not defined
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 8
+ *                     name: 
+ *                       type: string
+ *                       example: "undefined-list"
+ *                     message: 
+ *                       type: string
+ *                       example: "List is not defined"
  *       500:
  *         description: Internal server error 
  *         content:
@@ -163,12 +194,16 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:
- *               Name updated
- * 
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     message:
+ *                       type: string
+ *                       example: "List updated"
  *       400:
  *         description: List validation error
  *         content:
@@ -177,10 +212,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:
- *               statusCode: 7
- *               name: empty-field
- *               message: The 'name' field cannot be empty
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 7
+ *                     name: 
+ *                       type: string
+ *                       example: "empty-field"
+ *                     message: 
+ *                       type: string
+ *                       example: "The 'name' field cannot be empty"
  *       500:
  *         description: Internal server error 
  *         content:
@@ -225,10 +269,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/List'
- *             example:
- *               statusCode: 8
- *               name: undefined-list
- *               message: List in not defined
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode:
+ *                       type: integer
+ *                       example: 8
+ *                     name: 
+ *                       type: string
+ *                       example: "undefined-list"
+ *                     message: 
+ *                       type: string
+ *                       example: "List is not defined"
  *       500:
  *         description: Internal server error 
  *         content:

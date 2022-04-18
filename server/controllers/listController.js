@@ -67,6 +67,10 @@ class ListController extends BaseController {
     }
   }
 
+    /**
+   * PUT запрос. Получение списка по id
+   * ex. http://localhost:8080/api/lists/:id
+   */
   async getList(req, res) {
     try {
       const reqId = req.params.id;
@@ -85,7 +89,7 @@ class ListController extends BaseController {
   }
 
   /**
-   * DELETE запрос. Удаление карточки
+   * DELETE запрос. Удаление списка
    * ex. http://localhost:8080/api/lists/:id
    */
   async deleteList(req, res) {

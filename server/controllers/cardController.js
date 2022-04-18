@@ -194,44 +194,6 @@ class CardController extends BaseController {
       res.status(500).json(e);
     }
   }
-
-
-  //NOT WORKING :(
-  /**
-   * Фильтр запросов через параметры
-   * ex. http://localhost:8080/api/cards/multifilter?key=value
-   * ex. http://localhost:8080/api/cards/multifilter?isCompleted=true&listId=1
-  */
-  multiFilterCards = async (req, res) => {
-    try {
-      const where = {};
-
-      for (const key in req.query) {
-        if (Object.hasOwnProperty.call(req.query, key)) {
-          const value = req.query[key];
-
-          if (Object.keys(CardController.types).includes(key.toLowerCase())) {
-            let booleanValue;
-            if (value === 'true') {
-              booleanValue = 1;
-            }
-
-            if (value === 'false') {
-              booleanValue = 0;
-            }
-
-            where[key] = booleanValue ?? value
-          }
-
-        }
-        const cards = await Cards.findAll({ where });
-        
-        res.json({ data: cards });
-      }
-    } catch (e) {
-      res.status(500).json(e);
-    }
-  }
 }
 
 module.exports = new CardController();

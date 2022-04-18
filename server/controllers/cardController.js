@@ -24,8 +24,10 @@ class CardController extends BaseController {
 
       const data = await Cards.create(card);
       res.status(200).json({
-        id: data.id,
-        ...messages.card.added
+        data: {
+          id: data.id,
+          ...messages.card.added
+        }
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
@@ -195,8 +197,6 @@ class CardController extends BaseController {
     }
   }
 
-
-  //NOT WORKING :(
   /**
    * Фильтр запросов через параметры
    * ex. http://localhost:8080/api/cards/multifilter?key=value
@@ -225,7 +225,7 @@ class CardController extends BaseController {
           }
 
         }
-        
+
         const cards = await Cards.findAll({ where });
         
         res.status(200).json({ data: cards });

@@ -93,6 +93,50 @@
 
 /**
  * @swagger
+ * /api/cards/multifilter:
+ *   get:
+ *     summary: Returns the list of all the cards that match specified query
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *           required: false
+ *           description: Cards' "name" value to filter
+ *       - in: query
+ *         name: isCompleted
+ *         schema:
+ *           type: boolean
+ *           required: false
+ *           description: Cards' "isCompleted" value to filter
+ *       - in: query
+ *         name: listId
+ *         schema:
+ *           type: string
+ *           required: false
+ *           description: Cards' "listId" value to filter
+ *     responses:
+ *       200:
+ *         description: The list of the filtered cards
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Card'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ */
+
+/**
+ * @swagger
  * /api/cards/{id}:
  *   get:
  *     summary: Returns single card by its id
@@ -181,8 +225,16 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *             example:
- *              "Card added"
+ *               properties:
+ *                 data: 
+ *                   type: object
+ *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
+ *                     message: 
+ *                       type: string
+ *                       example: "Card added"
  *       400:
  *         description: FOREIGN KEY constraint
  *         content:

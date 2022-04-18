@@ -122,9 +122,46 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
+ *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 3
+ *                     name:
+ *                       type: string
+ *                       example: "River Runs Through It, A"
+ *                     isCompleted: 
+ *                       type: boolean
+ *                       example: true
+ *                     listId:
+ *                      type: integer
+ *                      example: 1
+ *       400:
+ *         description: not-number-type
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/Error'
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 4
+ *                     name:
+ *                       type: string
+ *                       example: "not-number-type"
+ *                     message: 
+ *                       type: string
+ *                       example: "The value must be Number"
  *       500:
  *         description: Internal server error
  *         content:
@@ -181,10 +218,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
- *             example:
- *               statusCode: 1
- *               name: "undefined-card"
- *               message: "Card in not defined"
+*               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "undefined-card"
+ *                     message: 
+ *                       type: string
+ *                       example: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -243,10 +289,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
- *             example:
- *               statusCode: 9
- *               name: "no-such-entity"
- *               message: "FOREIGN KEY constraint failed. There is no entity with this Id"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 9
+ *                     name:
+ *                       type: string
+ *                       example: "no-such-entity"
+ *                     message: 
+ *                       type: string
+ *                       example: "FOREIGN KEY constraint failed. There is no entity with this Id"
  *       500:
  *         description: Internal server error
  *         content:
@@ -291,8 +346,13 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *             example:
- *               "updated"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     message: 
+ *                       type: string
+ *                       example: "Card updated"
  *       400:
  *         description: Card data validation error or not defined
  *         content:
@@ -301,10 +361,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
- *             example:
- *               statusCode: 6
- *               name: "undefined-card"
- *               message: "Card in not defined"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "undefined-card"
+ *                     message: 
+ *                       type: string
+ *                       example: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -349,8 +418,13 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *             example:
- *               "updated"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     message: 
+ *                       type: string
+ *                       example: "Card updated"
  *       400:
  *         description: Card data validation error
  *         content:
@@ -359,10 +433,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
- *             example:
- *               statusCode: 6
- *               name: "undefined-card"
- *               message: "Card in not defined"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "undefined-card"
+ *                     message: 
+ *                       type: string
+ *                       example: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:
@@ -395,8 +478,13 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *             example:
- *               "Card with Id = 2 is deleted"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     message: 
+ *                       type: string
+ *                       example: "Card updated"
  *       400:
  *         description: Card is not defined
  *         content:
@@ -405,10 +493,19 @@
  *               type: object
  *               items:
  *                 $ref: '#/components/schemas/Error'
- *             example:
- *               statusCode: 6
- *               name: "undefined-card"
- *               message: "Card in not defined"
+ *               properties:
+ *                data: 
+ *                   type: object
+ *                   properties:
+ *                     statusCode: 
+ *                       type: integer
+ *                       example: 1
+ *                     name:
+ *                       type: string
+ *                       example: "undefined-card"
+ *                     message: 
+ *                       type: string
+ *                       example: "Card in not defined"
  *       500:
  *         description: Internal server error
  *         content:

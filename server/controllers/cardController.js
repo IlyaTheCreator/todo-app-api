@@ -226,6 +226,13 @@ class CardController extends BaseController {
               booleanValue = 0;
             }
 
+            if (key === 'listId') {
+              if (!Boolean(Number(value))) {
+                res.status(400).json({ data: errors.types.number });
+                return;
+              }
+            }
+
             where[key] = (key === 'name')
               ? { [Op.like]: `%${value}%` }
               : booleanValue ?? value;

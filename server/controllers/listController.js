@@ -1,6 +1,8 @@
 const Lists = require('../db/tables/Lists');
+const Cards = require('../db/tables/Cards');
 const BaseController = require("./baseController");
 const { errors, messages } = require('../rules/errors');
+
 
 class ListController extends BaseController {
   constructor() {
@@ -28,8 +30,11 @@ class ListController extends BaseController {
         return;
       }
 
-      await Lists.create(list);
-      res.status(200).json(messages.list.added);
+      const data = await Lists.create(list);
+      res.status(200).json({
+        id: data.id,
+        ...messages.list.added
+      });
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
         res.status(409).json(errors.lists.uniqueName);

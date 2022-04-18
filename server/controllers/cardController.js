@@ -22,8 +22,11 @@ class CardController extends BaseController {
         return;
       }
 
-      await Cards.create(card);
-      res.status(200).json(messages.card.added);
+      const data = await Cards.create(card);
+      res.status(200).json({
+        id: data.id,
+        ...messages.card.added
+      });
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
         res.status(409).json(errors.cards.fk_added);

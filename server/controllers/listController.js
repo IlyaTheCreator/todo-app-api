@@ -137,6 +137,16 @@ class ListController extends BaseController {
       res.status(500).json(e);
     }
   }
+
+  async allDelete(req, res) {
+    try {
+      Lists.destroy({ truncate: true });
+
+      res.json({ data: { message: 'Все списки удалены' } });
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
 }
 
 module.exports = new ListController();

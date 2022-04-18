@@ -14,6 +14,11 @@ const errors = {
       statusCode: 6,
       name: 'undefined-card',
       message: 'Card in not defined',
+    },
+    incorrectlyProp: {
+      statusCode: 10,
+      name: 'incorrectly-property',
+      message: 'The value can be either true or false',
     }
   },
   lists: {
@@ -61,16 +66,16 @@ const errors = {
 
 const messages = {
   list: {
-    added: {message: 'List added'},
-    deleted: {message: 'List deleted'},
-    updated: {message: 'List updated'},
-    noData: {message: 'There are no lists'}
+    added: { message: 'List added' },
+    deleted: { message: 'List deleted' },
+    updated: { message: 'List updated' },
+    noData: { message: 'There are no lists' }
   },
   card: {
-    added: {message: 'Card added'},
-    deleted: {message: 'Card deleted'},
-    updated: {message: 'Card updated'},
-    noData: {message: 'There are no cards'}
+    added: { message: 'Card added' },
+    deleted: { message: 'Card deleted' },
+    updated: { message: 'Card updated' },
+    noData: { message: 'There are no cards' }
   }
 }
 

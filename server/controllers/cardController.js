@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+
 const Cards = require("../db/tables/Cards");
 const BaseController = require("./baseController");
 const { errors, messages } = require("../rules/errors");
@@ -68,9 +70,11 @@ class CardController extends BaseController {
       const card = await Cards.findOne({ where: { id: reqId } });
 
       if (!card) {
-        res.status(409).json({ data: {
-          message: errors.cards.notDefined
-        }});
+        res.status(409).json({
+          data: {
+            message: errors.cards.notDefined
+          }
+        });
 
         return;
       }
@@ -154,7 +158,7 @@ class CardController extends BaseController {
         return;
       }
 
-      res.status(409).json({data: errors.cards.notDefined});
+      res.status(409).json({ data: errors.cards.notDefined });
     } catch (e) {
       res.status(500).json({ data: e });
     }
@@ -208,11 +212,9 @@ class CardController extends BaseController {
     try {
       const where = {};
 
-      console.log(req.query);
       for (const key in req.query) {
         if (Object.hasOwnProperty.call(req.query, key)) {
           const value = req.query[key];
-
           if (Object.keys(CardController.types).includes(key.toLowerCase())) {
             let booleanValue;
 
@@ -224,18 +226,17 @@ class CardController extends BaseController {
               booleanValue = 0;
             }
 
-            where[key] = booleanValue ?? value
+            where[key] = (key === 'name')
+              ? { [Op.like]: `%${value}%` }
+              : booleanValue ?? value;
           }
-
         }
-
-        const cards = await Cards.findAll({ where });
-        console.log(cards)
-        
-        res.status(200).json({ data: cards });
-
-        return;
       }
+      const cards = await Cards.findAll({ where });
+
+      res.status(200).json({ data: cards });
+
+      return;
     } catch (e) {
       res.status(500).json({ data: e });
     }

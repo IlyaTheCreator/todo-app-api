@@ -99,7 +99,12 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(202).json({ data: messages.list.deleted });
+        res.status(202).json({
+          data: {
+            id: list.id,
+            ...messages.list.deleted
+          }
+        });
 
         return;
       }
@@ -138,7 +143,12 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(202).json({ data: messages.list.updated });
+      res.status(202).json({
+        data: {
+          id: list.id,
+          ...messages.list.updated
+        }
+      });
     } catch (e) {
       res.status(500).json({ data: e });
     }

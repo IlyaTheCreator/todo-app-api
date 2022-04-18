@@ -10,6 +10,8 @@ router.get('/cards/:id', cardController.getCard);
 router.post('/cards', cardController.addCard);
 router.put('/cards/:id', cardController.setNameCard);
 router.put('/cards/complete/:id', cardController.setCompleted);
+router.put('/cards/complete/all/:boolean', cardController.allComplete);
 router.delete('/cards/:id', cardController.deleteCard);
+router.delete('/cards/', cardController.allDelete);
 
 module.exports = router;

@@ -206,6 +206,7 @@ class CardController extends BaseController {
     try {
       const where = {};
 
+      console.log(req.query);
       for (const key in req.query) {
         if (Object.hasOwnProperty.call(req.query, key)) {
           const value = req.query[key];
@@ -225,9 +226,36 @@ class CardController extends BaseController {
 
         }
         const cards = await Cards.findAll({ where });
-        
+
         res.json({ data: cards });
       }
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  async allDelete(req, res) {
+    try {
+      Cards.destroy({ truncate: true });
+
+      res.json({ data: { message: 'Все карточки удалены' } });
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  async allComplete(req, res) {
+    try {
+      const reqBoolean = req.params.boolean;
+      if (reqBoolean === 'true' || reqBoolean === 'false') {
+        const boolean = reqBoolean === 'true' ? true : false;
+        await Cards.update({ isCompleted: boolean }, { where: { isCompleted: !boolean } });
+        res.json({ data: { message: 'Карточки обновлены' } });
+
+        return;
+      }
+
+      res.status(400).json(errors.cards.incorrectlyProp);
     } catch (e) {
       res.status(500).json(e);
     }

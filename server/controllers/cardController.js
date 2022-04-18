@@ -33,7 +33,7 @@ class CardController extends BaseController {
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes("foreign")) {
-        res.status(409).json(errors.cards.fk_added);
+        res.status(409).json({ data: errors.cards.fk_added });
 
         return;
       }

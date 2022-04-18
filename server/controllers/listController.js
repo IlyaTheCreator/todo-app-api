@@ -1,7 +1,8 @@
 const Lists = require('../db/tables/Lists');
 const Cards = require('../db/tables/Cards');
 const BaseController = require("./baseController");
-const { errors, messages } = require('../rules/errors');
+const { errors } = require('../rules/errors');
+const { messages } = require('../rules/messages');
 
 
 class ListController extends BaseController {

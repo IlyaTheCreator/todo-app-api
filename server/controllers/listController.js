@@ -31,9 +31,11 @@ class ListController extends BaseController {
       }
 
       const data = await Lists.create(list);
-      res.status(200).json({
-        id: data.id,
-        ...messages.list.added
+      res.status(201).json({
+        data: {
+          id: data.id,
+          ...messages.list.added
+        }
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
@@ -93,7 +95,7 @@ class ListController extends BaseController {
 
       if (list) {
         await list.destroy();
-        res.status(200).json({ data: messages.list.deleted });
+        res.status(202).json({ data: messages.list.deleted });
 
         return;
       }
@@ -132,7 +134,7 @@ class ListController extends BaseController {
       list.name = name;
       await list.save();
 
-      res.status(200).json({ data: messages.list.updated });
+      res.status(202).json({ data: messages.list.updated });
     } catch (e) {
       res.status(500).json({ data: e });
     }
@@ -142,7 +144,7 @@ class ListController extends BaseController {
     try {
       Lists.destroy({ truncate: true });
 
-      res.json({ data: { message: 'All the lists are deleted' } });
+      res.json({ data: messages.list.deletedAll });
     } catch (e) {
       res.status(500).json({ data: e });
     }

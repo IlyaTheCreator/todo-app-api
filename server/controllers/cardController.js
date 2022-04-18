@@ -245,7 +245,7 @@ class CardController extends BaseController {
     try {
       Cards.destroy({ truncate: true });
 
-      res.json({ data: { message: 'Все карточки удалены' } });
+      res.json({ data: messages.card.deletedAll });
     } catch (e) {
       res.status(500).json({ data: e });
     }
@@ -257,7 +257,7 @@ class CardController extends BaseController {
       if (reqBoolean === 'true' || reqBoolean === 'false') {
         const boolean = reqBoolean === 'true' ? true : false;
         await Cards.update({ isCompleted: boolean }, { where: { isCompleted: !boolean } });
-        res.json({ data: { message: 'Карточки обновлены' } });
+        res.json({ data: messages.card.updatedAll });
 
         return;
       }

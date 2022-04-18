@@ -49,56 +49,6 @@
  *     tags: [Cards]
  *     parameters:
  *       - in: query
- *         name: key
- *         schema:
- *           type: string
- *         required: true
- *         description: A parameter by which cards will be filtered
- *       - in: query
- *         name: value
- *         schema:
- *           type: string
- *         required: true
- *         description: Value of the choosen parameter
- *     responses:
- *       200:
- *         description: The list of the filtered cards
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Card'
- *       400:
- *         description: undefined property
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *             example:
- *              statusCode: 1
- *              name: "undefined-property"
- *              message: "property is not defined"
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- */
-
-/**
- * @swagger
- * /api/cards/multifilter:
- *   get:
- *     summary: Returns the list of all the cards that match specified query
- *     tags: [Cards]
- *     parameters:
- *       - in: query
  *         name: name
  *         schema:
  *           type: string
@@ -111,7 +61,7 @@
  *           required: false
  *           description: Cards' "isCompleted" value to filter
  *       - in: query
- *         name: listId
+ *         name: number
  *         schema:
  *           type: string
  *           required: false

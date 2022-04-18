@@ -129,6 +129,9 @@
  *                 data: 
  *                   type: object
  *                   properties:
+ *                     id: 
+ *                       type: integer
+ *                       example: 1
  *                     message: 
  *                       type: string
  *                       example: "List deleted"
@@ -201,6 +204,9 @@
  *                 data:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
  *                     message:
  *                       type: string
  *                       example: "List updated"

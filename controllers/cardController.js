@@ -240,6 +240,16 @@ class CardController extends BaseController {
       res.status(500).json(e);
     }
   }
+
+  async deleteComplete(req, res) {
+    try {
+      await Cards.destroy({ where: { isCompleted: true } });
+
+      res.json(messages.card.deleteComplete);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
 }
 
 module.exports = new CardController();

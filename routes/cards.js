@@ -12,5 +12,6 @@ router.put('/cards/complete/:id', cardController.setCompleted);
 router.put('/cards/complete/all/:boolean', cardController.allComplete);
 router.delete('/cards/:id', cardController.deleteCard);
 router.delete('/cards/', cardController.allDelete);
+router.delete('/cards/complete/all', cardController.deleteComplete);
 
 module.exports = router;

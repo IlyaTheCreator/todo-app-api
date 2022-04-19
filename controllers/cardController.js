@@ -26,7 +26,7 @@ class CardController extends BaseController {
       }
 
       const data = await Cards.create(card);
-      res.status(200).json({
+      res.status(201).json({
         id: data.id,
         ...messages.card.added
       });

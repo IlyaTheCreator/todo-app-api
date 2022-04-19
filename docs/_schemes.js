@@ -8,7 +8,7 @@
  *         - name
  *       properties:
  *         id:
- *           type: string
+ *           type: integer
  *           description: The auto-generated id of a list
  *         name:
  *           type: string
@@ -30,7 +30,7 @@
  *         - listId
  *       properties:
  *         id:
- *           type: string
+ *           type: integer
  *           description: The auto-generated id of the card
  *         name:
  *           type: string
@@ -39,10 +39,10 @@
  *           type: boolean
  *           description: The card completion state
  *         listId:
- *           type: string
+ *           type: integer
  *           description: Id of a list the card belongs to
  *       example:
- *         id: d5fE_asz
+ *         id: 1
  *         name: Throw out the trash
  *         isCompleted: false
  *         listId: 3
@@ -56,7 +56,7 @@
  *       type: object
  *       properties:
  *         statusCode:
- *           type: number
+ *           type: integer
  *           description: |
  *            Custom error type. Possible values are:
  *            * 1 - undefined-property

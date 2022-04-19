@@ -31,7 +31,7 @@
  *                   type: string
  *                   example: "List added"
  *       400:
- *         description: List data validation error
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -78,7 +78,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: Existing list id
  *     responses:
@@ -96,7 +96,7 @@
  *                   type: string
  *                   example: "List deleted"
  *       400:
- *         description: List in not defined
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -120,7 +120,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: number
+ *           type: integer
  *         required: true
  *         description: A parameter by which a list title will be edited
  *     requestBody:
@@ -150,7 +150,7 @@
  *                   type: string
  *                   example: "List updated"
  *       400:
- *         description: List validation error
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
@@ -174,7 +174,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: Existing list id
  *     responses:
@@ -186,7 +186,7 @@
  *               type: object
  *               $ref: '#/components/schemas/List'
  *       400:
- *         description: List in not defined
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:

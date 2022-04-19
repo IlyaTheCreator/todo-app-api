@@ -10,30 +10,15 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: object
+ *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *               properties:
- *                 id: 
- *                   type: integer
- *                   example: 1
- *                 name: 
- *                   type: string
- *                   example: "Throw out the trash"
- *                 isCompleted: 
- *                   type: boolean
- *                   example: false
- *                 listId:
- *                   type: integer
- *                   example: 1
  *       500:
- *         description: Internal server error. Could not get cards
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -47,60 +32,36 @@
  *         name: name
  *         schema:
  *           type: string
- *           required: false
- *           description: Cards' "name" value to filter
+ *         required: false
+ *         description: Cards' "name" value to filter
  *       - in: query
  *         name: isCompleted
  *         schema:
  *           type: boolean
- *           required: false
- *           description: Cards' "isCompleted" value to filter
+ *         required: false
+ *         description: Cards' "isCompleted" value to filter
  *       - in: query
- *         name: number
+ *         name: listId
  *         schema:
- *           type: string
- *           required: false
- *           description: Cards' "listId" value to filter
+ *           type: integer
+ *         required: false
+ *         description: Cards' "listId" value to filter
  *     responses:
  *       200:
  *         description: The list of the filtered cards
  *         content:
  *           application/json:
  *             schema:
- *               type: object
+ *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Card'
- *               properties:
- *                 id: 
- *                   type: integer
- *                   example: 3
- *                 name:
- *                   type: string
- *                   example: "River Runs Through It, A"
- *                 isCompleted: 
- *                   type: boolean
- *                   example: true
- *                 listId:
- *                  type: integer
- *                  example: 1
  *       400:
- *         description: not-number-type
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 4
- *                 name:
- *                   type: string
- *                   example: "not-number-type"
- *                 message: 
- *                   type: string
- *                   example: "The value must be Number"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
@@ -121,7 +82,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: Existing card id
  *     responses:
@@ -131,47 +92,20 @@
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Card'
- *               properties:
- *                 id: 
- *                   type: integer
- *                   example: 1
- *                 name: 
- *                   type: string
- *                   example: "Throw out the trash"
- *                 isCompleted: 
- *                   type: boolean
- *                   example: false
- *                 listId:
- *                   type: integer
- *                   example: 1
+ *               $ref: '#/components/schemas/Card'
  *       400:
- *         description: Card with such id is not defined
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 1
- *                 name:
- *                   type: string
- *                   example: "undefined-card"
- *                 message: 
- *                   type: string
- *                   example: "Card in not defined"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -194,7 +128,7 @@
  *               name:
  *                 type: string
  *               listId:
- *                 type: number
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Card created successfully
@@ -202,8 +136,6 @@
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Card'
  *               properties:
  *                 id: 
  *                   type: integer
@@ -212,31 +144,18 @@
  *                   type: string
  *                   example: "Card added"
  *       400:
- *         description: FOREIGN KEY constraint
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 9
- *                 name:
- *                   type: string
- *                   example: "no-such-entity"
- *                 message: 
- *                   type: string
- *                   example: "FOREIGN KEY constraint failed. There is no entity with this Id"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -249,7 +168,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: number
+ *           type: integer
  *         required: true
  *         description: A parameter by which a card name will be edited
  *     requestBody:
@@ -271,8 +190,6 @@
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Card'
  *               properties:
  *                 id: 
  *                   type: integer
@@ -281,31 +198,18 @@
  *                   type: string
  *                   example: "Card updated"
  *       400:
- *         description: Card data validation error or not defined
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 1
- *                 name:
- *                   type: string
- *                   example: "undefined-card"
- *                 message: 
- *                   type: string
- *                   example: "Card in not defined"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -318,21 +222,9 @@
  *      - in: path
  *        name: id
  *        schema:
- *          type: number
+ *          type: integer
  *        required: true
  *        description: A parameter by which a card will be edited
- *     requestBody:
- *       description: Task to be edited.
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - isCompleted 
- *             properties:
- *               idCompleted:
- *                 type: boolean
  *     responses:
  *       200:
  *         description: The card was updated successfully
@@ -340,8 +232,6 @@
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Card'
  *               properties:
  *                 id: 
  *                   type: integer
@@ -350,31 +240,18 @@
  *                   type: string
  *                   example: "Card updated"
  *       400:
- *         description: Card data validation error
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 1
- *                 name:
- *                   type: string
- *                   example: "undefined-card"
- *                 message: 
- *                   type: string
- *                   example: "Card in not defined"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */
 
 /**
@@ -387,7 +264,7 @@
  *       - in: path
  *         name: id
  *         schema:
- *           type: string
+ *           type: integer
  *         required: true
  *         description: Existing card id
  *     responses:
@@ -397,39 +274,24 @@
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Card'
  *               properties:
  *                 id: 
  *                   type: integer
  *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Card updated"
+ *                   example: "Card deleted"
  *       400:
- *         description: Card is not defined
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
- *               properties:
- *                 statusCode: 
- *                   type: integer
- *                   example: 1
- *                 name:
- *                   type: string
- *                   example: "undefined-card"
- *                 message: 
- *                   type: string
- *                   example: "Card in not defined"
+ *               $ref: '#/components/schemas/Error'
  *       500:
  *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               items:
- *                 $ref: '#/components/schemas/Error'
  */

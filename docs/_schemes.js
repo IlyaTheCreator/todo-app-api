@@ -68,10 +68,14 @@
  *            * 7 - empty-field
  *            * 8 - undefined-list
  *            * 9 - no-such-entity
+ *         name:
+ *           type: string
+ *           description: Name of an error
  *         message:
  *           type: string
  *           description: Text of an error
  *       example:
  *         statusCode: 4
+ *         name: not-number-type
  *         message: The value of IsCompleted can be either true(1) or false(0)
  */

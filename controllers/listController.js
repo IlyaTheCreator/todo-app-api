@@ -26,26 +26,24 @@ class ListController extends BaseController {
       const listError = this.validate(list, ListController.types);
 
       if (listError) {
-        res.status(409).json({ data: listError });
+        res.status(400).json(listError);
 
         return;
       }
 
       const data = await Lists.create(list);
       res.status(201).json({
-        data: {
-          id: data.id,
-          ...messages.list.added
-        }
+        id: data.id,
+        ...messages.list.added
       });
     } catch (e) {
       if (e.toString().toLowerCase().includes('unique')) {
-        res.status(409).json({ data: errors.lists.uniqueName });
+        res.status(400).json(errors.lists.uniqueName);
 
         return;
       }
 
-      res.status(500).json({ data: e })
+      res.status(500).json(e)
     }
   }
 
@@ -58,13 +56,13 @@ class ListController extends BaseController {
       const lists = await Lists.findAll();
 
       if (!lists) {
-        res.json({ data: messages.list.noData });
+        res.json(messages.list.noData);
 
         return;
       }
-      res.json({ data: lists });
+      res.json(lists);
     } catch (e) {
-      res.status(500).json({ data: e });
+      res.status(500).json(e);
     }
   }
 
@@ -78,14 +76,14 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(409).json({ data: errors.lists.notDefined });
+        res.status(400).json(errors.lists.notDefined);
 
         return;
       }
 
-      res.status(200).json({ data: list });
+      res.status(200).json(list);
     } catch (e) {
-      res.status(500).json({ data: e });
+      res.status(500).json(e);
     }
   }
 
@@ -101,18 +99,16 @@ class ListController extends BaseController {
       if (list) {
         await list.destroy();
         res.status(200).json({
-          data: {
-            id: list.id,
-            ...messages.list.deleted
-          }
+          id: list.id,
+          ...messages.list.deleted
         });
 
         return;
       }
 
-      res.status(409).json({ data: errors.lists.notDefined });
+      res.status(400).json(errors.lists.notDefined);
     } catch (e) {
-      res.status(500).json({ data: e });
+      res.status(500).json(e);
     }
   }
 
@@ -128,7 +124,7 @@ class ListController extends BaseController {
       const list = await Lists.findOne({ where: { id: reqId } });
 
       if (!list) {
-        res.status(409).json({ data: errors.lists.notDefined });
+        res.status(400).json(errors.lists.notDefined);
 
         return;
       }
@@ -136,7 +132,7 @@ class ListController extends BaseController {
       const listError = this.validate({ name }, ListController.types);
 
       if (listError) {
-        res.status(409).json({ data: listError });
+        res.status(400).json(listError);
 
         return;
       }
@@ -145,13 +141,11 @@ class ListController extends BaseController {
       await list.save();
 
       res.status(200).json({
-        data: {
-          id: list.id,
-          ...messages.list.updated
-        }
+        id: list.id,
+        ...messages.list.updated
       });
     } catch (e) {
-      res.status(500).json({ data: e });
+      res.status(500).json(e);
     }
   }
 
@@ -159,9 +153,9 @@ class ListController extends BaseController {
     try {
       Lists.destroy({ truncate: true });
 
-      res.json({ data: messages.list.deletedAll });
+      res.json(messages.list.deletedAll);
     } catch (e) {
-      res.status(500).json({ data: e });
+      res.status(500).json(e);
     }
   }
 }

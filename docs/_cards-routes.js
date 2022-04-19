@@ -295,3 +295,102 @@
  *             schema:
  *               type: object
  */
+
+/**
+ * @swagger
+ * /api/cards:
+ *   delete:
+ *     summary: Deletes all cards
+ *     tags: [Cards]
+ *     parameters:
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Existing card id
+ *     responses:
+ *       200:
+ *         description: Cards deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                   example: "All cards deleted"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+
+/**
+ * @swagger
+ * /api/cards/complete/all/{boolean}:
+ *   put:
+ *     summary: Mark all cards completed/uncompleted
+ *     tags: [Cards]
+ *     parameters:
+ *       - in: path
+ *         name: boolean
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The value can be either true or false
+ *     responses:
+ *       200:
+ *         description: All cards updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                   example: All cards updated
+ *       400:
+ *         description: Incorrectly property 
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Error'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+
+/**
+ * @swagger
+ * /api/cards/complete/all:
+ *   delete:
+ *     summary: Deletes all completed cards
+ *     tags: [Cards]
+ *     parameters:
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Completed cards removed
+ *     responses:
+ *       200:
+ *         description: Completed cards removed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                   example: "Completed cards removed"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */

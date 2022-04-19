@@ -199,3 +199,33 @@
  *             schema:
  *               type: object
  */
+
+/**
+ * @swagger
+ * /api/lists:
+ *   delete:
+ *     summary: Deletes all lists
+ *     tags: [Lists]
+ *     parameters:
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Deletes all lists
+ *     responses:
+ *       200:
+ *         description: Lists deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message: 
+ *                   type: string
+ *                   example: "All lists deleted"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */

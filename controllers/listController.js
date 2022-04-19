@@ -149,6 +149,11 @@ class ListController extends BaseController {
     }
   }
 
+  /**
+  * DELETE запрос
+  * Удаление всех выполненных карточек
+  * ex. http://localhost:8080/api/cards/complete/all
+  */
   async allDelete(req, res) {
     try {
       Lists.destroy({ truncate: true });

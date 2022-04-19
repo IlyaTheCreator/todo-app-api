@@ -214,6 +214,11 @@ class CardController extends BaseController {
     }
   }
 
+  /**
+   * DELETE запрос
+   * Удаление всех карточек
+   * ex. http://localhost:8080/api/cards
+   */
   async allDelete(req, res) {
     try {
       Cards.destroy({ truncate: true });
@@ -224,6 +229,12 @@ class CardController extends BaseController {
     }
   }
 
+  /**
+   * PUT запрос
+   * Пометить сразу все карточки выполненными/невыполненными
+   * ex. http://localhost:8080/api/cards/complete/all/false
+   * ex. http://localhost:8080/api/cards/complete/all/true
+   */
   async allComplete(req, res) {
     try {
       const reqBoolean = req.params.boolean;
@@ -241,6 +252,11 @@ class CardController extends BaseController {
     }
   }
 
+  /**
+   * DELETE запрос
+   * Удаление всех выполненных карточек
+   * ex. http://localhost:8080/api/cards/complete/all
+   */
   async deleteComplete(req, res) {
     try {
       await Cards.destroy({ where: { isCompleted: true } });

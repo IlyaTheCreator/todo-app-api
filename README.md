@@ -94,6 +94,12 @@ Fill the database with more mock data
 npm run bigInsert
 ```
 
+Clear the database
+
+```
+npm run clear
+```
+
 <br>
 
 ## 🎈 Usage <a name="usage"></a>
@@ -104,7 +110,7 @@ For available routes check <em><strong>/api-docs</strong></em> page where docs f
 
 ## ❕ Version 2.0.0 changes <a name="changes"></a>
 
-Later all responses contained one <em>data</em> property. Now we omit it 
+Later all responses contained one <em><strong>data</strong></em> property. Now we omit it 
 and pass all the data directly in response body (check the docs bruh).
 
 <br>

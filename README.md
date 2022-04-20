@@ -1,8 +1,3 @@
-<p align="center">
-  <a href="" rel="noopener">
- <img width=200px height=200px src="https://sun1-96.userapi.com/impf/JK0QgUrFSEq9gULTdC4k5Pf5dNXm0GlTw9u_OQ/3dXYOf1sxq4.jpg?size=291x289&quality=96&sign=6482fe1c37ee092ff90a9fe616e2b5e9&type=album" alt="Project logo"></a>
-</p>
-
 <h1 align="center">Yandex Test Todo API</h1>
 
 <div align="center">

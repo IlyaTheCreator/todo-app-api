@@ -219,7 +219,7 @@ class CardController extends BaseController {
    * Удаление всех карточек
    * ex. http://localhost:8080/api/cards
    */
-  async allDelete(req, res) {
+  async deleteAll(req, res) {
     try {
       Cards.destroy({ truncate: true });
 
@@ -235,7 +235,7 @@ class CardController extends BaseController {
    * ex. http://localhost:8080/api/cards/complete/all/false
    * ex. http://localhost:8080/api/cards/complete/all/true
    */
-  async allComplete(req, res) {
+  async toggleCompleteAll(req, res) {
     try {
       const reqBoolean = req.params.boolean;
       if (reqBoolean === 'true' || reqBoolean === 'false') {

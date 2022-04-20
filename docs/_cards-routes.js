@@ -302,11 +302,6 @@
  *   delete:
  *     summary: Deletes all cards
  *     tags: [Cards]
- *     parameters:
- *         schema:
- *           type: integer
- *         required: true
- *         description: Existing card id
  *     responses:
  *       200:
  *         description: Cards deleted successfully
@@ -330,15 +325,15 @@
  * @swagger
  * /api/cards/complete/all/{boolean}:
  *   put:
- *     summary: Mark all cards completed/uncompleted
+ *     summary: Marks all cards completed/uncompleted
  *     tags: [Cards]
  *     parameters:
  *       - in: path
  *         name: boolean
  *         schema:
- *           type: integer
+ *           type: boolean
  *         required: true
- *         description: The value can be either true or false
+ *         description: The "isCompleted" value to set to all cards at once
  *     responses:
  *       200:
  *         description: All cards updated
@@ -371,14 +366,9 @@
  *   delete:
  *     summary: Deletes all completed cards
  *     tags: [Cards]
- *     parameters:
- *         schema:
- *           type: integer
- *         required: true
- *         description: Completed cards removed
  *     responses:
  *       200:
- *         description: Completed cards removed
+ *         description: Completed cards deleted
  *         content:
  *           application/json:
  *             schema:
@@ -386,7 +376,7 @@
  *               properties:
  *                 message: 
  *                   type: string
- *                   example: "Completed cards removed"
+ *                   example: "Completed cards deleted"
  *       500:
  *         description: Internal server error
  *         content:

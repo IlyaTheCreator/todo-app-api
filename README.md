@@ -115,6 +115,29 @@ and pass all the data directly in response body (check the docs bruh).
 
 <br>
 
+**We've changed names of controllers' methods.**
+
+For listController:
+
+`allDelete` -> `deleteAll`
+
+For cardController:
+
+`allDelete` -> `deleteAll`
+
+`allComplete` -> `toggleCompleteAll`
+
+<br>
+
+**NEW method also has been added.**
+
+For cardController:
+
+`deleteComplete`
+
+For additional information about all the methods please check the docs bruh.
+
+
 ## ⛏️ Built Using <a name = "built_using"></a>
 
 - [SQLite](https://sqlite.org/) - Database

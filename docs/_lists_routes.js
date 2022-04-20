@@ -206,11 +206,6 @@
  *   delete:
  *     summary: Deletes all lists
  *     tags: [Lists]
- *     parameters:
- *         schema:
- *           type: integer
- *         required: true
- *         description: Deletes all lists
  *     responses:
  *       200:
  *         description: Lists deleted successfully

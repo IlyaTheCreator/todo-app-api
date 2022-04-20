@@ -9,9 +9,9 @@ router.get('/cards/:id', cardController.getCard);
 router.post('/cards', cardController.addCard);
 router.put('/cards/:id', cardController.setNameCard);
 router.put('/cards/complete/:id', cardController.setCompleted);
-router.put('/cards/complete/all/:boolean', cardController.allComplete);
+router.put('/cards/complete/all/:boolean', cardController.toggleCompleteAll);
 router.delete('/cards/:id', cardController.deleteCard);
-router.delete('/cards/', cardController.allDelete);
+router.delete('/cards/', cardController.deleteAll);
 router.delete('/cards/complete/all', cardController.deleteComplete);
 
 module.exports = router;

@@ -13,7 +13,7 @@ const messages = {
     updated: { message: 'Card updated' },
     updatedAll: { message: 'All cards updated' },
     noData: { message: 'There are no cards' },
-    deleteComplete: { message: 'Completed cards removed' },
+    deleteComplete: { message: 'Completed cards deleted' },
   }
 };
 

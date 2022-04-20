@@ -131,7 +131,8 @@ For cardController:
 `deleteComplete`
 
 For additional information about all the methods please check the docs bruh.
-
+<br>
+<br>
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 

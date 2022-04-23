@@ -2,26 +2,6 @@
  * @swagger
  * components:
  *   schemas:
- *     List:
- *       type: object
- *       required:
- *         - name
- *       properties:
- *         id:
- *           type: integer
- *           description: The auto-generated id of a list
- *         name:
- *           type: string
- *           description: List title
- *       example:
- *         id: 1
- *         name: Today's ToDos
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
  *     Card:
  *       type: object
  *       required:

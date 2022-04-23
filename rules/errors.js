@@ -43,7 +43,7 @@ const errors = {
       name: 'incorrect-property',
       message: 'The value can be either true or false',
     },
-    parentNotFound: {
+    noParent: {
       statusCode: 34,
       name: 'parent-not-found',
       message: 'A parent with this Id does not exist',

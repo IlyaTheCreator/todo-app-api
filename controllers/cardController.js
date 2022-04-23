@@ -22,7 +22,7 @@ class CardController extends BaseController {
         const parentCard = await Cards.findOne({ where: { id: parentId } });
 
         if (!parentCard) {
-          res.status(400).json(errors.cards.parentNotFound);
+          res.status(400).json(errors.cards.noParent);
 
           return;
         }
@@ -38,7 +38,7 @@ class CardController extends BaseController {
       }
 
       const data = await Cards.create(card);
-      
+
       res.status(201).json({
         id: data.id,
         ...messages.card.added

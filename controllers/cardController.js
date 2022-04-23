@@ -96,7 +96,6 @@ class CardController extends BaseController {
     try {
       const reqId = req.params.id;
       const card = await Cards.findOne({ where: { id: reqId } });
-      const { name } = req.body;
 
       if (!card) {
         res.status(400).json(errors.cards.notDefined);
@@ -104,6 +103,7 @@ class CardController extends BaseController {
         return;
       }
 
+      const { name } = req.body;
       const cardError = this.validate({ name }, CardController.types);
 
       if (cardError) {

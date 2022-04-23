@@ -2,8 +2,6 @@ const { Model, DataTypes } = require('sequelize');
 const { errors } = require('../../rules/errors');
 const sequelize = require('../database');
 
-const Lists = require('./Lists');
-
 class Cards extends Model { };
 
 Cards.init({
@@ -41,15 +39,5 @@ Cards.init({
     timestamps: false,
   }
 );
-
-
-Lists.hasMany(Cards, {
-  foreignKey: {
-    name: 'listId',
-  },
-  onDelete: 'CASCADE',
-  hooks: true,
-});
-Cards.belongsTo(Lists);
 
 module.exports = Cards;

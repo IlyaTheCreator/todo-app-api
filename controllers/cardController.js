@@ -193,7 +193,7 @@ class CardController extends BaseController {
             }
 
             if (key === 'parentId') {
-              if (!Boolean(Number(value))) {
+              if (!Number.isInteger(Number(value))) {
                 res.status(400).json(errors.types.number);
                 return;
               }

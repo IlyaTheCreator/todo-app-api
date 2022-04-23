@@ -26,18 +26,6 @@ const errors = {
       message: 'A parent with this Id does not exist',
     }
   },
-  lists: {
-    uniqueName: {
-      statusCode: 2,
-      name: 'list-name-exist',
-      message: "Name must be unique",
-    },
-    notDefined: {
-      statusCode: 8,
-      name: 'undefined-list',
-      message: 'List in not defined',
-    }
-  },
   types: {
     string: {
       statusCode: 3,

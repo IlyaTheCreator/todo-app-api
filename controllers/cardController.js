@@ -38,17 +38,12 @@ class CardController extends BaseController {
       }
 
       const data = await Cards.create(card);
+      
       res.status(201).json({
         id: data.id,
         ...messages.card.added
       });
     } catch (e) {
-      if (e.toString().toLowerCase().includes("foreign")) {
-        res.status(400).json(errors.cards.fk_added);
-
-        return;
-      }
-
       res.status(500).json(e);
     }
   }

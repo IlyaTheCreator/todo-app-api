@@ -17,6 +17,17 @@ class CardController extends BaseController {
   addCard = async (req, res) => {
     try {
       const { name, parentId } = req.body;
+
+      if (parentId) {
+        const parentCard = await Cards.findOne({ where: { id: parentId } });
+
+        if (!parentCard) {
+          res.status(400).json(errors.cards.parentNotFound);
+
+          return;
+        }
+      }
+
       const card = parentId ? { name, parentId } : { name };
       const cardError = this.validate(card, CardController.types);
 

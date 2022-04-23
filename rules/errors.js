@@ -19,6 +19,11 @@ const errors = {
       statusCode: 10,
       name: 'incorrectly-property',
       message: 'The value can be either true or false',
+    },
+    parentNotFound: {
+      statusCode: 11,
+      name: 'parent-not-found',
+      message: 'A parent with this Id does not exist',
     }
   },
   lists: {

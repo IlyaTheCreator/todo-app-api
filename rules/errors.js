@@ -28,11 +28,6 @@ const errors = {
     }
   },
   cards: {
-    filter: {
-      statusCode: 31,
-      name: 'undefined-property',
-      message: 'property is not defined',
-    },
     notDefined: {
       statusCode: 32,
       name: 'undefined-card',

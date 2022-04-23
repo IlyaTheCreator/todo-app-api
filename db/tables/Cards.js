@@ -24,10 +24,11 @@ Cards.init(
     },
     parentId: {
       type: DataTypes.INTEGER,
-      defaultValue: null,
+      allowNull: false,
+      defaultValue: 0,
       validate: {
         isNumber(value) {
-          if (value !== null && typeof value !== 'number') {
+          if (typeof value !== 'number') {
             throw new Error(errors.types.number.message);
           }
         }

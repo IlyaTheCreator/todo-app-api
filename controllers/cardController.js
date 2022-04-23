@@ -9,14 +9,15 @@ class CardController extends BaseController {
   constructor() {
     super(Cards);
   }
+  
   /**
    * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
    * ex. http://localhost:8080/api/cards
    */
   addCard = async (req, res) => {
     try {
-      const { name, listId } = req.body;
-      const card = { name, listId };
+      const { name, parentId } = req.body;
+      const card = parentId ? { name, parentId } : { name };
       const cardError = this.validate(card, CardController.types);
 
       if (cardError) {
@@ -171,7 +172,7 @@ class CardController extends BaseController {
   /**
    * Фильтр запросов через параметры
    * ex. http://localhost:8080/api/cards/filter?key=value
-   * ex. http://localhost:8080/api/cards/filter?isCompleted=true&listId=1
+   * ex. http://localhost:8080/api/cards/filter?isCompleted=true&parentId=1
   */
   filterCards = async (req, res) => {
     try {
@@ -191,7 +192,7 @@ class CardController extends BaseController {
               booleanValue = 0;
             }
 
-            if (key === 'listId') {
+            if (key === 'parentId') {
               if (!Boolean(Number(value))) {
                 res.status(400).json(errors.types.number);
                 return;

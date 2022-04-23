@@ -41,11 +41,11 @@
  *         required: false
  *         description: Cards' "isCompleted" value to filter
  *       - in: query
- *         name: listId
+ *         name: parentId
  *         schema:
  *           type: integer
  *         required: false
- *         description: Cards' "listId" value to filter
+ *         description: Cards' "parentId" value to filter
  *     responses:
  *       200:
  *         description: The list of the filtered cards
@@ -121,14 +121,14 @@
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - name 
- *               - listId
  *             properties:
  *               name:
  *                 type: string
- *               listId:
+ *               parentId:
  *                 type: integer
+ *             example:
+ *               name: Card 3
+ *               parentId: 1
  *     responses:
  *       201:
  *         description: Card created successfully

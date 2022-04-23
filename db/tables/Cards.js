@@ -21,9 +21,9 @@ Cards.init({
     allowNull: false,
     defaultValue: false,
   },
-  listId: {
+  parentId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     validate: {
       isNumber(value) {
         if (typeof value !== 'number') {

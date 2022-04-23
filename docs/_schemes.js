@@ -7,7 +7,6 @@
  *       required:
  *         - name
  *         - isCompleted
- *         - listId
  *       properties:
  *         id:
  *           type: integer
@@ -18,14 +17,14 @@
  *         isCompleted:
  *           type: boolean
  *           description: The card completion state
- *         listId:
+ *         parentId:
  *           type: integer
- *           description: Id of a list the card belongs to
+ *           description: Id of a parent card
  *       example:
- *         id: 1
+ *         id: 3
  *         name: Throw out the trash
  *         isCompleted: false
- *         listId: 3
+ *         parentId: 1
  */
 
 /**

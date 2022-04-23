@@ -38,15 +38,14 @@
  *           type: integer
  *           description: |
  *            Custom error type. Possible values are:
- *            * 1 - undefined-property
- *            * 2 - list-name-exist
- *            * 3 - not-string-type
- *            * 4 - not-number-type
- *            * 5 - incorrect-type
- *            * 6 - undefined-card
- *            * 7 - empty-field
- *            * 8 - undefined-list
- *            * 9 - no-such-entity
+ *            * 11 - empty-field
+ *            * 21 - incorrect-type
+ *            * 22 - not-string-type
+ *            * 23 - not-number-type
+ *            * 31 - undefined-property
+ *            * 32 - undefined-card
+ *            * 33 - incorrect-property
+ *            * 34 - parent-not-found
  *         name:
  *           type: string
  *           description: Name of an error

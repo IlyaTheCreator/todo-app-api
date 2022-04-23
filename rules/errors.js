@@ -1,61 +1,54 @@
 const errors = {
-  cards: {
-    filter: {
-      statusCode: 1,
-      name: 'undefined-property',
-      message: 'property is not defined',
-    },
-    fk_added: {
-      statusCode: 9,
-      name: 'no-such-entity',
-      message: 'FOREIGN KEY constraint failed. There is no entity with this Id',
-    },
-    notDefined: {
-      statusCode: 6,
-      name: 'undefined-card',
-      message: 'Card in not defined',
-    },
-    incorrectlyProp: {
-      statusCode: 10,
-      name: 'incorrectly-property',
-      message: 'The value can be either true or false',
-    },
-    parentNotFound: {
-      statusCode: 11,
-      name: 'parent-not-found',
-      message: 'A parent with this Id does not exist',
-    }
-  },
-  types: {
-    string: {
-      statusCode: 3,
-      name: 'not-string-type',
-      message: 'The value must be String',
-    },
-    number: {
-      statusCode: 4,
-      name: 'not-number-type',
-      message: 'The value must be Number',
-    },
-    general(field) {
-      return {
-        statusCode: 5,
-        name: 'incorrect-type',
-        message: `The '${field}' type is incorrectly set`,
-      }
-    },
-  },
   field: {
     isNotEmpty(field) {
       return {
-        statusCode: 7,
+        statusCode: 11,
         name: 'empty-field',
         message: `The '${field}' field cannot be empty`
       }
     }
+  },
+  types: {
+    general(field) {
+      return {
+        statusCode: 21,
+        name: 'incorrect-type',
+        message: `The '${field}' type is incorrectly set`,
+      }
+    },
+    string: {
+      statusCode: 22,
+      name: 'not-string-type',
+      message: 'The value must be String',
+    },
+    number: {
+      statusCode: 23,
+      name: 'not-number-type',
+      message: 'The value must be Number',
+    }
+  },
+  cards: {
+    filter: {
+      statusCode: 31,
+      name: 'undefined-property',
+      message: 'property is not defined',
+    },
+    notDefined: {
+      statusCode: 32,
+      name: 'undefined-card',
+      message: 'Card in not defined',
+    },
+    incorrectlyProp: {
+      statusCode: 33,
+      name: 'incorrect-property',
+      message: 'The value can be either true or false',
+    },
+    parentNotFound: {
+      statusCode: 34,
+      name: 'parent-not-found',
+      message: 'A parent with this Id does not exist',
+    }
   }
-
 };
-
 
 module.exports = { errors };

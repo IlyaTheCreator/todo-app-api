@@ -9,9 +9,31 @@ class ItemsController extends BaseController {
   constructor() {
     super(Items);
   }
+
+  /**
+   * Статический метод для сбора всех id дочерних элементов по id родителя.
+   * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
+   */
+  static async getAllChildrenIds(initialId) {
+    const childrenIds = [initialId];
+    
+    async function findChildren(ids) {
+      const items = await Items.findAll({ where: {parentId: ids} });
+
+      if (items.length) {
+        const currentIds = items.map(item => item.dataValues.id);
+        childrenIds.push(...currentIds);
+
+        await findChildren(currentIds);
+      }
+    }
+
+    await findChildren(childrenIds);
+    return childrenIds;
+  }
   
   /**
-   * POST запрос. Добавление карточки. Данные принимаются из тела запрсоа
+   * POST запрос. Добавление элемента. Данные принимаются из тела запрсоа
    * ex. http://localhost:8080/api/items
    */
   addItem = async (req, res) => {
@@ -49,7 +71,7 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * GET запрос. Получение всех карточек
+   * GET запрос. Получение всех элементов
    * ex. http://localhost:8080/api/items
    */
   async getItems(req, res) {
@@ -67,7 +89,7 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * GET запрос. Получение карточки по id
+   * GET запрос. Получение элемента по id
    * ex. http://localhost:8080/api/items/:id
    */
   async getItem(req, res) {
@@ -91,7 +113,7 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * PUT запрос. Обновление имени для карточки
+   * PUT запрос. Обновление имени для элемента
    * ex. http://localhost:8080/api/items/:id
    * Имя принимает из тела запроса
    */
@@ -154,7 +176,7 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * DELETE запрос. Удаление карточки
+   * DELETE запрос. Удаление элемента
    * ex. http://localhost:8080/api/items/:id
    */
   async deleteItem(req, res) {
@@ -226,7 +248,7 @@ class ItemsController extends BaseController {
 
   /**
    * DELETE запрос
-   * Удаление всех карточек
+   * Удаление всех элементов
    * ex. http://localhost:8080/api/items
    */
   async deleteAll(req, res) {
@@ -241,16 +263,27 @@ class ItemsController extends BaseController {
 
   /**
    * PUT запрос
-   * Пометить сразу все карточки выполненными/невыполненными
+   * Пометить элемент, включая все дочерние элементы, выполненными/невыполненными
    * ex. http://localhost:8080/api/items/complete/all/false
    * ex. http://localhost:8080/api/items/complete/all/true
    */
   async toggleCompleteAll(req, res) {
     try {
-      const reqBoolean = req.params.boolean;
-      if (reqBoolean === 'true' || reqBoolean === 'false') {
-        const boolean = reqBoolean === 'true' ? true : false;
-        await Items.update({ isCompleted: boolean }, { where: { isCompleted: !boolean } });
+      const { id, boolean } = req.params;
+      
+      // try to find the item by id
+      const item = await Items.findOne({ where: { id } });
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
+
+        return;
+      }
+
+      if (boolean === 'true' || 'false') {
+        const booleanValue = boolean === 'true' ? true : false;
+        const ids = await ItemsController.getAllChildrenIds(id);
+        await Items.update({ isCompleted: booleanValue }, { where: { isCompleted: !booleanValue, id: ids } });
+
         res.json(messages.items.updatedAll);
 
         return;
@@ -264,7 +297,7 @@ class ItemsController extends BaseController {
 
   /**
    * DELETE запрос
-   * Удаление всех выполненных карточек
+   * Удаление всех выполненных элементов
    * ex. http://localhost:8080/api/items/complete/all
    */
   async deleteComplete(req, res) {

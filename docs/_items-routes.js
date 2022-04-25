@@ -230,7 +230,7 @@
 
 /**
  * @swagger
- * /api/items/complete/{id}:
+ * /api/items/{id}/complete:
  *   put:
  *     summary: Edits existing item's isCompleted property by its id
  *     tags: [Items]
@@ -339,11 +339,17 @@
 
 /**
  * @swagger
- * /api/items/complete/all/{boolean}:
+ * /api/items/{id}/complete/{boolean}:
  *   put:
  *     summary: Marks all items completed/uncompleted
  *     tags: [Items]
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Existing item id
  *       - in: path
  *         name: boolean
  *         schema:
@@ -358,7 +364,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message: 
+ *                 message:
  *                   type: string
  *                   example: All items updated
  *       400:

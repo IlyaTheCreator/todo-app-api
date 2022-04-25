@@ -127,8 +127,8 @@
  *               parentId:
  *                 type: integer
  *             example:
- *               name: Card 3
- *               parentId: 1
+ *               name: Card 1
+ *               parentId: 0
  *     responses:
  *       201:
  *         description: Card created successfully

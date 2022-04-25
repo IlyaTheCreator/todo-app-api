@@ -51,4 +51,4 @@ const itemsOptions = [
   {"id":50,"name":"volutpat in","isCompleted":true,"parentId":0}
 ];
 
-module.exports = { cardsOptions, listOptions }
+module.exports = { itemsOptions }

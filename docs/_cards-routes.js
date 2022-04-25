@@ -87,12 +87,28 @@
  *         description: Existing card id
  *     responses:
  *       200:
- *         description: Single found card
+ *         description: found card with all its children cards
  *         content:
  *           application/json:
  *             schema:
  *               type: object
- *               $ref: '#/components/schemas/Card'
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: Monday
+ *                 isCompleted:
+ *                   type: boolean
+ *                   example: false
+ *                 parentId:
+ *                   type: integer
+ *                   example: 0
+ *                 children:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Card'
  *       400:
  *         description: Bad request
  *         content:

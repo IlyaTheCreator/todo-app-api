@@ -2,9 +2,9 @@ const { Model, DataTypes } = require('sequelize');
 const { errors } = require('../../rules/errors');
 const sequelize = require('../database');
 
-class Cards extends Model { };
+class Items extends Model { };
 
-Cards.init(
+Items.init(
   {
     name: {
       type: DataTypes.STRING,
@@ -37,9 +37,9 @@ Cards.init(
   },
   {
     sequelize,
-    modelName: 'cards',
+    modelName: 'items',
     timestamps: false,
   }
 );
 
-module.exports = Cards;
+module.exports = Items;

@@ -19,7 +19,7 @@ class BaseController {
   }
 
   /**
-   * Method for validating new card data before putting it into db
+   * Method for validating new item data before putting it into db
    */
   validate(obj, types) {
     for (const key in obj) {

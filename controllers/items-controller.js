@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 
-const Items = require("../db/tables/Items");
-const BaseController = require("./baseController");
+const Items = require("../db/tables/items");
+const BaseController = require("./base-controller");
 const { errors } = require("../rules/errors");
 const { messages } = require("../rules/messages");
 

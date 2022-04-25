@@ -81,6 +81,9 @@ class CardController extends BaseController {
         return;
       }
 
+      const cardChildren = await Cards.findAll({ where: { parentId: card.id } });
+      card.dataValues.children = cardChildren;
+
       res.json(card);
     } catch (e) {
       res.status(500).json(e);

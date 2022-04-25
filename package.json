@@ -11,9 +11,9 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "bigInsert": "node bigInsert.js",
-    "smallInsert": "node smallInsert.js",
-    "clear": "node clearDB.js"
+    "insert-big": "node ./db-scripts/insert-big.js",
+    "insert-small": "node ./db-scripts/insert-small.js",
+    "clear": "node ./db-scripts/clear-db.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

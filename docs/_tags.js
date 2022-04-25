@@ -1,6 +1,6 @@
 /**
  * @swagger
  * tags:
- *   name: Cards
- *   description: Managing cards
+ *   name: Items
+ *   description: Managing items
  */

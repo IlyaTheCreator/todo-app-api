@@ -2,7 +2,7 @@
  * @swagger
  * components:
  *   schemas:
- *     Card:
+ *     Item:
  *       type: object
  *       required:
  *         - name
@@ -10,16 +10,16 @@
  *       properties:
  *         id:
  *           type: integer
- *           description: The auto-generated id of the card
+ *           description: The auto-generated id of the item
  *         name:
  *           type: string
  *           description: Text of a task
  *         isCompleted:
  *           type: boolean
- *           description: The card completion state
+ *           description: The item completion state
  *         parentId:
  *           type: integer
- *           description: Id of a parent card
+ *           description: Id of a parent item
  *       example:
  *         id: 3
  *         name: Throw out the trash
@@ -42,7 +42,7 @@
  *            * 21 - incorrect-type
  *            * 22 - not-string-type
  *            * 23 - not-number-type
- *            * 31 - undefined-card
+ *            * 31 - undefined-item
  *            * 32 - incorrect-property
  *            * 33 - parent-not-found
  *         name:

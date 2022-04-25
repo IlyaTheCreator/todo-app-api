@@ -17,7 +17,6 @@
 - [Getting Started](#getting_started)
 - [Available NPM commands](#commands)
 - [Usage](#usage)
-- [Version 2.0.0 changes](#changes)
 - [Built Using](#built_using)
 - [Authors](#authors)
 
@@ -25,7 +24,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-The purpose of this project is pretty obscure but out team is all in.
+The purpose of this project is pretty obscure but our team is all in.
 <br>
 <br>
 
@@ -100,37 +99,6 @@ npm run clear
 ## 🎈 Usage <a name="usage"></a>
 
 For available routes check <em><strong>/api-docs</strong></em> page where docs for the API are held.
-
-<br>
-
-## ❕ Version 2.0.0 changes <a name="changes"></a>
-
-Later all responses contained one <em><strong>data</strong></em> property. Now we omit it 
-and pass all the data directly in response body (check the docs bruh).
-
-<br>
-
-**We've changed names of controllers' methods.**
-
-For listController:
-
-`allDelete` -> `deleteAll`
-
-For cardController:
-
-`allDelete` -> `deleteAll`
-
-`allComplete` -> `toggleCompleteAll`
-
-<br>
-
-**NEW method also has been added.**
-
-For cardController:
-
-`deleteComplete`
-
-For additional information about all the methods please check the docs bruh.
 <br>
 <br>
 

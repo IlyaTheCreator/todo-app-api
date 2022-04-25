@@ -1,18 +1,18 @@
 /**
  * @swagger
- * /api/cards:
+ * /api/items:
  *   get:
- *     summary: Returns the list of all the cards
- *     tags: [Cards]
+ *     summary: Returns the list of all the items
+ *     tags: [Items]
  *     responses:
  *       200:
- *         description: The list of the cards (can be empty)
+ *         description: The list of the items (can be empty)
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Card'
+ *                 $ref: '#/components/schemas/Item'
  *       500:
  *         description: Internal server error
  *         content:
@@ -23,38 +23,38 @@
 
 /**
  * @swagger
- * /api/cards/filter:
+ * /api/items/filter:
  *   get:
- *     summary: Returns the list of all the cards that match specified query
- *     tags: [Cards]
+ *     summary: Returns the list of all the items that match specified query
+ *     tags: [Items]
  *     parameters:
  *       - in: query
  *         name: name
  *         schema:
  *           type: string
  *         required: false
- *         description: Cards' "name" value to filter
+ *         description: Items' "name" value to filter
  *       - in: query
  *         name: isCompleted
  *         schema:
  *           type: boolean
  *         required: false
- *         description: Cards' "isCompleted" value to filter
+ *         description: Items' "isCompleted" value to filter
  *       - in: query
  *         name: parentId
  *         schema:
  *           type: integer
  *         required: false
- *         description: Cards' "parentId" value to filter
+ *         description: Items' "parentId" value to filter
  *     responses:
  *       200:
- *         description: The list of the filtered cards
+ *         description: The list of the filtered items
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Card'
+ *                 $ref: '#/components/schemas/Item'
  *       400:
  *         description: Bad request
  *         content:
@@ -74,20 +74,20 @@
 
 /**
  * @swagger
- * /api/cards/{id}:
+ * /api/items/{id}:
  *   get:
- *     summary: Returns single card by its id
- *     tags: [Cards]
+ *     summary: Returns single item by its id
+ *     tags: [Items]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: Existing card id
+ *         description: Existing item id
  *     responses:
  *       200:
- *         description: found card with all its children cards
+ *         description: found item with all its children items
  *         content:
  *           application/json:
  *             schema:
@@ -108,7 +108,7 @@
  *                 children:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Card'
+ *                     $ref: '#/components/schemas/Item'
  *       400:
  *         description: Bad request
  *         content:
@@ -126,10 +126,10 @@
 
 /**
  * @swagger
- * /api/cards:
+ * /api/items:
  *   post:
- *     summary: Adds new card
- *     tags: [Cards]
+ *     summary: Adds new item
+ *     tags: [Items]
  *     requestBody:
  *       description: Task to be created.
  *       required: true
@@ -143,11 +143,11 @@
  *               parentId:
  *                 type: integer
  *             example:
- *               name: Card 1
+ *               name: Item 1
  *               parentId: 0
  *     responses:
  *       201:
- *         description: Card created successfully
+ *         description: Item created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -158,7 +158,7 @@
  *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Card added"
+ *                   example: "Item added"
  *       400:
  *         description: Bad request
  *         content:
@@ -176,17 +176,17 @@
 
 /**
  * @swagger
- * /api/cards/{id}:
+ * /api/items/{id}:
  *   put:
- *     summary: Sets a name of a card
- *     tags: [Cards]
+ *     summary: Sets a name of a item
+ *     tags: [Items]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: A parameter by which a card name will be edited
+ *         description: A parameter by which a item name will be edited
  *     requestBody:
  *       description: A name to be edited.
  *       required: true
@@ -201,7 +201,7 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: The card was updated successfully
+ *         description: The item was updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -212,7 +212,7 @@
  *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Card updated"
+ *                   example: "Item updated"
  *       400:
  *         description: Bad request
  *         content:
@@ -230,20 +230,20 @@
 
 /**
  * @swagger
- * /api/cards/complete/{id}:
+ * /api/items/complete/{id}:
  *   put:
- *     summary: Edits existing card's isCompleted property by its id
- *     tags: [Cards]
+ *     summary: Edits existing item's isCompleted property by its id
+ *     tags: [Items]
  *     parameters:
  *      - in: path
  *        name: id
  *        schema:
  *          type: integer
  *        required: true
- *        description: A parameter by which a card will be edited
+ *        description: A parameter by which a item will be edited
  *     responses:
  *       200:
- *         description: The card was updated successfully
+ *         description: The item was updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -254,7 +254,7 @@
  *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Card updated"
+ *                   example: "Item updated"
  *       400:
  *         description: Bad request
  *         content:
@@ -272,20 +272,20 @@
 
 /**
  * @swagger
- * /api/cards/{id}:
+ * /api/items/{id}:
  *   delete:
- *     summary: Deletes single card by its id
- *     tags: [Cards]
+ *     summary: Deletes single item by its id
+ *     tags: [Items]
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: integer
  *         required: true
- *         description: Existing card id
+ *         description: Existing item id
  *     responses:
  *       200:
- *         description: Card deleted successfully
+ *         description: Item deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -296,7 +296,7 @@
  *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Card deleted"
+ *                   example: "Item deleted"
  *       400:
  *         description: Bad request
  *         content:
@@ -314,13 +314,13 @@
 
 /**
  * @swagger
- * /api/cards:
+ * /api/items:
  *   delete:
- *     summary: Deletes all cards
- *     tags: [Cards]
+ *     summary: Deletes all items
+ *     tags: [Items]
  *     responses:
  *       200:
- *         description: Cards deleted successfully
+ *         description: Items deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -328,7 +328,7 @@
  *               properties:
  *                 message: 
  *                   type: string
- *                   example: "All cards deleted"
+ *                   example: "All items deleted"
  *       500:
  *         description: Internal server error
  *         content:
@@ -339,20 +339,20 @@
 
 /**
  * @swagger
- * /api/cards/complete/all/{boolean}:
+ * /api/items/complete/all/{boolean}:
  *   put:
- *     summary: Marks all cards completed/uncompleted
- *     tags: [Cards]
+ *     summary: Marks all items completed/uncompleted
+ *     tags: [Items]
  *     parameters:
  *       - in: path
  *         name: boolean
  *         schema:
  *           type: boolean
  *         required: true
- *         description: The "isCompleted" value to set to all cards at once
+ *         description: The "isCompleted" value to set to all items at once
  *     responses:
  *       200:
- *         description: All cards updated
+ *         description: All items updated
  *         content:
  *           application/json:
  *             schema:
@@ -360,7 +360,7 @@
  *               properties:
  *                 message: 
  *                   type: string
- *                   example: All cards updated
+ *                   example: All items updated
  *       400:
  *         description: Incorrectly property 
  *         content:
@@ -378,13 +378,13 @@
 
 /**
  * @swagger
- * /api/cards/complete/all:
+ * /api/items/complete/all:
  *   delete:
- *     summary: Deletes all completed cards
- *     tags: [Cards]
+ *     summary: Deletes all completed items
+ *     tags: [Items]
  *     responses:
  *       200:
- *         description: Completed cards deleted
+ *         description: Completed items deleted
  *         content:
  *           application/json:
  *             schema:
@@ -392,7 +392,7 @@
  *               properties:
  *                 message: 
  *                   type: string
- *                   example: "Completed cards deleted"
+ *                   example: "Completed items deleted"
  *       500:
  *         description: Internal server error
  *         content:

@@ -12,6 +12,7 @@ class ItemsController extends BaseController {
 
   /**
    * Статический метод для сбора всех id дочерних элементов по id родителя.
+   * Возвращает массив из id родителя и всех его дочерних элементов.
    * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
    */
   static async getAllChildrenIds(initialId) {
@@ -153,18 +154,20 @@ class ItemsController extends BaseController {
    * PUT запрос. Меняет флаг isCompleted
    * ex. http://localhost:8080/api/items/complete/:id
    */
-  async setCompleted(req, res) {
+  async toggleIsCompleted(req, res) {
     try {
-      const reqId = req.params.id;
-      const item = await Items.findOne({ where: { id: reqId } });
+      const { id } = req.params;
+      const item = await Items.findOne({ where: { id } });
 
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
         return;
       }
-      item.isCompleted = !item.isCompleted;
-      await item.save();
+
+      const isCompleted = item.isCompleted;
+      const ids = await ItemsController.getAllChildrenIds(id);
+      await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
 
       res.status(200).json({
         id: item.id,
@@ -284,7 +287,7 @@ class ItemsController extends BaseController {
         const ids = await ItemsController.getAllChildrenIds(id);
         await Items.update({ isCompleted: booleanValue }, { where: { isCompleted: !booleanValue, id: ids } });
 
-        res.json(messages.items.updatedAll);
+        res.status(200).json(messages.items.updatedAll);
 
         return;
       }

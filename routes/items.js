@@ -8,7 +8,7 @@ router.get('/items/filter', ItemsController.filterItems);
 router.get('/items/:id', ItemsController.getItem);
 router.post('/items', ItemsController.addItem);
 router.put('/items/:id', ItemsController.setNameItem);
-router.put('/items/:id/complete', ItemsController.setCompleted);
+router.put('/items/:id/complete', ItemsController.toggleIsCompleted);
 router.put('/items/:id/complete/:boolean', ItemsController.toggleCompleteAll);
 router.delete('/items/:id', ItemsController.deleteItem);
 router.delete('/items/', ItemsController.deleteAll);

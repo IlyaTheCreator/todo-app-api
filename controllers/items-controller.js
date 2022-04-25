@@ -15,7 +15,7 @@ class ItemsController extends BaseController {
    * Возвращает массив из id родителя и всех его дочерних элементов.
    * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
    */
-  static async getAllChildrenIds(initialId) {
+  static async addAllChildrenIds(initialId) {
     const childrenIds = [initialId];
     
     async function findChildren(ids) {
@@ -166,7 +166,7 @@ class ItemsController extends BaseController {
       }
 
       const isCompleted = item.isCompleted;
-      const ids = await ItemsController.getAllChildrenIds(id);
+      const ids = await ItemsController.addAllChildrenIds(id);
       await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
 
       res.status(200).json({
@@ -270,7 +270,7 @@ class ItemsController extends BaseController {
    * ex. http://localhost:8080/api/items/complete/all/false
    * ex. http://localhost:8080/api/items/complete/all/true
    */
-  async toggleCompleteAll(req, res) {
+  async setIsCompletedAll(req, res) {
     try {
       const { id, boolean } = req.params;
       
@@ -284,7 +284,7 @@ class ItemsController extends BaseController {
 
       if (boolean === 'true' || 'false') {
         const booleanValue = boolean === 'true' ? true : false;
-        const ids = await ItemsController.getAllChildrenIds(id);
+        const ids = await ItemsController.addAllChildrenIds(id);
         await Items.update({ isCompleted: booleanValue }, { where: { isCompleted: !booleanValue, id: ids } });
 
         res.status(200).json(messages.items.updatedAll);

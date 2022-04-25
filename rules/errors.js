@@ -27,11 +27,11 @@ const errors = {
       message: 'The value must be Number',
     }
   },
-  cards: {
+  items: {
     notDefined: {
       statusCode: 31,
-      name: 'undefined-card',
-      message: 'Card in not defined',
+      name: 'undefined-item',
+      message: 'Item is not defined',
     },
     incorrectlyProp: {
       statusCode: 32,

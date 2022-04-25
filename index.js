@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require('path');
 
 const sequelize = require("./db/database");
-const cardRoutes = require("./routes/cards");
+const itemsRoutes = require("./routes/items");
 const swaggerJsdoc = require("swagger-jsdoc");
 
 const PORT = process.env.PORT || 8080;
@@ -48,7 +48,7 @@ app.use(logger("dev"));
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", cardRoutes);
+app.use("/api", itemsRoutes);
 
 // Defining a separate route for docs page
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));

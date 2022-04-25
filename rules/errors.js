@@ -29,17 +29,17 @@ const errors = {
   },
   cards: {
     notDefined: {
-      statusCode: 32,
+      statusCode: 31,
       name: 'undefined-card',
       message: 'Card in not defined',
     },
     incorrectlyProp: {
-      statusCode: 33,
+      statusCode: 32,
       name: 'incorrect-property',
       message: 'The value can be either true or false',
     },
     noParent: {
-      statusCode: 34,
+      statusCode: 33,
       name: 'parent-not-found',
       message: 'A parent with this Id does not exist',
     }

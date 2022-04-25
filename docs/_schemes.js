@@ -42,10 +42,9 @@
  *            * 21 - incorrect-type
  *            * 22 - not-string-type
  *            * 23 - not-number-type
- *            * 31 - undefined-property
- *            * 32 - undefined-card
- *            * 33 - incorrect-property
- *            * 34 - parent-not-found
+ *            * 31 - undefined-card
+ *            * 32 - incorrect-property
+ *            * 33 - parent-not-found
  *         name:
  *           type: string
  *           description: Name of an error

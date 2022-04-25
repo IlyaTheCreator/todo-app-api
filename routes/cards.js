@@ -1,17 +1,17 @@
 const Router = require('express');
-const cardController = require('../controllers/cardController');
+const ItemsController = require('../controllers/items-controller');
 
 const router = new Router();
 
-router.get('/cards', cardController.getCards);
-router.get('/cards/filter', cardController.filterCards);
-router.get('/cards/:id', cardController.getCard);
-router.post('/cards', cardController.addCard);
-router.put('/cards/:id', cardController.setNameCard);
-router.put('/cards/complete/:id', cardController.setCompleted);
-router.put('/cards/complete/all/:boolean', cardController.toggleCompleteAll);
-router.delete('/cards/:id', cardController.deleteCard);
-router.delete('/cards/', cardController.deleteAll);
-router.delete('/cards/complete/all', cardController.deleteComplete);
+router.get('/cards', ItemsController.getItems);
+router.get('/cards/filter', ItemsController.filterItems);
+router.get('/cards/:id', ItemsController.getItem);
+router.post('/cards', ItemsController.addItem);
+router.put('/cards/:id', ItemsController.setNameItem);
+router.put('/cards/complete/:id', ItemsController.setCompleted);
+router.put('/cards/complete/all/:boolean', ItemsController.toggleCompleteAll);
+router.delete('/cards/:id', ItemsController.deleteItem);
+router.delete('/cards/', ItemsController.deleteAll);
+router.delete('/cards/complete/all', ItemsController.deleteComplete);
 
 module.exports = router;

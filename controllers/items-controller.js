@@ -343,22 +343,18 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const firstCompletedChildren = await Items.findAll({ where: {
-          parentId: item.id,
-          isCompleted: true
-        } });
+      const allCompleted = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
+      const allCompletedIds = allCompleted.map(item => item.id);
 
-      const allCompletedChildrenIds = await Promise.all(firstCompletedChildren.map(
-          // add to every item's ID all the IDs of all its children with static addAllChildrenIds method
-          item => ItemsController.addAllChildrenIds(item.id)
+      const allCompletedChildrenIds = await Promise.all(allCompletedIds.map(
+          // add to every item's ID all the IDs of all its children with static getAllChildrenIds method
+          id => ItemsController.getAllChildrenIds(id)
         ));
 
-      console.log(allCompletedChildrenIds)
-
-      await Items.destroy({ where: { id: allCompletedChildrenIds.flat() } });
+      await Items.destroy({ where: { id: [...allCompletedIds, ...allCompletedChildrenIds.flat()] } });
 
       res.status(200).json({
-        id: allCompletedChildrenIds,
+        id: allCompletedIds.map((id, index) => ({parent: id, children: allCompletedChildrenIds[index]})),
         ...messages.items.deleteComplete
       });
     } catch (e) {

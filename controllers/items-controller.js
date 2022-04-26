@@ -216,7 +216,6 @@ class ItemsController extends BaseController {
 
       const isCompleted = item.isCompleted;
 
-      // add to item's ID all the IDs of all its children with static getAllChildrenIds method
       const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
       await Items.update(
           { isCompleted: !isCompleted },
@@ -255,7 +254,6 @@ class ItemsController extends BaseController {
       if (boolean === 'true' || 'false') {
         const booleanValue = boolean === 'true' ? true : false;
 
-        // add to item's ID all the IDs of all its children with static getAllChildrenIds method
         const allChildrenIds = await ItemsController.getAllChildrenIds(id);
         await Items.update(
             { isCompleted: booleanValue },
@@ -310,7 +308,6 @@ class ItemsController extends BaseController {
         return;
       }
 
-      // add to item's ID all the IDs of all its children with static getAllChildrenIds method
       const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
       await Items.destroy({ where: { id: [item.id, ...allChildrenIds] } });
 
@@ -347,7 +344,6 @@ class ItemsController extends BaseController {
       const allCompletedIds = allCompleted.map(item => item.id);
 
       const allCompletedChildrenIds = await Promise.all(allCompletedIds.map(
-          // add to every item's ID all the IDs of all its children with static getAllChildrenIds method
           id => ItemsController.getAllChildrenIds(id)
         ));
 

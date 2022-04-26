@@ -277,24 +277,22 @@ class ItemsController extends BaseController {
    */
   async deleteItem(req, res) {
     try {
-      const reqId = req.params.id;
+      const { id } = req.params;
+      const item = await Items.findOne({ where: { id } });
 
-      const item = await Items.findOne({ where: { id: reqId } });
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
         return;
       }
 
-      await Items.destroy({ where: { id: reqId } });
+      const ids = await ItemsController.addAllChildrenIds(item.id);
+      await Items.destroy({ where: { id: ids } });
+
       res.status(200).json({
-        id: item.id,
+        id: ids,
         ...messages.items.deleted
       });
-
-      return;
-
-      res.status(400).json(errors.items.notDefined);
     } catch (e) {
       res.status(500).json(e);
     }

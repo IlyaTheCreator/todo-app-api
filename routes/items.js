@@ -10,8 +10,8 @@ router.post('/items', ItemsController.addItem);
 router.put('/items/:id', ItemsController.setNameItem);
 router.put('/items/:id/complete', ItemsController.toggleIsCompleted);
 router.put('/items/:id/complete/:boolean', ItemsController.setIsCompletedAll);
-router.delete('/items/:id', ItemsController.deleteItem);
 router.delete('/items/', ItemsController.deleteAll);
+router.delete('/items/:id', ItemsController.deleteItem);
 router.delete('/items/complete/all', ItemsController.deleteComplete);
 
 module.exports = router;

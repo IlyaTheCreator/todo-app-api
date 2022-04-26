@@ -32,44 +32,6 @@ class ItemsController extends BaseController {
     await findChildren(childrenIds);
     return childrenIds;
   }
-  
-  /**
-   * POST запрос. Добавление элемента. Данные принимаются из тела запрсоа
-   * ex. http://localhost:8080/api/items
-   */
-  addItem = async (req, res) => {
-    try {
-      const { name, parentId } = req.body;
-
-      if (parentId) {
-        const parentItem = await Items.findOne({ where: { id: parentId } });
-
-        if (!parentItem) {
-          res.status(400).json(errors.items.noParent);
-
-          return;
-        }
-      }
-
-      const item = parentId ? { name, parentId } : { name };
-      const itemError = this.validate(item, ItemsController.types);
-
-      if (itemError) {
-        res.status(400).json(itemError);
-
-        return;
-      }
-
-      const data = await Items.create(item);
-
-      res.status(201).json({
-        id: data.id,
-        ...messages.items.added
-      });
-    } catch (e) {
-      res.status(500).json(e);
-    }
-  }
 
   /**
    * GET запрос. Получение всех элементов
@@ -90,122 +52,7 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * GET запрос. Получение элемента по id
-   * ex. http://localhost:8080/api/items/:id
-   */
-  async getItem(req, res) {
-    try {
-      const reqId = req.params.id;
-      const item = await Items.findOne({ where: { id: reqId } });
-
-      if (!item) {
-        res.status(400).json(errors.items.notDefined);
-
-        return;
-      }
-
-      const itemChildren = await Items.findAll({ where: { parentId: item.id } });
-      item.dataValues.children = itemChildren;
-
-      res.json(item);
-    } catch (e) {
-      res.status(500).json(e);
-    }
-  }
-
-  /**
-   * PUT запрос. Обновление имени для элемента
-   * ex. http://localhost:8080/api/items/:id
-   * Имя принимает из тела запроса
-   */
-  setNameItem = async (req, res) => {
-    try {
-      const reqId = req.params.id;
-      const item = await Items.findOne({ where: { id: reqId } });
-
-      if (!item) {
-        res.status(400).json(errors.items.notDefined);
-
-        return;
-      }
-
-      const { name } = req.body;
-      const itemError = this.validate({ name }, ItemsController.types);
-
-      if (itemError) {
-        res.status(400).json(itemError);
-
-        return;
-      }
-
-      item.name = name;
-      await item.save();
-
-      res.status(200).json({
-        id: item.id,
-        ...messages.items.updated
-      });
-    } catch (e) {
-      res.status(400).json(e);
-    }
-  }
-
-  /**
-   * PUT запрос. Меняет флаг isCompleted
-   * ex. http://localhost:8080/api/items/complete/:id
-   */
-  async toggleIsCompleted(req, res) {
-    try {
-      const { id } = req.params;
-      const item = await Items.findOne({ where: { id } });
-
-      if (!item) {
-        res.status(400).json(errors.items.notDefined);
-
-        return;
-      }
-
-      const isCompleted = item.isCompleted;
-      const ids = await ItemsController.addAllChildrenIds(id);
-      await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
-
-      res.status(200).json({
-        id: item.id,
-        ...messages.items.updated
-      });
-    } catch (e) {
-      res.status(500).json(e);
-    }
-  }
-
-  /**
-   * DELETE запрос. Удаление элемента
-   * ex. http://localhost:8080/api/items/:id
-   */
-  async deleteItem(req, res) {
-    try {
-      const reqId = req.params.id;
-      const item = await Items.findOne({ where: { id: reqId } });
-
-      if (item) {
-        await Items.destroy({ where: { id: reqId } });
-        res.status(200).json({
-          id: item.id,
-          ...messages.items.deleted
-        });
-
-        return;
-      }
-
-      res.status(400).json(errors.items.notDefined);
-    } catch (e) {
-      res.status(500).json(e);
-    }
-  }
-
-  /**
    * Фильтр запросов через параметры
-   * ex. http://localhost:8080/api/items/filter?key=value
    * ex. http://localhost:8080/api/items/filter?isCompleted=true&parentId=1
   */
   filterItems = async (req, res) => {
@@ -250,15 +97,127 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * DELETE запрос
-   * Удаление всех элементов
+   * GET запрос. Получение элемента по id
+   * ex. http://localhost:8080/api/items/:id
+   */
+  async getItem(req, res) {
+    try {
+      const reqId = req.params.id;
+      const item = await Items.findOne({ where: { id: reqId } });
+
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
+
+        return;
+      }
+
+      const itemChildren = await Items.findAll({ where: { parentId: item.id } });
+      item.dataValues.children = itemChildren;
+
+      res.json(item);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+  
+  /**
+   * POST запрос. Добавление элемента. Данные принимаются из тела запрсоа
    * ex. http://localhost:8080/api/items
    */
-  async deleteAll(req, res) {
+  addItem = async (req, res) => {
     try {
-      Items.destroy({ truncate: true });
+      const { name, parentId } = req.body;
 
-      res.json(messages.items.deletedAll);
+      if (parentId) {
+        const parentItem = await Items.findOne({ where: { id: parentId } });
+
+        if (!parentItem) {
+          res.status(400).json(errors.items.noParent);
+
+          return;
+        }
+      }
+
+      const item = parentId ? { name, parentId } : { name };
+      const itemError = this.validate(item, ItemsController.types);
+
+      if (itemError) {
+        res.status(400).json(itemError);
+
+        return;
+      }
+
+      const data = await Items.create(item);
+
+      res.status(201).json({
+        id: data.id,
+        ...messages.items.added
+      });
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * PUT запрос. Обновление имени для элемента
+   * ex. http://localhost:8080/api/items/:id
+   * Имя принимает из тела запроса
+   */
+  setNameItem = async (req, res) => {
+    try {
+      const reqId = req.params.id;
+      const item = await Items.findOne({ where: { id: reqId } });
+
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
+
+        return;
+      }
+
+      const { name } = req.body;
+      const itemError = this.validate({ name }, ItemsController.types);
+
+      if (itemError) {
+        res.status(400).json(itemError);
+
+        return;
+      }
+
+      item.name = name;
+      await item.save();
+
+      res.status(200).json({
+        id: item.id,
+        ...messages.items.updated
+      });
+    } catch (e) {
+      res.status(400).json(e);
+    }
+  }
+
+  /**
+   * PUT запрос. Меняет флаг isCompleted
+   * ex. http://localhost:8080/api/items/:id/complete
+   */
+  async toggleIsCompleted(req, res) {
+    try {
+      const { id } = req.params;
+      const item = await Items.findOne({ where: { id } });
+
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
+
+        return;
+      }
+
+      const isCompleted = item.isCompleted;
+      const ids = await ItemsController.addAllChildrenIds(id);
+      await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
+
+      res.status(200).json({
+        id: item.id,
+        ...messages.items.updated
+      });
     } catch (e) {
       res.status(500).json(e);
     }
@@ -267,8 +226,7 @@ class ItemsController extends BaseController {
   /**
    * PUT запрос
    * Пометить элемент, включая все дочерние элементы, выполненными/невыполненными
-   * ex. http://localhost:8080/api/items/complete/all/false
-   * ex. http://localhost:8080/api/items/complete/all/true
+   * ex. http://localhost:8080/api/items/:id/complete/:boolean
    */
   async setIsCompletedAll(req, res) {
     try {
@@ -293,6 +251,46 @@ class ItemsController extends BaseController {
       }
 
       res.status(400).json(errors.items.incorrectlyProp);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * DELETE запрос
+   * Удаление всех элементов
+   * ex. http://localhost:8080/api/items
+   */
+  async deleteAll(req, res) {
+    try {
+      Items.destroy({ truncate: true });
+
+      res.json(messages.items.deletedAll);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
+   * DELETE запрос. Удаление элемента
+   * ex. http://localhost:8080/api/items/:id
+   */
+  async deleteItem(req, res) {
+    try {
+      const reqId = req.params.id;
+      const item = await Items.findOne({ where: { id: reqId } });
+
+      if (item) {
+        await Items.destroy({ where: { id: reqId } });
+        res.status(200).json({
+          id: item.id,
+          ...messages.items.deleted
+        });
+
+        return;
+      }
+
+      res.status(400).json(errors.items.notDefined);
     } catch (e) {
       res.status(500).json(e);
     }

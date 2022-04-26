@@ -225,7 +225,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           parent: item.id,
-          children: allChildrenIds
+          childrenAll: allChildrenIds
         },
         ...messages.items.updated
       });
@@ -263,7 +263,7 @@ class ItemsController extends BaseController {
         res.status(200).json({
           id: {
             parent: item.id,
-            children: allChildrenIds
+            childrenAll: allChildrenIds
           },
           ...messages.items.updatedAll
         });
@@ -314,7 +314,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           parent: item.id,
-          children: allChildrenIds
+          childrenAll: allChildrenIds
         },
         ...messages.items.deleted
       });
@@ -350,7 +350,7 @@ class ItemsController extends BaseController {
       await Items.destroy({ where: { id: [...allCompletedIds, ...allCompletedChildrenIds.flat()] } });
 
       res.status(200).json({
-        id: allCompletedIds.map((id, index) => ({parent: id, children: allCompletedChildrenIds[index]})),
+        id: allCompletedIds.map((id, index) => ({parent: id, childrenAll: allCompletedChildrenIds[index]})),
         ...messages.items.deleteComplete
       });
     } catch (e) {

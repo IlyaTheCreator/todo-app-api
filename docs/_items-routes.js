@@ -277,9 +277,9 @@
 
 /**
  * @swagger
- * /api/items/{id}:
- *   delete:
- *     summary: Deletes single item by its id
+ * /api/items/{id}/complete/{boolean}:
+ *   put:
+ *     summary: Marks all items completed/uncompleted
  *     tags: [Items]
  *     parameters:
  *       - in: path
@@ -288,22 +288,25 @@
  *           type: integer
  *         required: true
  *         description: Existing item id
+ *       - in: path
+ *         name: boolean
+ *         schema:
+ *           type: boolean
+ *         required: true
+ *         description: The "isCompleted" value to set to all items at once
  *     responses:
  *       200:
- *         description: Item deleted successfully
+ *         description: All items updated
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id: 
- *                   type: integer
- *                   example: 1
- *                 message: 
+ *                 message:
  *                   type: string
- *                   example: "Item deleted"
+ *                   example: All items updated
  *       400:
- *         description: Bad request
+ *         description: Incorrectly property 
  *         content:
  *           application/json:
  *             schema:
@@ -344,9 +347,9 @@
 
 /**
  * @swagger
- * /api/items/{id}/complete/{boolean}:
- *   put:
- *     summary: Marks all items completed/uncompleted
+ * /api/items/{id}:
+ *   delete:
+ *     summary: Deletes single item by its id
  *     tags: [Items]
  *     parameters:
  *       - in: path
@@ -355,25 +358,22 @@
  *           type: integer
  *         required: true
  *         description: Existing item id
- *       - in: path
- *         name: boolean
- *         schema:
- *           type: boolean
- *         required: true
- *         description: The "isCompleted" value to set to all items at once
  *     responses:
  *       200:
- *         description: All items updated
+ *         description: Item deleted successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 id: 
+ *                   type: integer
+ *                   example: 1
+ *                 message: 
  *                   type: string
- *                   example: All items updated
+ *                   example: "Item deleted"
  *       400:
- *         description: Incorrectly property 
+ *         description: Bad request
  *         content:
  *           application/json:
  *             schema:

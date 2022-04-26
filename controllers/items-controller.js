@@ -310,12 +310,15 @@ class ItemsController extends BaseController {
         return;
       }
 
-      // add to item's ID all the IDs of all its children with static addAllChildrenIds method
-      const ids = await ItemsController.addAllChildrenIds(item.id);
-      await Items.destroy({ where: { id: ids } });
+      // add to item's ID all the IDs of all its children with static getAllChildrenIds method
+      const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
+      await Items.destroy({ where: { id: [item.id, ...allChildrenIds] } });
 
       res.status(200).json({
-        id: ids,
+        id: {
+          parent: item.id,
+          children: allChildrenIds
+        },
         ...messages.items.deleted
       });
     } catch (e) {

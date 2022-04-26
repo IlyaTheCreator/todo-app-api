@@ -255,11 +255,20 @@ class ItemsController extends BaseController {
       if (boolean === 'true' || 'false') {
         const booleanValue = boolean === 'true' ? true : false;
 
-        // add to item's ID all the IDs of all its children with static addAllChildrenIds method
-        const ids = await ItemsController.addAllChildrenIds(id);
-        await Items.update({ isCompleted: booleanValue }, { where: { isCompleted: !booleanValue, id: ids } });
+        // add to item's ID all the IDs of all its children with static getAllChildrenIds method
+        const allChildrenIds = await ItemsController.getAllChildrenIds(id);
+        await Items.update(
+            { isCompleted: booleanValue },
+            { where: { isCompleted: !booleanValue, id: [item.id, ...allChildrenIds] } }
+          );
 
-        res.status(200).json(messages.items.updatedAll);
+        res.status(200).json({
+          id: {
+            parent: item.id,
+            children: allChildrenIds
+          },
+          ...messages.items.updatedAll
+        });
 
         return;
       }

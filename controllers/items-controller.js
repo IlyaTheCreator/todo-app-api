@@ -15,8 +15,8 @@ class ItemsController extends BaseController {
    * Возвращает массив из id родителя и всех его дочерних элементов.
    * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
    */
-  static async addAllChildrenIds(initialId) {
-    const childrenIds = [initialId];
+  static async getAllChildrenIds(parentId) {
+    const childrenIds = [];
     
     async function findChildren(ids) {
       const items = await Items.findAll({ where: {parentId: ids} });
@@ -29,7 +29,7 @@ class ItemsController extends BaseController {
       }
     }
 
-    await findChildren(childrenIds);
+    await findChildren(parentId);
     return childrenIds;
   }
 

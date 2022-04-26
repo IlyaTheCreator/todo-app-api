@@ -23,6 +23,7 @@ class ItemsController extends BaseController {
 
       if (items.length) {
         const currentIds = items.map(item => item.dataValues.id);
+        console.log('убрать dataValues') // убрать dataValues
         childrenIds.push(...currentIds);
 
         await findChildren(currentIds);
@@ -303,11 +304,34 @@ class ItemsController extends BaseController {
    * Удаление всех выполненных элементов
    * ex. http://localhost:8080/api/items/complete/all
    */
-  async deleteComplete(req, res) {
+  async deleteAllCompleted(req, res) {
     try {
-      await Items.destroy({ where: { isCompleted: true } });
+      const { id } = req.params;
+      const item = await Items.findOne({ where: { id } });
 
-      res.json(messages.items.deleteComplete);
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
+
+        return;
+      }
+
+      const firstCompletedChildren = await Items.findAll({ where: {
+          parentId: item.id,
+          isCompleted: true
+        } });
+
+      const allCompletedChildrenIds = await Promise.all(firstCompletedChildren.map(
+          item => ItemsController.addAllChildrenIds(item.id)
+        ));
+
+      console.log(allCompletedChildrenIds)
+
+      await Items.destroy({ where: { id: allCompletedChildrenIds.flat() } });
+
+      res.status(200).json({
+        id: allCompletedChildrenIds,
+        ...messages.items.deleteComplete
+      });
     } catch (e) {
       res.status(500).json(e);
     }

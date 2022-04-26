@@ -211,11 +211,11 @@ class ItemsController extends BaseController {
       }
 
       const isCompleted = item.isCompleted;
-      const ids = await ItemsController.addAllChildrenIds(id);
+      const ids = await ItemsController.addAllChildrenIds(item.id);
       await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
 
       res.status(200).json({
-        id: item.id,
+        id: ids,
         ...messages.items.updated
       });
     } catch (e) {
@@ -278,17 +278,21 @@ class ItemsController extends BaseController {
   async deleteItem(req, res) {
     try {
       const reqId = req.params.id;
-      const item = await Items.findOne({ where: { id: reqId } });
 
-      if (item) {
-        await Items.destroy({ where: { id: reqId } });
-        res.status(200).json({
-          id: item.id,
-          ...messages.items.deleted
-        });
+      const item = await Items.findOne({ where: { id: reqId } });
+      if (!item) {
+        res.status(400).json(errors.items.notDefined);
 
         return;
       }
+
+      await Items.destroy({ where: { id: reqId } });
+      res.status(200).json({
+        id: item.id,
+        ...messages.items.deleted
+      });
+
+      return;
 
       res.status(400).json(errors.items.notDefined);
     } catch (e) {

@@ -243,15 +243,20 @@
  *        description: A parameter by which a item will be edited
  *     responses:
  *       200:
- *         description: The item was updated successfully
+ *         description: |
+ *           The item was updated successfully.
+ *           The "id" of the response object is an array in which the first element is an ID of modified item
+ *           and the rest elements are IDs of all its children items.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id: 
- *                   type: integer
- *                   example: 1
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *                   example: [1, 4, 5]
  *                 message: 
  *                   type: string
  *                   example: "Item updated"

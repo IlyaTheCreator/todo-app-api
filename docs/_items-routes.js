@@ -6,7 +6,7 @@
  *     tags: [Items]
  *     responses:
  *       200:
- *         description: The list of the items (can be empty)
+ *         description: The list of the items (may be empty)
  *         content:
  *           application/json:
  *             schema:
@@ -232,7 +232,7 @@
  * @swagger
  * /api/items/{id}/complete:
  *   put:
- *     summary: Edits existing item's isCompleted property by its id
+ *     summary: Toggles property "isCompleted" of the item and all its children by the item's ID
  *     tags: [Items]
  *     parameters:
  *      - in: path
@@ -245,18 +245,24 @@
  *       200:
  *         description: |
  *           The item updated successfully.
- *           The "id" of the response object is an array in which the first element is an ID of modified item
- *           and the rest elements are IDs of all its children items also modified.
+ *           The "id" property of the response object is an object with the ID of the modified item
+ *           and with an array of all its children IDs, on all levels of nesting, also modified.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id: 
- *                   type: array
- *                   items:
- *                     type: integer
- *                   example: [1, 4, 5]
+ *                   type: object
+ *                   properties:
+ *                     parent:
+ *                       type: integer
+ *                       example: 1
+ *                     childrenAll:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [5, 6, 9]
  *                 message: 
  *                   type: string
  *                   example: "Item updated"
@@ -279,7 +285,7 @@
  * @swagger
  * /api/items/{id}/complete/{boolean}:
  *   put:
- *     summary: Marks all items completed/uncompleted
+ *     summary: Marks all children items of the current item completed/incompleted by the current item's ID.
  *     tags: [Items]
  *     parameters:
  *       - in: path
@@ -296,15 +302,29 @@
  *         description: The "isCompleted" value to set to all items at once
  *     responses:
  *       200:
- *         description: All items updated
+ *         description: |
+ *           All items updated.
+ *           The "id" property of the response object is an object with the ID of the current item
+ *           and with an array of all its children IDs, on all levels of nesting, also modified.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 id: 
+ *                   type: object
+ *                   properties:
+ *                     parent:
+ *                       type: integer
+ *                       example: 1
+ *                     childrenAll:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [5, 6, 9]
+ *                 message: 
  *                   type: string
- *                   example: All items updated
+ *                   example: "All items updated"
  *       400:
  *         description: Incorrectly property 
  *         content:
@@ -362,18 +382,24 @@
  *       200:
  *         description: |
  *           The item deleted successfully.
- *           The "id" of the response object is an array in which the first element is an ID of deleted item
- *           and the rest elements are IDs of all its children items also deleted.
+ *           The "id" property of the response object is an object with the ID of the deleted item
+ *           and with an array of all its children IDs, on all levels of nesting, also deleted.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id: 
- *                   type: array
- *                   items:
- *                     type: integer
- *                   example: [1, 4, 5]
+ *                   type: object
+ *                   properties:
+ *                     parent:
+ *                       type: integer
+ *                       example: 1
+ *                     childrenAll:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [5, 6, 9]
  *                 message: 
  *                   type: string
  *                   example: "Item deleted"
@@ -394,10 +420,17 @@
 
 /**
  * @swagger
- * /api/items/complete/all:
+ * /api/items/{id}/complete:
  *   delete:
  *     summary: Deletes all completed items
  *     tags: [Items]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Existing item id
  *     responses:
  *       200:
  *         description: Completed items deleted
@@ -406,6 +439,25 @@
  *             schema:
  *               type: object
  *               properties:
+ *                 id: 
+ *                   type: object
+ *                   properties:
+ *                     parent:
+ *                       type: integer
+ *                       example: 1
+ *                     children:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           parent:
+ *                             type: integer
+ *                             example: 1
+ *                           childrenAll:
+ *                             type: array
+ *                             items:
+ *                               type: integer
+ *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
  *                   example: "Completed items deleted"

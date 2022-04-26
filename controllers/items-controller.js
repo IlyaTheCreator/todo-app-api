@@ -350,7 +350,10 @@ class ItemsController extends BaseController {
       await Items.destroy({ where: { id: [...allCompletedIds, ...allCompletedChildrenIds.flat()] } });
 
       res.status(200).json({
-        id: allCompletedIds.map((id, index) => ({parent: id, childrenAll: allCompletedChildrenIds[index]})),
+        id: {
+          parent: item.id,
+          children: allCompletedIds.map((id, index) => ({parent: id, childrenAll: allCompletedChildrenIds[index]})),
+        },
         ...messages.items.deleteComplete
       });
     } catch (e) {

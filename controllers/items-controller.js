@@ -105,6 +105,7 @@ class ItemsController extends BaseController {
       const reqId = req.params.id;
       const item = await Items.findOne({ where: { id: reqId } });
 
+        // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
@@ -121,7 +122,7 @@ class ItemsController extends BaseController {
   }
   
   /**
-   * POST запрос. Добавление элемента. Данные принимаются из тела запрсоа
+   * POST запрос. Добавление элемента. Данные принимаются из тела запроса
    * ex. http://localhost:8080/api/items
    */
   addItem = async (req, res) => {
@@ -129,6 +130,7 @@ class ItemsController extends BaseController {
       const { name, parentId } = req.body;
 
       if (parentId) {
+        // check if the item with this parent ID exists
         const parentItem = await Items.findOne({ where: { id: parentId } });
 
         if (!parentItem) {
@@ -168,6 +170,7 @@ class ItemsController extends BaseController {
       const reqId = req.params.id;
       const item = await Items.findOne({ where: { id: reqId } });
 
+      // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
@@ -204,6 +207,7 @@ class ItemsController extends BaseController {
       const { id } = req.params;
       const item = await Items.findOne({ where: { id } });
 
+      // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
@@ -211,6 +215,8 @@ class ItemsController extends BaseController {
       }
 
       const isCompleted = item.isCompleted;
+
+      // add to item's ID all the IDs of all its children with static addAllChildrenIds method
       const ids = await ItemsController.addAllChildrenIds(item.id);
       await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
 
@@ -232,7 +238,7 @@ class ItemsController extends BaseController {
     try {
       const { id, boolean } = req.params;
       
-      // try to find the item by id
+      // check if the item with this ID exists
       const item = await Items.findOne({ where: { id } });
       if (!item) {
         res.status(400).json(errors.items.notDefined);
@@ -242,6 +248,8 @@ class ItemsController extends BaseController {
 
       if (boolean === 'true' || 'false') {
         const booleanValue = boolean === 'true' ? true : false;
+
+        // add to item's ID all the IDs of all its children with static addAllChildrenIds method
         const ids = await ItemsController.addAllChildrenIds(id);
         await Items.update({ isCompleted: booleanValue }, { where: { isCompleted: !booleanValue, id: ids } });
 
@@ -280,12 +288,14 @@ class ItemsController extends BaseController {
       const { id } = req.params;
       const item = await Items.findOne({ where: { id } });
 
+      // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
         return;
       }
 
+      // add to item's ID all the IDs of all its children with static addAllChildrenIds method
       const ids = await ItemsController.addAllChildrenIds(item.id);
       await Items.destroy({ where: { id: ids } });
 
@@ -308,6 +318,7 @@ class ItemsController extends BaseController {
       const { id } = req.params;
       const item = await Items.findOne({ where: { id } });
 
+      // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
@@ -320,6 +331,7 @@ class ItemsController extends BaseController {
         } });
 
       const allCompletedChildrenIds = await Promise.all(firstCompletedChildren.map(
+          // add to every item's ID all the IDs of all its children with static addAllChildrenIds method
           item => ItemsController.addAllChildrenIds(item.id)
         ));
 

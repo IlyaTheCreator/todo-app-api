@@ -22,8 +22,7 @@ class ItemsController extends BaseController {
       const items = await Items.findAll({ where: {parentId: ids} });
 
       if (items.length) {
-        const currentIds = items.map(item => item.dataValues.id);
-        console.log('убрать dataValues') // убрать dataValues
+        const currentIds = items.map(item => item.id);
         childrenIds.push(...currentIds);
 
         await findChildren(currentIds);

@@ -216,12 +216,18 @@ class ItemsController extends BaseController {
 
       const isCompleted = item.isCompleted;
 
-      // add to item's ID all the IDs of all its children with static addAllChildrenIds method
-      const ids = await ItemsController.addAllChildrenIds(item.id);
-      await Items.update({ isCompleted: !isCompleted }, { where: { isCompleted, id: ids } });
+      // add to item's ID all the IDs of all its children with static getAllChildrenIds method
+      const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
+      await Items.update(
+          { isCompleted: !isCompleted },
+          { where: { isCompleted, id: [item.id, ...allChildrenIds] } }
+        );
 
       res.status(200).json({
-        id: ids,
+        id: {
+          parent: item.id,
+          children: allChildrenIds
+        },
         ...messages.items.updated
       });
     } catch (e) {

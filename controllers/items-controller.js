@@ -234,16 +234,22 @@ class ItemsController extends BaseController {
 
       const isCompleted = item.isCompleted;
 
-      const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
+      const allSamecompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: isCompleted } });
+      const allSamecompletedChildrenIds = allSamecompletedChildren.map(item => item.id);
+
+      const allNestedSamecompletedChildrenIds = await Promise.all(allSamecompletedChildrenIds.map(
+        id => ItemsController.getAllChildrenIds(id)
+      ));
+
       await Items.update(
           { isCompleted: !isCompleted },
-          { where: { isCompleted, id: [item.id, ...allChildrenIds] } }
+          { where: { isCompleted, id: [item.id, ...allSamecompletedChildrenIds, ...allNestedSamecompletedChildrenIds.flat()] } }
         );
 
       res.status(200).json({
         id: {
-          parent: item.id,
-          childrenAll: allChildrenIds
+          current: item.id,
+          children: allSamecompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSamecompletedChildrenIds[index]})),
         },
         ...messages.items.updated
       });

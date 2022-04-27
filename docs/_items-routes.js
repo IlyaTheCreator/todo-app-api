@@ -280,9 +280,13 @@
  *     responses:
  *       200:
  *         description: |
- *           The item updated successfully.
- *           The "id" property of the response object is an object with the ID of the modified item
- *           and with an array of all its children IDs, on all levels of nesting, also modified.
+ *           The item updated successfully.<br>
+ *           The "id" property of the response object is an object which contains
+ *           the "current" property with the ID of the current updated item,
+ *           and the "children" property with an array of all its also updated children items
+ *           which had the same "isCompleted" property value as the current item.<br>
+ *           Each updated child object has its own "current" property with its ID,
+ *           and its own "children" property with IDs of all its also updated nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -291,14 +295,22 @@
  *                 id: 
  *                   type: object
  *                   properties:
- *                     parent:
+ *                     current:
  *                       type: integer
  *                       example: 1
- *                     childrenAll:
+ *                     children:
  *                       type: array
  *                       items:
- *                         type: integer
- *                       example: [5, 6, 9]
+ *                         type: object
+ *                         properties:
+ *                           current:
+ *                             type: integer
+ *                             example: 2
+ *                           childrenAllNested:
+ *                             type: array
+ *                             items:
+ *                               type: integer
+ *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
  *                   example: "Item updated"
@@ -416,10 +428,13 @@
  *         description: Existing item id
  *     responses:
  *       200:
- *         description: |
- *           The item deleted successfully.
- *           The "id" property of the response object is an object with the ID of the deleted item
- *           and with an array of all its children IDs, on all levels of nesting, also deleted.
+ *         description:  |
+ *           The item deleted successfully.<br>
+ *           The "id" property of the response object is an object which contains
+ *           the "current" property with the ID of the current deleted item,
+ *           and the "children" property with an array of all its also deleted children items.<br>
+ *           Each deleted child object has its own "current" property with its ID,
+ *           and its own "children" property with IDs of all its also deleted nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -480,10 +495,10 @@
  *         description:  |
  *           Completed items deleted successfully.<br>
  *           The "id" property of the response object is an object which contains
- *           the "current" property with the ID of the current deleted item,
- *           and the "children" property with an array of all its also deleted children items.<br>
+ *           the "current" property with the ID of the current modified item,
+ *           and the "children" property with an array of deleted items which had been completed.<br>
  *           Each deleted child object has its own "current" property with its ID,
- *           and its own "children" property with IDs of all its nested children items on all levels of nesting.
+ *           and its own "children" property with IDs of all its also deleted nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -510,7 +525,7 @@
  *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
- *                   example: "Item deleted"
+ *                   example: "Completed items deleted"
  *       500:
  *         description: Internal server error
  *         content:

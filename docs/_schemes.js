@@ -43,7 +43,7 @@
  *            * 22 - not-string-type
  *            * 23 - not-number-type
  *            * 31 - undefined-item
- *            * 32 - incorrect-property
+ *            * 32 - incorrect-boolean-property
  *            * 33 - parent-not-found
  *         name:
  *           type: string

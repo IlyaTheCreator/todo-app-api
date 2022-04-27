@@ -286,7 +286,7 @@ class ItemsController extends BaseController {
       }
 
       if (boolean !== 'true' && boolean !== 'false') {
-        res.status(400).json(errors.items.incorrectlyProp);
+        res.status(400).json(errors.items.incorrectlyBooleanProp);
 
         return;
       }

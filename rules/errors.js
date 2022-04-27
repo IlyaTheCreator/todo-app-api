@@ -33,9 +33,9 @@ const errors = {
       name: 'undefined-item',
       message: 'Item is not defined',
     },
-    incorrectlyProp: {
+    incorrectlyBooleanProp: {
       statusCode: 32,
-      name: 'incorrect-property',
+      name: 'incorrect-boolean-property',
       message: 'The value can be either true or false',
     },
     noParent: {

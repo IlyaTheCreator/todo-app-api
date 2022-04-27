@@ -165,7 +165,7 @@ class ItemsController extends BaseController {
    * ex. http://localhost:8080/api/items/:id
    * Имя принимает из тела запроса
    */
-  setNameItem = async (req, res) => {
+  setItemName = async (req, res) => {
     try {
       const reqId = req.params.id;
       const item = await Items.findOne({ where: { id: reqId } });

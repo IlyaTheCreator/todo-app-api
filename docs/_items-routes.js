@@ -12,7 +12,20 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Item'
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: Throw out the trash
+ *                   isCompleted:
+ *                     type: boolean
+ *                     example: false
+ *                   parentId:
+ *                     type: integer
+ *                     example: 0
  *       500:
  *         description: Internal server error
  *         content:

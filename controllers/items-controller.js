@@ -34,6 +34,27 @@ class ItemsController extends BaseController {
   }
 
   /**
+   * Статический метод для актуализации свойства isCompleted родителя элемента по id этого элемента.
+   * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
+   */
+  static async updateParentProp(parentId, checkProp, propValue) {
+    const allSiblings = await Items.findAll({ where: { parentId } });
+    const siblingsPropsArr = allSiblings.map(sibling => sibling[checkProp])
+    
+    if (!siblingsPropsArr.every(prop => prop == propValue)) {
+      await Items.update(
+        { [checkProp]: propValue },
+        { where: { id: parentId } }
+      );
+
+      const parent = await Items.findOne({ where: { id: parentId } });
+      if (parent.parentId) {
+        await ItemsController.updateParentProp(parent.parentId, checkProp, propValue)
+      }
+    }
+  }
+
+  /**
    * GET запрос. Получение всех корневых элементов
    * ex. http://localhost:8080/api/items
    */
@@ -170,6 +191,10 @@ class ItemsController extends BaseController {
 
       const item = parentId ? { name, parentId } : { name };
       const itemError = this.validate(item, ItemsController.types);
+
+      if (parentId) {
+        await ItemsController.updateParentProp(parentId, 'isCompleted', false);
+      }
 
       if (itemError) {
         res.status(400).json(itemError);

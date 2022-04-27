@@ -358,19 +358,19 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const allCompleted = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
-      const allCompletedIds = allCompleted.map(item => item.id);
+      const allCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
+      const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
-      const allCompletedChildrenIds = await Promise.all(allCompletedIds.map(
+      const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
           id => ItemsController.getAllChildrenIds(id)
         ));
 
-      await Items.destroy({ where: { id: [...allCompletedIds, ...allCompletedChildrenIds.flat()] } });
+      await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allCompletedIds.map((id, index) => ({current: id, childrenAllNested: allCompletedChildrenIds[index]})),
+          children: allCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
         },
         ...messages.items.deleteComplete
       });

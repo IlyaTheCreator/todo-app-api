@@ -1,5 +1,28 @@
 /**
  * @swagger
+ * /api/items:
+ *   get:
+ *     summary: Returns the list of all root items
+ *     tags: [Items]
+ *     responses:
+ *       200:
+ *         description: The list of all root items with parentId = 0 (may be empty)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Item'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ */
+
+/**
+ * @swagger
  * /api/items/all:
  *   get:
  *     summary: Returns the list of all the items

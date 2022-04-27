@@ -34,6 +34,24 @@ class ItemsController extends BaseController {
   }
 
   /**
+   * GET запрос. Получение всех корневых элементов
+   * ex. http://localhost:8080/api/items
+   */
+  async getRootItems(req, res) {
+    try {
+      const items = await Items.findAll({ where: { parentId: Items.getAttributes().parentId.defaultValue } });
+
+      if (!items) {
+        res.json(messages.items.noData);
+      }
+
+      res.json(items);
+    } catch (e) {
+      res.status(500).json(e);
+    }
+  }
+
+  /**
    * GET запрос. Получение всех элементов
    * ex. http://localhost:8080/api/items/all
    */

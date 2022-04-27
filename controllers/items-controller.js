@@ -130,8 +130,18 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const itemChildren = await Items.findAll({ where: { parentId: item.id } });
-      item.dataValues.children = itemChildren;
+      const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      const allChildrenIds = allChildren.map(item => item.id);
+
+      const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
+        id => ItemsController.getAllChildrenIds(id)
+      ));
+
+      for (let i = 0; i < allChildren.length; i++) {
+        allChildren[i].dataValues.childrenAllNested = allNestedChildrenIds[i];
+      }
+      
+      item.dataValues.children = allChildren;
 
       res.json(item);
     } catch (e) {

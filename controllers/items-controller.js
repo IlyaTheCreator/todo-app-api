@@ -326,13 +326,19 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const allChildrenIds = await ItemsController.getAllChildrenIds(item.id);
-      await Items.destroy({ where: { id: [item.id, ...allChildrenIds] } });
+      const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      const allChildrenIds = allChildren.map(item => item.id);
+
+      const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
+        id => ItemsController.getAllChildrenIds(id)
+      ));
+
+      await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds] } });
 
       res.status(200).json({
         id: {
-          parent: item.id,
-          childrenAll: allChildrenIds
+          current: item.id,
+          children: allChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
         },
         ...messages.items.deleted
       });

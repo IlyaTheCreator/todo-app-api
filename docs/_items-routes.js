@@ -428,17 +428,25 @@
  *                 id: 
  *                   type: object
  *                   properties:
- *                     parent:
+ *                     current:
  *                       type: integer
  *                       example: 1
- *                     childrenAll:
+ *                     children:
  *                       type: array
  *                       items:
- *                         type: integer
- *                       example: [5, 6, 9]
+ *                         type: object
+ *                         properties:
+ *                           current:
+ *                             type: integer
+ *                             example: 2
+ *                           childrenAllNested:
+ *                             type: array
+ *                             items:
+ *                               type: integer
+ *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
- *                   example: "Item deleted"
+ *                   example: "Completed items deleted"
  *       400:
  *         description: Bad request
  *         content:
@@ -472,8 +480,8 @@
  *         description:  |
  *           Completed items deleted successfully.<br>
  *           The "id" property of the response object is an object which contains
- *           the "current" property with the ID of the current modified item,
- *           and the "children" property with an array of deleted items which had been completed.<br>
+ *           the "current" property with the ID of the current deleted item,
+ *           and the "children" property with an array of all its also deleted children items.<br>
  *           Each deleted child object has its own "current" property with its ID,
  *           and its own "children" property with IDs of all its nested children items on all levels of nesting.
  *         content:
@@ -494,7 +502,7 @@
  *                         properties:
  *                           current:
  *                             type: integer
- *                             example: 1
+ *                             example: 2
  *                           childrenAllNested:
  *                             type: array
  *                             items:
@@ -502,7 +510,7 @@
  *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
- *                   example: "Completed items deleted"
+ *                   example: "Item deleted"
  *       500:
  *         description: Internal server error
  *         content:

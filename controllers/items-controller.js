@@ -275,27 +275,33 @@ class ItemsController extends BaseController {
         return;
       }
 
-      if (boolean === 'true' || 'false') {
-        const booleanValue = boolean === 'true' ? true : false;
-
-        const allChildrenIds = await ItemsController.getAllChildrenIds(id);
-        await Items.update(
-            { isCompleted: booleanValue },
-            { where: { isCompleted: !booleanValue, id: [item.id, ...allChildrenIds] } }
-          );
-
-        res.status(200).json({
-          id: {
-            parent: item.id,
-            childrenAll: allChildrenIds
-          },
-          ...messages.items.updatedAll
-        });
+      if (boolean !== 'true' && boolean !== 'false') {
+        res.status(400).json(errors.items.incorrectlyProp);
 
         return;
       }
 
-      res.status(400).json(errors.items.incorrectlyProp);
+      const booleanValue = boolean === 'true' ? true : false;
+
+      const allDiffChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: !booleanValue } });
+      const allDiffChildrenIds = allDiffChildren.map(item => item.id);
+
+      const allNestedDiffChildrenIds = await Promise.all(allDiffChildrenIds.map(
+        id => ItemsController.getAllChildrenIds(id)
+      ));
+
+      await Items.update(
+          { isCompleted: booleanValue },
+          { where: { isCompleted: !booleanValue, id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()] } }
+        );
+
+      res.status(200).json({
+        id: {
+          current: item.id,
+          children: allDiffChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedDiffChildrenIds[index]})),
+        },
+        ...messages.items.updatedAll
+      });
     } catch (e) {
       res.status(500).json(e);
     }

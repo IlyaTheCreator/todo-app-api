@@ -268,7 +268,7 @@
  * @swagger
  * /api/items/{id}/complete:
  *   put:
- *     summary: Toggles property "isCompleted" of the item and all its children by the item's ID
+ *     summary: Toggles "isCompleted" property of the current item and all its children by the item's ID
  *     tags: [Items]
  *     parameters:
  *      - in: path
@@ -286,7 +286,7 @@
  *           and the "children" property with an array of all its also updated children items
  *           which had the same "isCompleted" property value as the current item.<br>
  *           Each updated child object has its own "current" property with its ID,
- *           and its own "children" property with IDs of all its also updated nested children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its also updated nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -333,7 +333,7 @@
  * @swagger
  * /api/items/{id}/complete/{boolean}:
  *   put:
- *     summary: Marks all children items of the current item completed/incompleted by the current item's ID.
+ *     summary: Sets the "isComplete" property of the current item and all its children equal to the "boolean" parameter.
  *     tags: [Items]
  *     parameters:
  *       - in: path
@@ -351,9 +351,13 @@
  *     responses:
  *       200:
  *         description: |
- *           All items updated.
- *           The "id" property of the response object is an object with the ID of the current item
- *           and with an array of all its children IDs, on all levels of nesting, also modified.
+ *           All item updated successfully.<br>
+ *           The "id" property of the response object is an object which contains
+ *           the "current" property with the ID of the current updated item,
+ *           and the "children" property with an array of all its also updated children items
+ *           whose "isCompleted" property value is opposite to the given boolean parameter.<br>
+ *           Each updated child object has its own "current" property with its ID,
+ *           and its own "childrenAllNested" property as an array with IDs of all its also updated nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -362,14 +366,22 @@
  *                 id: 
  *                   type: object
  *                   properties:
- *                     parent:
+ *                     current:
  *                       type: integer
  *                       example: 1
- *                     childrenAll:
+ *                     children:
  *                       type: array
  *                       items:
- *                         type: integer
- *                       example: [5, 6, 9]
+ *                         type: object
+ *                         properties:
+ *                           current:
+ *                             type: integer
+ *                             example: 2
+ *                           childrenAllNested:
+ *                             type: array
+ *                             items:
+ *                               type: integer
+ *                             example: [5, 6, 9]
  *                 message: 
  *                   type: string
  *                   example: "All items updated"
@@ -434,7 +446,7 @@
  *           the "current" property with the ID of the current deleted item,
  *           and the "children" property with an array of all its also deleted children items.<br>
  *           Each deleted child object has its own "current" property with its ID,
- *           and its own "children" property with IDs of all its also deleted nested children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its also deleted nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -498,7 +510,7 @@
  *           the "current" property with the ID of the current modified item,
  *           and the "children" property with an array of deleted items which had been completed.<br>
  *           Each deleted child object has its own "current" property with its ID,
- *           and its own "children" property with IDs of all its also deleted nested children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its also deleted nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:

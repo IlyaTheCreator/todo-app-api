@@ -35,9 +35,9 @@ class ItemsController extends BaseController {
 
   /**
    * GET запрос. Получение всех элементов
-   * ex. http://localhost:8080/api/items
+   * ex. http://localhost:8080/api/items/all
    */
-  async getItems(req, res) {
+  async getAllItems(req, res) {
     try {
       const items = await Items.findAll();
 

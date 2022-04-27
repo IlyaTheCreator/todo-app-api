@@ -1,12 +1,12 @@
 /**
  * @swagger
- * /api/items:
+ * /api/items/all:
  *   get:
  *     summary: Returns the list of all the items
  *     tags: [Items]
  *     responses:
  *       200:
- *         description: The list of the items (may be empty)
+ *         description: The list of all the items (may be empty)
  *         content:
  *           application/json:
  *             schema:

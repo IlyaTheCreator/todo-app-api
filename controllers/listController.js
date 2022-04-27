@@ -60,7 +60,7 @@ class ListController extends BaseController {
 
         return;
       }
-      res.json(lists);
+      res.json(lists.reverse());
     } catch (e) {
       res.status(500).json(e);
     }

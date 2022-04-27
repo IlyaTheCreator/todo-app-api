@@ -469,7 +469,13 @@
  *         description: Existing item id
  *     responses:
  *       200:
- *         description: Completed items deleted
+ *         description:  |
+ *           Completed items deleted successfully.<br>
+ *           The "id" property of the response object is an object which contains
+ *           the "current" property with the ID of the current modified item,
+ *           and the "children" property with an array of deleted items which had been completed.<br>
+ *           Each deleted child object has its own "current" property with its ID,
+ *           and its own "children" property with IDs of all its nested children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -478,7 +484,7 @@
  *                 id: 
  *                   type: object
  *                   properties:
- *                     parent:
+ *                     current:
  *                       type: integer
  *                       example: 1
  *                     children:
@@ -486,10 +492,10 @@
  *                       items:
  *                         type: object
  *                         properties:
- *                           parent:
+ *                           current:
  *                             type: integer
  *                             example: 1
- *                           childrenAll:
+ *                           childrenAllNested:
  *                             type: array
  *                             items:
  *                               type: integer

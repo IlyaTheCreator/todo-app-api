@@ -369,8 +369,8 @@ class ItemsController extends BaseController {
 
       res.status(200).json({
         id: {
-          parent: item.id,
-          children: allCompletedIds.map((id, index) => ({parent: id, childrenAll: allCompletedChildrenIds[index]})),
+          current: item.id,
+          children: allCompletedIds.map((id, index) => ({current: id, childrenAllNested: allCompletedChildrenIds[index]})),
         },
         ...messages.items.deleteComplete
       });

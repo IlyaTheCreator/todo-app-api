@@ -42,4 +42,13 @@ Items.init(
   }
 );
 
+Items.hasMany(Items, {
+  foreignKey: {
+    name: 'parentId',
+  },
+  onDelete: 'CASCADE',
+  hooks: true,
+});
+
+
 module.exports = Items;

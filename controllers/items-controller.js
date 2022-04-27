@@ -17,9 +17,9 @@ class ItemsController extends BaseController {
    */
   static async getAllChildrenIds(parentId) {
     const childrenIds = [];
-    
+
     async function findChildren(ids) {
-      const items = await Items.findAll({ where: {parentId: ids} });
+      const items = await Items.findAll({ where: { parentId: ids } });
 
       if (items.length) {
         const currentIds = items.map(item => item.id);
@@ -40,7 +40,7 @@ class ItemsController extends BaseController {
   static async updateParentProp(parentId, checkProp, propValue) {
     const allSiblings = await Items.findAll({ where: { parentId } });
     const siblingsPropsArr = allSiblings.map(sibling => sibling[checkProp])
-    
+
     if (!siblingsPropsArr.every(prop => prop == propValue)) {
       await Items.update(
         { [checkProp]: propValue },
@@ -144,7 +144,7 @@ class ItemsController extends BaseController {
       const reqId = req.params.id;
       const item = await Items.findOne({ where: { id: reqId } });
 
-        // check if the item with this ID exists
+      // check if the item with this ID exists
       if (!item) {
         res.status(400).json(errors.items.notDefined);
 
@@ -161,7 +161,7 @@ class ItemsController extends BaseController {
       for (let i = 0; i < allChildren.length; i++) {
         allChildren[i].dataValues.childrenAllNested = allNestedChildrenIds[i];
       }
-      
+
       item.dataValues.children = allChildren;
 
       res.json(item);
@@ -169,7 +169,7 @@ class ItemsController extends BaseController {
       res.status(500).json(e);
     }
   }
-  
+
   /**
    * POST запрос. Добавление элемента. Данные принимаются из тела запроса
    * ex. http://localhost:8080/api/items
@@ -277,14 +277,14 @@ class ItemsController extends BaseController {
       ));
 
       await Items.update(
-          { isCompleted: !isCompleted },
-          { where: { isCompleted, id: [item.id, ...allSamecompletedChildrenIds, ...allNestedSamecompletedChildrenIds.flat()] } }
-        );
+        { isCompleted: !isCompleted },
+        { where: { isCompleted, id: [item.id, ...allSamecompletedChildrenIds, ...allNestedSamecompletedChildrenIds.flat()] } }
+      );
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allSamecompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSamecompletedChildrenIds[index]})),
+          children: allSamecompletedChildrenIds.map((id, index) => ({ current: id, childrenAllNested: allNestedSamecompletedChildrenIds[index] })),
         },
         ...messages.items.updated
       });
@@ -301,7 +301,7 @@ class ItemsController extends BaseController {
   async setIsCompletedAll(req, res) {
     try {
       const { id, boolean } = req.params;
-      
+
       // check if the item with this ID exists
       const item = await Items.findOne({ where: { id } });
       if (!item) {
@@ -326,14 +326,14 @@ class ItemsController extends BaseController {
       ));
 
       await Items.update(
-          { isCompleted: booleanValue },
-          { where: { isCompleted: !booleanValue, id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()] } }
-        );
+        { isCompleted: booleanValue },
+        { where: { isCompleted: !booleanValue, id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()] } }
+      );
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allDiffChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedDiffChildrenIds[index]})),
+          children: allDiffChildrenIds.map((id, index) => ({ current: id, childrenAllNested: allNestedDiffChildrenIds[index] })),
         },
         ...messages.items.updatedAll
       });
@@ -373,19 +373,21 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const allChildren = await Items.findAll({ where: { parentId: item.id } });
-      const allChildrenIds = allChildren.map(item => item.id);
+      await item.destroy();
 
-      const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
-        id => ItemsController.getAllChildrenIds(id)
-      ));
+      // const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      // const allChildrenIds = allChildren.map(item => item.id);
 
-      await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
+      // const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
+      //   id => ItemsController.getAllChildrenIds(id)
+      // ));
+
+      // await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
+          // children: allChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
         },
         ...messages.items.deleted
       });
@@ -415,15 +417,15 @@ class ItemsController extends BaseController {
       const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
       const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
-          id => ItemsController.getAllChildrenIds(id)
-        ));
+        id => ItemsController.getAllChildrenIds(id)
+      ));
 
       await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
+          children: allCompletedChildrenIds.map((id, index) => ({ current: id, childrenAllNested: allNestedChildrenIds[index] })),
         },
         ...messages.items.deleteComplete
       });

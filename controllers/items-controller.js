@@ -339,7 +339,7 @@ class ItemsController extends BaseController {
         id => ItemsController.getAllChildrenIds(id)
       ));
 
-      await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds] } });
+      await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
 
       res.status(200).json({
         id: {

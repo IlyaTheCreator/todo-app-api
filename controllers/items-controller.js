@@ -372,7 +372,7 @@ class ItemsController extends BaseController {
 
         return;
       }
-
+      // сразу удаляем айтем => удаляются все дети и дети детей :))))
       await item.destroy();
 
       // const allChildren = await Items.findAll({ where: { parentId: item.id } });

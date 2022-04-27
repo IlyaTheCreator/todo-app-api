@@ -12,7 +12,7 @@ class ItemsController extends BaseController {
 
   /**
    * Статический метод для сбора всех id дочерних элементов по id родителя.
-   * Возвращает массив из id родителя и всех его дочерних элементов.
+   * Возвращает массив из id всех его дочерних элементов.
    * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
    */
   static async getAllChildrenIds(parentId) {

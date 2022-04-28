@@ -34,22 +34,59 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * Статический метод для актуализации свойства isCompleted родителя элемента по id этого элемента.
-   * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
+   * Статический метод, который по parentId проверяет,
+   * равно ли false свойство isCompleted у родителя элемента
+   * и всех его вышестоящих родителей, в противном случае
+   * устанавливает им isCompleted = false.
    */
-  static async updateParentProp(parentId, checkProp, propValue) {
+  static async updateParentsIsCompletedIfItIsNotFalse(parentId) {
+    const parent = await Items.findOne({ where: { id: parentId } });
+
+    // если isCompleted родителя уже равно false, то останавливаем метод
+    if (parent.isCompleted == false) {
+      return;
+    }
+
+    // в противном случае перезаписываем свойство
+    await Items.update({ isCompleted: false }, { where: { id: parentId } });
+
+    // обновляем его у вышестоящих родителей рекурсивно этим же методом
+    if (parent.parentId) {
+      await ItemsController.updateParentsIsCompletedIfItIsNotFalse(parent.parentId);
+    }
+  }
+
+  /**
+   * Статический метод, который по parentId проверяет значение
+   * свойства isCompleted у родителя элемента и всех вышестоящих родителей
+   * и устанавливает им isCompleted = true, если у всех детей родителя
+   * isCompleted также равно true.
+   */
+  static async updateParentsIsCompletedIfItShouldBeTrue(parentId) {
+    const parent = await Items.findOne({ where: { id: parentId } });
+
+    // если isCompleted родителя уже равно true, то останавливаем метод
+    if (parent.isCompleted == true) {
+      return;
+    }
+
+    // собираем всех соседних дочерних элементов по id родителя
     const allSiblings = await Items.findAll({ where: { parentId } });
-    const siblingsPropsArr = allSiblings.map(sibling => sibling[checkProp])
+
+    // собираем в массив значения isCompleted у всех дочерних элементов
+    const siblingsPropsArr = allSiblings.map(sibling => sibling.isCompleted);
     
-    if (!siblingsPropsArr.every(prop => prop == propValue)) {
+    // если все значения isCompleted в массиве равны true,
+    // то задаем isCompleted родителя true
+    if (siblingsPropsArr.every(prop => prop)) {
       await Items.update(
-        { [checkProp]: propValue },
+        { isCompleted: true },
         { where: { id: parentId } }
       );
 
       const parent = await Items.findOne({ where: { id: parentId } });
       if (parent.parentId) {
-        await ItemsController.updateParentProp(parent.parentId, checkProp, propValue)
+        await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(parent.parentId);
       }
     }
   }
@@ -193,7 +230,7 @@ class ItemsController extends BaseController {
       const itemError = this.validate(item, ItemsController.types);
 
       if (parentId) {
-        await ItemsController.updateParentProp(parentId, 'isCompleted', false);
+        await ItemsController.updateParentsIsCompletedIfItIsNotFalse(parentId);
       }
 
       if (itemError) {
@@ -269,22 +306,26 @@ class ItemsController extends BaseController {
 
       const isCompleted = item.isCompleted;
 
-      const allSamecompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: isCompleted } });
-      const allSamecompletedChildrenIds = allSamecompletedChildren.map(item => item.id);
+      const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: isCompleted } });
+      const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
 
-      const allNestedSamecompletedChildrenIds = await Promise.all(allSamecompletedChildrenIds.map(
+      const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
         id => ItemsController.getAllChildrenIds(id)
       ));
 
       await Items.update(
           { isCompleted: !isCompleted },
-          { where: { isCompleted, id: [item.id, ...allSamecompletedChildrenIds, ...allNestedSamecompletedChildrenIds.flat()] } }
+          { where: { isCompleted, id: [item.id, ...allSameCompletedChildrenIds, ...allNestedSameCompletedChildrenIds.flat()] } }
         );
+
+      isCompleted
+        ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
+        : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
       res.status(200).json({
         id: {
           current: item.id,
-          children: allSamecompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSamecompletedChildrenIds[index]})),
+          children: allSameCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSameCompletedChildrenIds[index]})),
         },
         ...messages.items.updated
       });

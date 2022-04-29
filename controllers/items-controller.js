@@ -304,24 +304,45 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const isCompleted = item.isCompleted;
+      // определяем новое свойство isCompleted, противоположное предыдущему
+      const prevIsCompleted = item.isCompleted;
+      const newIsCompleted = !prevIsCompleted;
 
-      const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: isCompleted } });
+      // собираем в массив ID всех дочерних элементов с предыдущим значением isCompleted
+      const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: prevIsCompleted } });
       const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
 
+      // собираем для каждого такого дочернего элемента в отдельный массив
+      // ID всех его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
         id => ItemsController.getAllChildrenIds(id)
       ));
 
+      // изменяем всем им значение isCompleted
       await Items.update(
-          { isCompleted: !isCompleted },
-          { where: { isCompleted, id: [item.id, ...allSameCompletedChildrenIds, ...allNestedSameCompletedChildrenIds.flat()] } }
-        );
+        { isCompleted: newIsCompleted },
+        { 
+          where: {
+            isCompleted: prevIsCompleted,
+            id: [item.id, ...allSameCompletedChildrenIds, ...allNestedSameCompletedChildrenIds.flat()] 
+          }
+        }
+      );
 
-      isCompleted
+      // если новое значение isCompleted = false, то для всех вышестоящих родителей текущего элемента
+      // проверяем значение isCompleted и при необходимости изменяем его на false
+      // с помощью метода updateParentsIsCompletedIfItIsNotFalse,
+      // а если новое значение isCompleted = true, то для каждого родителя на основании
+      // значений isCompleted всех его детей методом updateParentsIsCompletedIfItShouldBeTrue проверяем,
+      // должно ли быть его isCompleted = true, и если должно быть, то при необходимости изменяем его на true.
+      newIsCompleted == false
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
+      // в свойство id.children ответа помещаем массив из объектов дочерних элементов,
+      // у которых также было переключено значение isCompleted, в каждом из которых в свойстве current
+      // передаем id каждого из этих дочерних элементов, а в свойстве childrenAllNested -
+      // массив всех их дочерних элементов на всех уровнях вложенности
       res.status(200).json({
         id: {
           current: item.id,

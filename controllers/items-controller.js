@@ -12,10 +12,10 @@ class ItemsController extends BaseController {
 
   /**
    * Статический метод для сбора всех id дочерних элементов по id родителя.
-   * Возвращает массив из id всех его дочерних элементов.
-   * @param {initialId} number id главного родителя (с которого начинается поиск дочерних элементов)
+   * Возвращает массив из id всех его дочерних элементов на всех уровнях вложенности.
+   * @param {parentId} number id главного родителя (с которого начинается поиск дочерних элементов)
    */
-  static async getAllChildrenIds(parentId) {
+  static async getAllNestedChildrenIds(parentId) {
     const childrenIds = [];
     
     async function findChildren(ids) {
@@ -191,7 +191,7 @@ class ItemsController extends BaseController {
       const allChildrenIds = allChildren.map(item => item.id);
 
       const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
-        id => ItemsController.getAllChildrenIds(id)
+        id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
       for (let i = 0; i < allChildren.length; i++) {
@@ -314,7 +314,7 @@ class ItemsController extends BaseController {
       // собираем для каждого такого дочернего элемента в отдельный массив
       // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
-        id => ItemsController.getAllChildrenIds(id)
+        id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
       // изменяем всем им значение isCompleted на новое
@@ -359,7 +359,7 @@ class ItemsController extends BaseController {
     try {
       const { id, boolean } = req.params;
       
-      // check if the item with this ID exists
+      // check if an item with this ID exists
       const item = await Items.findOne({ where: { id } });
       if (!item) {
         res.status(400).json(errors.items.notDefined);
@@ -367,6 +367,7 @@ class ItemsController extends BaseController {
         return;
       }
 
+      // check if the given boolean value is valid
       if (boolean !== 'true' && boolean !== 'false') {
         res.status(400).json(errors.items.incorrectlyBooleanProp);
 
@@ -379,7 +380,7 @@ class ItemsController extends BaseController {
       const allDiffChildrenIds = allDiffChildren.map(item => item.id);
 
       const allNestedDiffChildrenIds = await Promise.all(allDiffChildrenIds.map(
-        id => ItemsController.getAllChildrenIds(id)
+        id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
       await Items.update(
@@ -434,7 +435,7 @@ class ItemsController extends BaseController {
       const allChildrenIds = allChildren.map(item => item.id);
 
       const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
-        id => ItemsController.getAllChildrenIds(id)
+        id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
       await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
@@ -472,7 +473,7 @@ class ItemsController extends BaseController {
       const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
       const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
-          id => ItemsController.getAllChildrenIds(id)
+          id => ItemsController.getAllNestedChildrenIds(id)
         ));
 
       await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });

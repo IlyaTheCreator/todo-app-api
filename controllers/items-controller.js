@@ -34,10 +34,9 @@ class ItemsController extends BaseController {
   }
 
   /**
-   * Статический метод, который по parentId проверяет,
-   * равно ли false свойство isCompleted у родителя элемента
-   * и всех его вышестоящих родителей, в противном случае
-   * устанавливает им isCompleted = false.
+   * Статический метод, который проверяет значение свойства isCompleted
+   * у всех вышестоящих родителей элемента по его parentId
+   * и при необходимости изменяет его на false
    */
   static async updateParentsIsCompletedIfItIsNotFalse(parentId) {
     const parent = await Items.findOne({ where: { id: parentId } });
@@ -59,8 +58,8 @@ class ItemsController extends BaseController {
   /**
    * Статический метод, который по parentId проверяет значение
    * свойства isCompleted у родителя элемента и всех вышестоящих родителей
-   * и устанавливает им isCompleted = true, если у всех детей родителя
-   * isCompleted также равно true.
+   * и при необходимости изменяет его на true каждому родителю,
+   * если у всех его детей isCompleted также равно true.
    */
   static async updateParentsIsCompletedIfItShouldBeTrue(parentId) {
     const parent = await Items.findOne({ where: { id: parentId } });
@@ -308,17 +307,17 @@ class ItemsController extends BaseController {
       const prevIsCompleted = item.isCompleted;
       const newIsCompleted = !prevIsCompleted;
 
-      // собираем в массив ID всех дочерних элементов с предыдущим значением isCompleted
+      // собираем в массив ID всех дочерних элементов только с таким же предыдущим значением isCompleted
       const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: prevIsCompleted } });
       const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех его вложенных дочерних элементов на всех уровнях вложенности
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
         id => ItemsController.getAllChildrenIds(id)
       ));
 
-      // изменяем всем им значение isCompleted
+      // изменяем всем им значение isCompleted на новое
       await Items.update(
         { isCompleted: newIsCompleted },
         { 
@@ -329,20 +328,16 @@ class ItemsController extends BaseController {
         }
       );
 
-      // если новое значение isCompleted = false, то для всех вышестоящих родителей текущего элемента
-      // проверяем значение isCompleted и при необходимости изменяем его на false
-      // с помощью метода updateParentsIsCompletedIfItIsNotFalse,
-      // а если новое значение isCompleted = true, то для каждого родителя на основании
-      // значений isCompleted всех его детей методом updateParentsIsCompletedIfItShouldBeTrue проверяем,
-      // должно ли быть его isCompleted = true, и если должно быть, то при необходимости изменяем его на true.
+      // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
+      // в зависимости от нового значения isCompleted самого элемента
       newIsCompleted == false
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
-      // в свойство id.children ответа помещаем массив из объектов дочерних элементов,
-      // у которых также было переключено значение isCompleted, в каждом из которых в свойстве current
-      // передаем id каждого из этих дочерних элементов, а в свойстве childrenAllNested -
-      // массив всех их дочерних элементов на всех уровнях вложенности
+      // в свойство id.children ответа помещаем массив из объектов дочерних элементов
+      // с переключенным значением isCompleted, в каждом из которых в свойстве current
+      // передаем id дочернего элемента, а в свойстве childrenAllNested -
+      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
       res.status(200).json({
         id: {
           current: item.id,

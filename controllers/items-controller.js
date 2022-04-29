@@ -376,17 +376,32 @@ class ItemsController extends BaseController {
 
       const booleanValue = boolean === 'true' ? true : false;
 
+      // собираем в массив ID всех дочерних элементов только с отличающимся от booleanValue значением isCompleted
       const allDiffChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: !booleanValue } });
       const allDiffChildrenIds = allDiffChildren.map(item => item.id);
 
+      // собираем для каждого такого дочернего элемента в отдельный массив
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedDiffChildrenIds = await Promise.all(allDiffChildrenIds.map(
         id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
+      // изменяем всем им значение isCompleted на заданное
       await Items.update(
-          { isCompleted: booleanValue },
-          { where: { isCompleted: !booleanValue, id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()] } }
-        );
+        { isCompleted: booleanValue },
+        {
+          where: {
+            isCompleted: !booleanValue,
+            id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()]
+          }
+        }
+      );
+
+      // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
+      // в зависимости от нового значения isCompleted самого элемента
+      booleanValue == false
+        ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
+        : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
       res.status(200).json({
         id: {

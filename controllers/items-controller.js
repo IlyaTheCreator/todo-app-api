@@ -496,7 +496,7 @@ class ItemsController extends BaseController {
   /**
    * DELETE запрос
    * Удаление всех выполненных элементов
-   * ex. http://localhost:8080/api/items/complete/all
+   * ex. http://localhost:8080/api/items/:id/complete
    */
   async deleteAllCompleted(req, res) {
     try {
@@ -510,15 +510,23 @@ class ItemsController extends BaseController {
         return;
       }
 
+      // собираем в массив ID всех дочерних элементов со значением isCompleted = true
       const allCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
       const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
+      // собираем для каждого такого дочернего элемента в отдельный массив
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
           id => ItemsController.getAllNestedChildrenIds(id)
         ));
 
+      // удаляем все выполненные дочерние элементы вместе со всеми в свою очередь их дочерними элементами
       await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });
 
+      // в свойство id.children ответа помещаем массив из объектов удаленных
+      // выполненных дочерних элементов, в каждом из которых в свойстве current
+      // передаем id дочернего элемента, а в свойстве childrenAllNested -
+      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
       res.status(200).json({
         id: {
           current: item.id,

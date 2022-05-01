@@ -72,36 +72,41 @@ class ItemsController extends BaseController {
    * если у всех его детей isCompleted также равно true.
    */
   static async updateParentsIsCompletedIfItShouldBeTrue(parentId) {
-    if (parentId == 0) {
-      return;
-    }
+    const parents = [];
 
-    const parent = await Items.findOne({ where: { id: parentId } });
-
-    // если isCompleted родителя уже равно true, то останавливаем метод
-    if (parent.isCompleted == true) {
-      return;
-    }
-
-    // собираем всех соседних дочерних элементов по id родителя
-    const allSiblings = await Items.findAll({ where: { parentId } });
-
-    // собираем в массив значения isCompleted у всех дочерних элементов
-    const siblingsPropsArr = allSiblings.map(sibling => sibling.isCompleted);
-    
-    // если все значения isCompleted в массиве равны true,
-    // то задаем isCompleted родителя true
-    if (siblingsPropsArr.every(prop => prop)) {
-      await Items.update(
-        { isCompleted: true },
-        { where: { id: parentId } }
-      );
-
+    async function updateParent(parentId) {
+      if (!parentId) {
+        return;
+      }
+  
       const parent = await Items.findOne({ where: { id: parentId } });
-      if (parent.parentId) {
-        await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(parent.parentId);
+  
+      // если isCompleted родителя уже равно true, то останавливаем метод
+      if (parent.isCompleted == true) {
+        return;
+      }
+  
+      // собираем всех соседних дочерних элементов по id родителя
+      const allSiblings = await Items.findAll({ where: { parentId } });
+  
+      // собираем в массив значения isCompleted у всех дочерних элементов
+      const siblingsPropsArr = allSiblings.map(sibling => sibling.isCompleted);
+      
+      // если все значения isCompleted в массиве равны true,
+      // то задаем isCompleted родителя true и добавляем его ID в массив
+      if (siblingsPropsArr.every(prop => prop)) {
+        await Items.update(
+          { isCompleted: true },
+          { where: { id: parentId } }
+        );
+        parents.push(parent.id);
+        
+        await updateParent(parent.parentId);
       }
     }
+
+    await updateParent(parentId);
+    return parents;
   }
 
   /**

@@ -320,7 +320,8 @@ class ItemsController extends BaseController {
       const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
+      // получаем массив из таких массивов
       const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
         id => ItemsController.getAllNestedChildrenIds(id)
       ));
@@ -389,7 +390,8 @@ class ItemsController extends BaseController {
       const allDiffChildrenIds = allDiffChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
+      // получаем массив из таких массивов
       const allNestedDiffChildrenIds = await Promise.all(allDiffChildrenIds.map(
         id => ItemsController.getAllNestedChildrenIds(id)
       ));
@@ -465,7 +467,8 @@ class ItemsController extends BaseController {
       const allChildrenIds = allChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
+      // получаем массив из таких массивов
       const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
         id => ItemsController.getAllNestedChildrenIds(id)
       ));
@@ -515,7 +518,8 @@ class ItemsController extends BaseController {
       const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
+      // получаем массив из таких массивов
       const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
           id => ItemsController.getAllNestedChildrenIds(id)
         ));

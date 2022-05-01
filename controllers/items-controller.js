@@ -458,15 +458,29 @@ class ItemsController extends BaseController {
         return;
       }
 
+      const isCompleted = item.isCompleted;
+
+      // собираем в массив ID всех дочерних элементов удаляемого элемента
       const allChildren = await Items.findAll({ where: { parentId: item.id } });
       const allChildrenIds = allChildren.map(item => item.id);
 
+      // собираем для каждого такого дочернего элемента в отдельный массив
+      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности
       const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
         id => ItemsController.getAllNestedChildrenIds(id)
       ));
 
+      // удаляем текущий элемент вместе со всеми его дочерними элементами
       await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
 
+      // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
+      // на случай, если у всех оставшихся его соседей значение isCompleted равно true
+      await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
+
+      // в свойство id.children ответа помещаем массив из объектов дочерних элементов,
+      // также удаленных вместе с текущим, в каждом из которых в свойстве current
+      // передаем id дочернего элемента, а в свойстве childrenAllNested -
+      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
       res.status(200).json({
         id: {
           current: item.id,

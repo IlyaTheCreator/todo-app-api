@@ -39,24 +39,30 @@ class ItemsController extends BaseController {
    * и при необходимости изменяет его на false
    */
   static async updateParentsIsCompletedIfItIsNotFalse(parentId) {
-    if (parentId == 0) {
-      return;
+    const parents = [];
+
+    async function updateParent(parentId) {
+      if (!parentId) {
+        return;
+      }
+  
+      const parent = await Items.findOne({ where: { id: parentId } });
+  
+      // если isCompleted родителя уже равно false, то останавливаем метод
+      if (parent.isCompleted == false) {
+        return;
+      }
+  
+      // в противном случае перезаписываем свойство и добавляем ID родителя в массив
+      await Items.update({ isCompleted: false }, { where: { id: parentId } });
+      parents.push(parent.id);
+  
+      // обновляем его у вышестоящих родителей рекурсивно этим же методом
+      await updateParent(parent.parentId);
     }
 
-    const parent = await Items.findOne({ where: { id: parentId } });
-
-    // если isCompleted родителя уже равно false, то останавливаем метод
-    if (parent.isCompleted == false) {
-      return;
-    }
-
-    // в противном случае перезаписываем свойство
-    await Items.update({ isCompleted: false }, { where: { id: parentId } });
-
-    // обновляем его у вышестоящих родителей рекурсивно этим же методом
-    if (parent.parentId) {
-      await ItemsController.updateParentsIsCompletedIfItIsNotFalse(parent.parentId);
-    }
+    await updateParent(parentId);
+    return parents;
   }
 
   /**
@@ -339,7 +345,7 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
       // в зависимости от нового значения isCompleted самого элемента
-      newIsCompleted == false
+      const currentParents = newIsCompleted == false
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
@@ -350,6 +356,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           current: item.id,
+          parents: currentParents,
           children: allSameCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSameCompletedChildrenIds[index]})),
         },
         ...messages.items.updated

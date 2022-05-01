@@ -39,6 +39,10 @@ class ItemsController extends BaseController {
    * и при необходимости изменяет его на false
    */
   static async updateParentsIsCompletedIfItIsNotFalse(parentId) {
+    if (parentId == 0) {
+      return;
+    }
+
     const parent = await Items.findOne({ where: { id: parentId } });
 
     // если isCompleted родителя уже равно false, то останавливаем метод
@@ -62,6 +66,10 @@ class ItemsController extends BaseController {
    * если у всех его детей isCompleted также равно true.
    */
   static async updateParentsIsCompletedIfItShouldBeTrue(parentId) {
+    if (parentId == 0) {
+      return;
+    }
+
     const parent = await Items.findOne({ where: { id: parentId } });
 
     // если isCompleted родителя уже равно true, то останавливаем метод
@@ -403,6 +411,10 @@ class ItemsController extends BaseController {
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
+      // в свойство id.children ответа помещаем массив из объектов дочерних элементов
+      // с переключенным значением isCompleted, в каждом из которых в свойстве current
+      // передаем id дочернего элемента, а в свойстве childrenAllNested -
+      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
       res.status(200).json({
         id: {
           current: item.id,

@@ -521,7 +521,7 @@
  *                             example: [10, 11, 14]
  *                 message: 
  *                   type: string
- *                   example: "Completed items deleted"
+ *                   example: "Item deleted"
  *       400:
  *         description: Bad request
  *         content:

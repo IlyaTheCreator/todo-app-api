@@ -348,7 +348,8 @@ class ItemsController extends BaseController {
       );
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
-      // в зависимости от нового значения isCompleted самого элемента
+      // в зависимости от нового значения isCompleted самого элемента,
+      // сохраняем все ID измененных родителей, начиная с самого близкого, в массив updatedParents
       const updatedParents = await ItemsController.updateParentsIsCompletedIfIt(
         newIsCompleted == false ? 'IS_NOT_FALSE' : 'SHOULD_BE_TRUE',
         item.parentId
@@ -421,7 +422,8 @@ class ItemsController extends BaseController {
       );
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
-      // в зависимости от нового значения isCompleted самого элемента
+      // в зависимости от нового значения isCompleted самого элемента,
+      // сохраняем все ID измененных родителей, начиная с самого близкого, в массив updatedParents
       const updatedParents = await ItemsController.updateParentsIsCompletedIfIt(
         booleanValue == false ? 'IS_NOT_FALSE' : 'SHOULD_BE_TRUE',
         item.parentId
@@ -491,7 +493,8 @@ class ItemsController extends BaseController {
       await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
-      // на случай, если у всех оставшихся его соседей значение isCompleted равно true
+      // на случай, если у всех оставшихся его соседей значение isCompleted равно true,
+      // сохраняем все ID измененных родителей, начиная с самого близкого, в массив updatedParents
       const updatedParents = await ItemsController.updateParentsIsCompletedIfIt('SHOULD_BE_TRUE', item.parentId);
 
       // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,

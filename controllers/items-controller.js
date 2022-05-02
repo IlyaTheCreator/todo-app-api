@@ -337,7 +337,10 @@ class ItemsController extends BaseController {
       const newIsCompleted = !prevIsCompleted;
 
       // собираем в массив ID всех дочерних элементов только с таким же предыдущим значением isCompleted
-      const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: prevIsCompleted } });
+      // при условии, что в свойстве parentId элемента не указан его собственный ID
+      const allSameCompletedChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id, isCompleted: prevIsCompleted } })
+        : [];
       const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
@@ -411,7 +414,10 @@ class ItemsController extends BaseController {
       const booleanValue = boolean === 'true' ? true : false;
 
       // собираем в массив ID всех дочерних элементов только с отличающимся от booleanValue значением isCompleted
-      const allDiffChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: !booleanValue } });
+      // при условии, что в свойстве parentId элемента не указан его собственный ID
+      const allDiffChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id, isCompleted: !booleanValue } })
+        : [];
       const allDiffChildrenIds = allDiffChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
@@ -490,7 +496,10 @@ class ItemsController extends BaseController {
       }
 
       // собираем в массив ID всех дочерних элементов удаляемого элемента
-      const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      // при условии, что в свойстве parentId элемента не указан его собственный ID
+      const allChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id } })
+        : [];
       const allChildrenIds = allChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
@@ -544,7 +553,10 @@ class ItemsController extends BaseController {
       }
 
       // собираем в массив ID всех дочерних элементов со значением isCompleted = true
-      const allCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
+      // при условии, что в свойстве parentId элемента не указан его собственный ID
+      const allCompletedChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id, isCompleted: true } })
+        : [];
       const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив

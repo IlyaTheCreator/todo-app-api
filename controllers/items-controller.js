@@ -217,7 +217,9 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      const allChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id } })
+        : [];
       const allChildrenIds = allChildren.map(item => item.id);
 
       const allNestedChildrenIds = await Promise.all(allChildrenIds.map(

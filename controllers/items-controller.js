@@ -22,8 +22,9 @@ class ItemsController extends BaseController {
       const items = await Items.findAll({ where: {parentId: ids} });
 
       // останавливаем метод, если в свойстве parentId хотя бы одного
-      // из дочерних элементов указан его собственный ID 
-      if (items.some(item => item.id == item.parentId)) {
+      // из дочерних элементов указан его собственный ID
+      // или если элемент уже был извлечен ранее в рекурсивной цепочке
+      if (items.some(item => item.id == item.parentId || childrenIds.includes(item.id))) {
         return;
       }
 
@@ -58,9 +59,10 @@ class ItemsController extends BaseController {
   
       const parent = await Items.findOne({ where: { id: parentId } });
 
-      // останавливаем метод, если элемент не найден или
-      // в его свойстве parentId указан его собственный ID
-      if (!parent || parent.id == parent.parentId) {
+      // останавливаем метод, если элемент не найден,
+      // или в его свойстве parentId указан его собственный ID,
+      // или родитель уже был извлечен ранее в рекурсивной цепочке
+      if (!parent || parent.id == parent.parentId || parents.includes(parent.id)) {
         return;
       }
 

@@ -21,6 +21,12 @@ class ItemsController extends BaseController {
     async function findChildren(ids) {
       const items = await Items.findAll({ where: {parentId: ids} });
 
+      // останавливаем метод, если в свойстве parentId хотя бы одного
+      // из дочерних элементов указан его собственный ID 
+      if (items.some(item => item.id == item.parentId)) {
+        return;
+      }
+
       if (items.length) {
         const currentIds = items.map(item => item.id);
         childrenIds.push(...currentIds);
@@ -51,6 +57,11 @@ class ItemsController extends BaseController {
       }
   
       const parent = await Items.findOne({ where: { id: parentId } });
+
+      // останавливаем метод, если в свойстве parentId элемента указан его собственный ID
+      if (parent.id == parent.parentId) {
+        return;
+      }
 
       switch (condition) {
         // если передано условие 'IS_NOT_FALSE', то проверяем у родителя
@@ -245,7 +256,7 @@ class ItemsController extends BaseController {
       const itemError = this.validate(item, ItemsController.types);
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента на случай,
-      // если до добавления все соседние компоненты вместе с родителем имели значение isCompleted = true
+      // если до добавления все его соседние компоненты вместе с родителем имели значение isCompleted = true
       if (parentId) {
         await ItemsController.updateParentsIsCompletedIfIt('IS_NOT_FALSE', parentId);
       }

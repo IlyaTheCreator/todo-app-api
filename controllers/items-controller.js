@@ -345,7 +345,7 @@ class ItemsController extends BaseController {
 
   /**
    * PUT запрос
-   * Пометить элемент, включая все дочерние элементы, выполненными/невыполненными
+   * Отметить элемент, включая все дочерние элементы, выполненными/невыполненными
    * ex. http://localhost:8080/api/items/:id/complete/:boolean
    */
   async setIsCompletedAll(req, res) {
@@ -398,15 +398,9 @@ class ItemsController extends BaseController {
         item.parentId
       );
 
-      // в свойство id.children ответа помещаем массив из объектов дочерних элементов
-      // с переключенным значением isCompleted, в каждом из которых в свойстве current
-      // передаем id дочернего элемента, а в свойстве childrenAllNested -
-      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
+      // возвращаем в ответе ID элемента, в котором производились изменения
       res.status(200).json({
-        id: {
-          current: item.id,
-          children: allDiffChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedDiffChildrenIds[index]})),
-        },
+        id: item.id,
         ...messages.items.updatedAll
       });
     } catch (e) {

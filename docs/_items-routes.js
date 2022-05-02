@@ -307,6 +307,8 @@
  *           The item updated successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current updated item,
+ *           the "parents" property with an array which contains IDs
+ *           of all parents of the current item with also updated "isComleted" property,
  *           and the "children" property with an array of all its also updated children items
  *           which had the same "isCompleted" property value as the current item.<br>
  *           Each updated child object has its own "current" property with its ID,
@@ -321,7 +323,12 @@
  *                   properties:
  *                     current:
  *                       type: integer
- *                       example: 1
+ *                       example: 5
+ *                     parents:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [1, 3]
  *                     children:
  *                       type: array
  *                       items:
@@ -329,12 +336,12 @@
  *                         properties:
  *                           current:
  *                             type: integer
- *                             example: 2
+ *                             example: 8
  *                           childrenAllNested:
  *                             type: array
  *                             items:
  *                               type: integer
- *                             example: [5, 6, 9]
+ *                             example: [10, 11, 14]
  *                 message: 
  *                   type: string
  *                   example: "Item updated"
@@ -378,6 +385,8 @@
  *           All item updated successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current updated item,
+ *           the "parents" property with an array which contains IDs
+ *           of all parents of the current item with also updated "isComleted" property,
  *           and the "children" property with an array of all its also updated children items
  *           whose "isCompleted" property value is opposite to the given boolean parameter.<br>
  *           Each updated child object has its own "current" property with its ID,
@@ -392,7 +401,12 @@
  *                   properties:
  *                     current:
  *                       type: integer
- *                       example: 1
+ *                       example: 5
+ *                     parents:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [1, 3]
  *                     children:
  *                       type: array
  *                       items:
@@ -400,12 +414,12 @@
  *                         properties:
  *                           current:
  *                             type: integer
- *                             example: 2
+ *                             example: 8
  *                           childrenAllNested:
  *                             type: array
  *                             items:
  *                               type: integer
- *                             example: [5, 6, 9]
+ *                             example: [10, 11, 14]
  *                 message: 
  *                   type: string
  *                   example: "All items updated"
@@ -468,6 +482,8 @@
  *           The item deleted successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current deleted item,
+ *           the "parents" property with an array which contains IDs
+ *           of all parents of the deleted item with updated "isComleted" property,
  *           and the "children" property with an array of all its also deleted children items.<br>
  *           Each deleted child object has its own "current" property with its ID,
  *           and its own "childrenAllNested" property as an array with IDs of all its also deleted children items on all levels of nesting.
@@ -481,7 +497,12 @@
  *                   properties:
  *                     current:
  *                       type: integer
- *                       example: 1
+ *                       example: 5
+ *                     parents:
+ *                       type: array
+ *                       items:
+ *                         type: integer
+ *                       example: [1, 3]
  *                     children:
  *                       type: array
  *                       items:
@@ -489,12 +510,12 @@
  *                         properties:
  *                           current:
  *                             type: integer
- *                             example: 2
+ *                             example: 8
  *                           childrenAllNested:
  *                             type: array
  *                             items:
  *                               type: integer
- *                             example: [5, 6, 9]
+ *                             example: [10, 11, 14]
  *                 message: 
  *                   type: string
  *                   example: "Completed items deleted"

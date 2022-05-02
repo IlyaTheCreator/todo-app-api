@@ -350,10 +350,11 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
       // в зависимости от нового значения isCompleted самого элемента
-      const currentParents = newIsCompleted == false
+      const updatedParents = newIsCompleted == false
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
+      // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов
       // с переключенным значением isCompleted, в каждом из которых в свойстве current
       // передаем id дочернего элемента, а в свойстве childrenAllNested -
@@ -361,7 +362,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           current: item.id,
-          parents: currentParents,
+          parents: updatedParents,
           children: allSameCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSameCompletedChildrenIds[index]})),
         },
         ...messages.items.updated
@@ -421,10 +422,11 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
       // в зависимости от нового значения isCompleted самого элемента
-      booleanValue == false
+      const updatedParents = booleanValue == false
         ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
         : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
+      // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов
       // с переключенным значением isCompleted, в каждом из которых в свойстве current
       // передаем id дочернего элемента, а в свойстве childrenAllNested -
@@ -432,6 +434,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           current: item.id,
+          parents: updatedParents,
           children: allDiffChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedDiffChildrenIds[index]})),
         },
         ...messages.items.updatedAll
@@ -490,8 +493,9 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
       // на случай, если у всех оставшихся его соседей значение isCompleted равно true
-      await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
+      const updatedParents = await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
 
+      // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов,
       // также удаленных вместе с текущим, в каждом из которых в свойстве current
       // передаем id дочернего элемента, а в свойстве childrenAllNested -
@@ -499,6 +503,7 @@ class ItemsController extends BaseController {
       res.status(200).json({
         id: {
           current: item.id,
+          parents: updatedParents,
           children: allChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
         },
         ...messages.items.deleted

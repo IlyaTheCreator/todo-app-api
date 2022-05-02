@@ -416,38 +416,18 @@
  *       200:
  *         description: |
  *           The item deleted successfully.<br>
- *           The "id" property of the response object is an object which contains
- *           the "current" property with the ID of the current deleted item,
- *           and the "children" property with an array of all its also deleted children items.<br>
- *           Each deleted child object has its own "current" property with its ID,
- *           and its own "childrenAllNested" property as an array with IDs of all its also deleted children items on all levels of nesting.
+ *           The "id" property contains the ID of the current deleted item.
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
  *                 id: 
- *                   type: object
- *                   properties:
- *                     current:
- *                       type: integer
- *                       example: 1
- *                     children:
- *                       type: array
- *                       items:
- *                         type: object
- *                         properties:
- *                           current:
- *                             type: integer
- *                             example: 2
- *                           childrenAllNested:
- *                             type: array
- *                             items:
- *                               type: integer
- *                             example: [5, 6, 9]
+ *                   type: integer
+ *                   example: 1
  *                 message: 
  *                   type: string
- *                   example: "Completed items deleted"
+ *                   example: "Item deleted"
  *       400:
  *         description: Bad request
  *         content:

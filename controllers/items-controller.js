@@ -439,33 +439,19 @@ class ItemsController extends BaseController {
         return;
       }
 
-      // собираем в массив ID всех дочерних элементов удаляемого элемента
-      const allChildren = await Items.findAll({ where: { parentId: item.id } });
-      const allChildrenIds = allChildren.map(item => item.id);
-
-      // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
-      // получаем массив из таких массивов
-      const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
-        id => ItemsController.getAllNestedChildrenIds(id)
-      ));
+      // собираем в массив ID всех дочерних элементов удаляемого элемента на всех уровнях вложенности
+      const allNestedChildrenIds = await ItemsController.getAllNestedChildrenIds(item.id);
 
       // удаляем текущий элемент вместе со всеми его дочерними элементами
-      await Items.destroy({ where: { id: [item.id, ...allChildrenIds, ...allNestedChildrenIds.flat()] } });
+      await Items.destroy({ where: { id: [item.id, ...allNestedChildrenIds] } });
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
       // на случай, если у всех оставшихся его соседей значение isCompleted равно true
       await ItemsController.updateParentsIsCompletedIfIt('SHOULD_BE_TRUE', item.parentId);
 
-      // в свойство id.children ответа помещаем массив из объектов дочерних элементов,
-      // также удаленных вместе с текущим, в каждом из которых в свойстве current
-      // передаем id дочернего элемента, а в свойстве childrenAllNested -
-      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
+      // возвращаем в ответе ID удаленного элемента
       res.status(200).json({
-        id: {
-          current: item.id,
-          children: allChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
-        },
+        id: item.id,
         ...messages.items.deleted
       });
     } catch (e) {

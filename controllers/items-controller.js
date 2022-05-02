@@ -192,15 +192,6 @@ class ItemsController extends BaseController {
       }
 
       const allChildren = await Items.findAll({ where: { parentId: item.id } });
-      const allChildrenIds = allChildren.map(item => item.id);
-
-      const allNestedChildrenIds = await Promise.all(allChildrenIds.map(
-        id => ItemsController.getAllNestedChildrenIds(id)
-      ));
-
-      for (let i = 0; i < allChildren.length; i++) {
-        allChildren[i].dataValues.childrenAllNested = allNestedChildrenIds[i];
-      }
       
       item.dataValues.children = allChildren;
 

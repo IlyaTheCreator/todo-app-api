@@ -124,12 +124,9 @@
  *     responses:
  *       200:
  *         description: |
- *           The found item with all its children items.<br>
+ *           The found item with all its first children items.<br>
  *           The "children" property of the item contains an array of
- *           all the children items of the current item.<br>
- *           Every child item also has the "childrenAllNested" property
- *           which contains an array with IDs of all its own
- *           children items on all levels of nesting.
+ *           all the first children items of the current item.<br>
  *         content:
  *           application/json:
  *             schema:
@@ -164,11 +161,6 @@
  *                       parentId:
  *                         type: integer
  *                         example: 1
- *                       childrenAllNested:
- *                         type: array
- *                         items:
- *                           type: integer
- *                         example: [5, 6, 9]
  *       400:
  *         description: Bad request
  *         content:

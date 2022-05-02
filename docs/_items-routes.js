@@ -307,12 +307,13 @@
  *           The item updated successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current updated item,
- *           the "parents" property with an array which contains IDs
- *           of all parents of the current item with also updated "isComleted" property,
+ *           the "parents" property with an array which contains IDs of all parents
+ *           of the current item, starting from the nearest, with also updated "isComleted" property,
  *           and the "children" property with an array of all its also updated children items
  *           which had the same "isCompleted" property value as the current item.<br>
  *           Each updated child object has its own "current" property with its ID,
- *           and its own "childrenAllNested" property as an array with IDs of all its also updated children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its
+ *           also updated children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -385,12 +386,13 @@
  *           All item updated successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current updated item,
- *           the "parents" property with an array which contains IDs
- *           of all parents of the current item with also updated "isComleted" property,
+ *           the "parents" property with an array which contains IDs of all parents
+ *           of the current item, starting from the nearest, with also updated "isComleted" property,
  *           and the "children" property with an array of all its also updated children items
  *           whose "isCompleted" property value is opposite to the given boolean parameter.<br>
  *           Each updated child object has its own "current" property with its ID,
- *           and its own "childrenAllNested" property as an array with IDs of all its also updated children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its
+ *           also updated children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:
@@ -482,11 +484,12 @@
  *           The item deleted successfully.<br>
  *           The "id" property of the response object is an object which contains
  *           the "current" property with the ID of the current deleted item,
- *           the "parents" property with an array which contains IDs
- *           of all parents of the deleted item with updated "isComleted" property,
+ *           the "parents" property with an array which contains IDs of all parents
+ *           of the deleted item, starting from the nearest, with updated "isComleted" property,
  *           and the "children" property with an array of all its also deleted children items.<br>
  *           Each deleted child object has its own "current" property with its ID,
- *           and its own "childrenAllNested" property as an array with IDs of all its also deleted children items on all levels of nesting.
+ *           and its own "childrenAllNested" property as an array with IDs of all its
+ *           also deleted children items on all levels of nesting.
  *         content:
  *           application/json:
  *             schema:

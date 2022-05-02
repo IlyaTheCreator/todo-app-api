@@ -58,8 +58,9 @@ class ItemsController extends BaseController {
   
       const parent = await Items.findOne({ where: { id: parentId } });
 
-      // останавливаем метод, если в свойстве parentId элемента указан его собственный ID
-      if (parent.id == parent.parentId) {
+      // останавливаем метод, если элемент не найден или
+      // в его свойстве parentId указан его собственный ID
+      if (!parent || parent.id == parent.parentId) {
         return;
       }
 

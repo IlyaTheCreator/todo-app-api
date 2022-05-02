@@ -453,7 +453,7 @@ class ItemsController extends BaseController {
         return;
       }
 
-      // собираем в массив ID всех дочерних элементов удаляемого элемента на всех уровнях вложенности
+      // получаем массив из ID самого удаляемого элемента и ID всех его дочерних элементов
       const itemAndAllChildrenIds = await ItemsController.addAllNestedChildrenIds(item.id);
 
       // удаляем текущий элемент вместе со всеми его дочерними элементами
@@ -500,8 +500,8 @@ class ItemsController extends BaseController {
         child => ItemsController.addAllNestedChildrenIds(child.id)
       ));
 
-      // удаляем все выполненные дочерние элементы вместе со всеми в свою очередь их дочерними элементами
-      await Items.destroy({ where: { id: allNestedCompletedChildrenIds.flat() } });
+      // при наличии удаляем все выполненные дочерние элементы вместе со всеми в свою очередь их дочерними элементами
+      allNestedCompletedChildrenIds.length && await Items.destroy({ where: { id: allNestedCompletedChildrenIds.flat() } });
 
       // возвращаем в ответе ID элемента, у которого были удалены все выполненные дочерние элементы
       res.status(200).json({

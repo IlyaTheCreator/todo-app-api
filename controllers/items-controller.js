@@ -224,7 +224,7 @@ class ItemsController extends BaseController {
       const itemError = this.validate(item, ItemsController.types);
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента на случай,
-      // если до добавления все соседние компоненты вместе с родителем имели значение isCompleted = true
+      // если до добавления все его соседние компоненты вместе с родителем имели значение isCompleted = true
       if (parentId) {
         await ItemsController.updateParentsIsCompletedIfIt('IS_NOT_FALSE', parentId);
       }
@@ -333,15 +333,9 @@ class ItemsController extends BaseController {
         item.parentId
       );
 
-      // в свойство id.children ответа помещаем массив из объектов дочерних элементов
-      // с переключенным значением isCompleted, в каждом из которых в свойстве current
-      // передаем id дочернего элемента, а в свойстве childrenAllNested -
-      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
+      // возвращаем в ответе ID измененного элемента
       res.status(200).json({
-        id: {
-          current: item.id,
-          children: allSameCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedSameCompletedChildrenIds[index]})),
-        },
+        id: item.id,
         ...messages.items.updated
       });
     } catch (e) {

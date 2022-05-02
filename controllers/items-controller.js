@@ -490,15 +490,9 @@ class ItemsController extends BaseController {
       // удаляем все выполненные дочерние элементы вместе со всеми в свою очередь их дочерними элементами
       await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });
 
-      // в свойство id.children ответа помещаем массив из объектов удаленных
-      // выполненных дочерних элементов, в каждом из которых в свойстве current
-      // передаем id дочернего элемента, а в свойстве childrenAllNested -
-      // массив всех в свою очередь его дочерних элементов на всех уровнях вложенности
+      // возвращаем в ответе ID элемента, у которого были удалены все выполненные дочерние элементы
       res.status(200).json({
-        id: {
-          current: item.id,
-          children: allCompletedChildrenIds.map((id, index) => ({current: id, childrenAllNested: allNestedChildrenIds[index]})),
-        },
+        id: item.id,
         ...messages.items.deleteComplete
       });
     } catch (e) {

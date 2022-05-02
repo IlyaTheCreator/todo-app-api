@@ -13,7 +13,7 @@ class ItemsController extends BaseController {
   /**
    * Статический метод для сбора всех id дочерних элементов по id родителя.
    * Возвращает массив из id всех его дочерних элементов на всех уровнях вложенности.
-   * @param {parentId} number id главного родителя (с которого начинается поиск дочерних элементов)
+   * @param parentId id главного родителя (с которого начинается поиск дочерних элементов)
    */
   static async getAllNestedChildrenIds(parentId) {
     const childrenIds = [];
@@ -36,76 +36,73 @@ class ItemsController extends BaseController {
   /**
    * Статический метод, который проверяет значение свойства isCompleted
    * у всех вышестоящих родителей элемента по его parentId
-   * и при необходимости изменяет его на false
+   * и в зависимости от переданного условия при необходимости изменяет
+   * значение isCompleted каждого родителя на нужное значение
    */
-  static async updateParentsIsCompletedIfItIsNotFalse(parentId) {
+  static async updateParentsIsCompletedIfIt(condition, parentId) {
+    // инициализируем массив, в котором метод вернет ID всех
+    // рекурсивно обновленных родительских элементов
     const parents = [];
 
-    async function updateParent(parentId) {
+    // функция для рекурсивного обновления
+    async function updateParentIsCompleted(parentId) {
       if (!parentId) {
         return;
       }
   
       const parent = await Items.findOne({ where: { id: parentId } });
-  
-      // если isCompleted родителя уже равно false, то останавливаем метод
-      if (parent.isCompleted == false) {
-        return;
-      }
-  
-      // в противном случае перезаписываем свойство и добавляем ID родителя в массив
-      await Items.update({ isCompleted: false }, { where: { id: parentId } });
-      parents.push(parent.id);
-  
-      // обновляем его у вышестоящих родителей рекурсивно этим же методом
-      await updateParent(parent.parentId);
-    }
 
-    await updateParent(parentId);
-    return parents;
-  }
+      switch (condition) {
+        // если передано условие 'IS_NOT_FALSE', то проверяем у родителя
+        // значение свойства isCompleted и при необходимости изменяем его на false
+        case 'IS_NOT_FALSE':
+          // если isCompleted родителя уже равно false, то останавливаем метод
+          if (parent.isCompleted == false) {
+            return;
+          }
 
-  /**
-   * Статический метод, который по parentId проверяет значение
-   * свойства isCompleted у родителя элемента и всех вышестоящих родителей
-   * и при необходимости изменяет его на true каждому родителю,
-   * если у всех его детей isCompleted также равно true.
-   */
-  static async updateParentsIsCompletedIfItShouldBeTrue(parentId) {
-    const parents = [];
-
-    async function updateParent(parentId) {
-      if (!parentId) {
-        return;
-      }
-  
-      const parent = await Items.findOne({ where: { id: parentId } });
-  
-      // если isCompleted родителя уже равно true, то останавливаем метод
-      if (parent.isCompleted == true) {
-        return;
-      }
-  
-      // собираем всех соседних дочерних элементов по id родителя
-      const allSiblings = await Items.findAll({ where: { parentId } });
-  
-      // собираем в массив значения isCompleted у всех дочерних элементов
-      const siblingsPropsArr = allSiblings.map(sibling => sibling.isCompleted);
-      
-      // если все значения isCompleted в массиве равны true,
-      // то задаем isCompleted родителя true и добавляем его ID в массив
-      if (siblingsPropsArr.every(prop => prop)) {
-        await Items.update(
-          { isCompleted: true },
-          { where: { id: parentId } }
-        );
-        parents.push(parent.id);
+          // в противном случае перезаписываем свойство и добавляем ID родителя в массив
+          await Items.update({ isCompleted: false }, { where: { id: parentId } });
+          parents.push(parent.id);
+          
+          break;
         
-        await updateParent(parent.parentId);
+        // если передано условие 'SHOULD_BE_TRUE', то проверяем у родителя
+        // значение свойства isCompleted и при необходимости изменяем его на true,
+        // если у всех его детей isCompleted также равно true.
+        case 'SHOULD_BE_TRUE':
+          // если isCompleted родителя уже равно true, то останавливаем метод
+          if (parent.isCompleted == true) {
+            return;
+          }
+          
+          // собираем всех соседних дочерних элементов по id родителя
+          const allSiblings = await Items.findAll({ where: { parentId } });
+      
+          // собираем в массив значения isCompleted у всех дочерних элементов
+          const siblingsPropsArr = allSiblings.map(sibling => sibling.isCompleted);
+          
+          // если все значения isCompleted в массиве равны true,
+          // то задаем isCompleted родителя true и добавляем его ID в массив
+          if (siblingsPropsArr.every(prop => prop)) {
+            await Items.update(
+              { isCompleted: true },
+              { where: { id: parentId } }
+            );
+            parents.push(parent.id);
+          }
+        
+          break;
+      
+        default:
+          break;
       }
+  
+      // обновляем isCompleted у вышестоящих родителей рекурсивно
+      await updateParentIsCompleted(parent.parentId);
     }
 
-    await updateParent(parentId);
+    await updateParentIsCompleted(parentId);
     return parents;
   }
 
@@ -247,8 +244,10 @@ class ItemsController extends BaseController {
       const item = parentId ? { name, parentId } : { name };
       const itemError = this.validate(item, ItemsController.types);
 
+      // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента на случай,
+      // если до добавления все соседние компоненты вместе с родителем имели значение isCompleted = true
       if (parentId) {
-        await ItemsController.updateParentsIsCompletedIfItIsNotFalse(parentId);
+        await ItemsController.updateParentsIsCompletedIfIt('IS_NOT_FALSE', parentId);
       }
 
       if (itemError) {
@@ -350,9 +349,10 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
       // в зависимости от нового значения isCompleted самого элемента
-      const updatedParents = newIsCompleted == false
-        ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
-        : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
+      const updatedParents = await ItemsController.updateParentsIsCompletedIfIt(
+        newIsCompleted == false ? 'IS_NOT_FALSE' : 'SHOULD_BE_TRUE',
+        item.parentId
+      );
 
       // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов
@@ -422,9 +422,10 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей элемента
       // в зависимости от нового значения isCompleted самого элемента
-      const updatedParents = booleanValue == false
-        ? await ItemsController.updateParentsIsCompletedIfItIsNotFalse(item.parentId)
-        : await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
+      const updatedParents = await ItemsController.updateParentsIsCompletedIfIt(
+        booleanValue == false ? 'IS_NOT_FALSE' : 'SHOULD_BE_TRUE',
+        item.parentId
+      );
 
       // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов
@@ -475,8 +476,6 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const isCompleted = item.isCompleted;
-
       // собираем в массив ID всех дочерних элементов удаляемого элемента
       const allChildren = await Items.findAll({ where: { parentId: item.id } });
       const allChildrenIds = allChildren.map(item => item.id);
@@ -493,7 +492,7 @@ class ItemsController extends BaseController {
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
       // на случай, если у всех оставшихся его соседей значение isCompleted равно true
-      const updatedParents = await ItemsController.updateParentsIsCompletedIfItShouldBeTrue(item.parentId);
+      const updatedParents = await ItemsController.updateParentsIsCompletedIfIt('SHOULD_BE_TRUE', item.parentId);
 
       // в свойство id.parents помещаем массив с ID всех родителей с изменившимся isCompleted,
       // в свойство id.children ответа помещаем массив из объектов дочерних элементов,

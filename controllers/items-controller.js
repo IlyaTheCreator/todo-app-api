@@ -15,8 +15,8 @@ class ItemsController extends BaseController {
    * Возвращает массив из id всех его дочерних элементов на всех уровнях вложенности.
    * @param parentId id главного родителя (с которого начинается поиск дочерних элементов)
    */
-  static async getAllNestedChildrenIds(parentId) {
-    const childrenIds = [];
+  static async addAllNestedChildrenIds(parentId) {
+    const childrenIds = [parentId];
     
     async function findChildren(ids) {
       const items = await Items.findAll({ where: {parentId: ids} });
@@ -29,7 +29,7 @@ class ItemsController extends BaseController {
       }
     }
 
-    await findChildren(parentId);
+    await findChildren(childrenIds);
     return childrenIds;
   }
 
@@ -304,24 +304,16 @@ class ItemsController extends BaseController {
       const prevIsCompleted = item.isCompleted;
       const newIsCompleted = !prevIsCompleted;
 
-      // собираем в массив ID всех дочерних элементов только с таким же предыдущим значением isCompleted
-      const allSameCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: prevIsCompleted } });
-      const allSameCompletedChildrenIds = allSameCompletedChildren.map(item => item.id);
+      // получаем массив из ID самого элемента и ID всех его дочерних элементов
+      const itemAndAllChildrenIds = await ItemsController.addAllNestedChildrenIds(item.id);
 
-      // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
-      // получаем массив из таких массивов
-      const allNestedSameCompletedChildrenIds = await Promise.all(allSameCompletedChildrenIds.map(
-        id => ItemsController.getAllNestedChildrenIds(id)
-      ));
-
-      // изменяем всем им значение isCompleted на новое
+      // среди них всем элементам со старым значением isCompleted изменяем его на новое
       await Items.update(
         { isCompleted: newIsCompleted },
         { 
           where: {
             isCompleted: prevIsCompleted,
-            id: [item.id, ...allSameCompletedChildrenIds, ...allNestedSameCompletedChildrenIds.flat()] 
+            id: itemAndAllChildrenIds 
           }
         }
       );
@@ -369,24 +361,17 @@ class ItemsController extends BaseController {
 
       const booleanValue = boolean === 'true' ? true : false;
 
-      // собираем в массив ID всех дочерних элементов только с отличающимся от booleanValue значением isCompleted
-      const allDiffChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: !booleanValue } });
-      const allDiffChildrenIds = allDiffChildren.map(item => item.id);
+      // получаем массив из ID самого элемента и ID всех его дочерних элементов
+      const itemAndAllChildrenIds = await ItemsController.addAllNestedChildrenIds(item.id);
 
-      // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
-      // получаем массив из таких массивов
-      const allNestedDiffChildrenIds = await Promise.all(allDiffChildrenIds.map(
-        id => ItemsController.getAllNestedChildrenIds(id)
-      ));
-
-      // изменяем всем им значение isCompleted на заданное
+      // среди них всем элементам со значением isCompleted,
+      // противоположным booleanValue, изменяем его на новое
       await Items.update(
         { isCompleted: booleanValue },
         {
           where: {
             isCompleted: !booleanValue,
-            id: [item.id, ...allDiffChildrenIds, ...allNestedDiffChildrenIds.flat()]
+            id: itemAndAllChildrenIds
           }
         }
       );
@@ -440,10 +425,10 @@ class ItemsController extends BaseController {
       }
 
       // собираем в массив ID всех дочерних элементов удаляемого элемента на всех уровнях вложенности
-      const allNestedChildrenIds = await ItemsController.getAllNestedChildrenIds(item.id);
+      const itemAndAllChildrenIds = await ItemsController.addAllNestedChildrenIds(item.id);
 
       // удаляем текущий элемент вместе со всеми его дочерними элементами
-      await Items.destroy({ where: { id: [item.id, ...allNestedChildrenIds] } });
+      await Items.destroy({ where: { id: itemAndAllChildrenIds } });
 
       // проверяем и при необходимости обновляем значения isCompleted у всех родителей удаленного элемента
       // на случай, если у всех оставшихся его соседей значение isCompleted равно true
@@ -476,19 +461,18 @@ class ItemsController extends BaseController {
         return;
       }
 
-      // собираем в массив ID всех дочерних элементов со значением isCompleted = true
+      // получаем массив всех дочерних элементов со значением isCompleted = true
       const allCompletedChildren = await Items.findAll({ where: { parentId: item.id, isCompleted: true } });
-      const allCompletedChildrenIds = allCompletedChildren.map(item => item.id);
 
       // собираем для каждого такого дочернего элемента в отдельный массив
-      // ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
+      // его ID и ID всех в свою очередь его вложенных дочерних элементов на всех уровнях вложенности,
       // получаем массив из таких массивов
-      const allNestedChildrenIds = await Promise.all(allCompletedChildrenIds.map(
-          id => ItemsController.getAllNestedChildrenIds(id)
-        ));
+      const allNestedCompletedChildrenIds = await Promise.all(allCompletedChildren.map(
+        child => ItemsController.addAllNestedChildrenIds(child.id)
+      ));
 
       // удаляем все выполненные дочерние элементы вместе со всеми в свою очередь их дочерними элементами
-      await Items.destroy({ where: { id: [...allCompletedChildrenIds, ...allNestedChildrenIds.flat()] } });
+      await Items.destroy({ where: { id: allNestedCompletedChildrenIds.flat() } });
 
       // возвращаем в ответе ID элемента, у которого были удалены все выполненные дочерние элементы
       res.status(200).json({

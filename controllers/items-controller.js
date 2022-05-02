@@ -216,7 +216,11 @@ class ItemsController extends BaseController {
         return;
       }
 
-      const allChildren = await Items.findAll({ where: { parentId: item.id } });
+      // получаем для текущего элемента всех его дочерних элементов
+      // при условии, что в свойстве parentId текущего элемента не указан его собственный ID
+      const allChildren = (item.id != item.parentId)
+        ? await Items.findAll({ where: { parentId: item.id } })
+        : [];
       
       item.dataValues.children = allChildren;
 
